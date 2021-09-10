@@ -1,6 +1,6 @@
 ---
 #title: "lotsaplots.2.rebuild"
-#author: "Sara"
+#author: "Sara DeLaurentis"
 #date: "02/10/2021"
 #output: html_document
 
@@ -8,7 +8,17 @@
 ---
   
 
+##SETUP##  
+
   
+
+#If necessary, install the following packages by uncommenting and running the following code:
+#install.packages("lubridate")
+#install.packages("stringr")
+#install.packages("tidyverse")
+
+
+#Call the packages:
 
 library(lubridate)
 library(stringr)
@@ -16,6 +26,8 @@ library(tidyverse)
 install.packages("plotrix")
 library(plotrix)
 
+
+#Check your working directory. This is where your files are stored:
 getwd()
 
 
@@ -45,6 +57,12 @@ getwd()
 #head(name.df) to check the order of the columns
 #colnames(name.df) <- c("name1", "name2", "name3", ....)
 #head(name.df) to check
+
+
+
+
+# Step 1:
+
 
 
 file.names <- list.files("./CLEAN_DATA", full.names = FALSE)
