@@ -29,7 +29,9 @@ library(plotrix)
 
 #Check your working directory. This is where your files are stored:
 getwd()
-
+setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_2020_Fall")
+pwd()
+getwd()
 
 #Amazing code for reading in file names, separating the file name elements into 
 #a dataframe (adding a filename column), and selecting rows by values within a 
@@ -92,47 +94,32 @@ colnames(name.df) <- c("file.names", "treatment", "rep", "position", "buttonID",
 head(name.df)
 str(name.df)
 
-class(name.df$treatment)
-
 #class(name.df)
 #str(name.df)
 
 
 
-#Selecting groups of .csv files from the filenames data frame using BASE R 
-#selection tools. For dplyr use of filter() and select(), see next section.
-
-#First example is extracting all rows from the data frame that were part of 
-#treatment C2A. Select rows of data that have "C2A" in the treatment column. 
-#Since the column is unspecified (no entry after the comma), it will select all 
-#columns.
-
-
-
-C2A <- name.df[name.df$treatment == "C2A",]
-C2A_file_names <- C2A[, "file.names"]
-C2A_file_names
-
-
-?subset
-C2A_R1_rows <- name.df[name.df$treatment == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
-
-C2A_R1_filenames <- C2A_R1_rows$file.names
-C2A_R1_filenames
-
-
 ######### Best .csv File Selection Code, as of 02/08/2021 ###########
+
+## Here is where you create a list of the group of files that you want to compare. You will then "feed" this list into the function.
+
+#Here we select the rows in name.df that meet the following criteria: "C2A" in the treatment column AND ("R1" OR "R0") in the rep column. The next line creates a character string out of just the $file.names column.
 
 
 C2A_R1_rows <- name.df[name.df$treatment == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
 C2A_R1_filenames<- C2A_R1_rows$file.names
-print(C2A_R1_filenames_exp)
-#print(C2_trt)
-
+print(C2A_R1_filenames)
 
 C5A_R1_rows <- name.df[name.df$treatment == "C5A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
 C5A_R1_filenames <- C5A_R1_rows$file.names
 print(C5A_R1_filenames)
+
+#Another example:
+#Another thing we could compare would be litter surface temperature across 3 reps at site C2A. 
+#In order to do that, I would write the following code:
+
+#    m10_group_rows <- name.df[name.df$position == "lsurf" & name.df$site == "C2A"]
+#     m10_group_filenames <- m10_group_rows$file.names
 
 
 
@@ -255,7 +242,15 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   ?abline
   ?ablineclip
   
-  ### THE FOR LOOP ###
+ 
+   ### THE FOR LOOP ###
+  #The "money" part of the function. We fed the function a group of character strings (file names), and for every entry (every "i") in the list, R will execute the following:
+  #Read the csv file given by the filepath.
+  #convert the date.time column to the proper format
+  #subset the dataframe to a set date range
+  #figure out what color the plotted line should be, based on a series of "if" statements. For example, if it finds the string "air" in the filename, the color will be gray74.
+    #If not, it moves to the next statement. If the filename has none of the matching words "air", "m0surf", etc., the line will be yellow and you'll know something went wrong.
+  
   
   for(i in data_names){
     #if(skipper != 0){
