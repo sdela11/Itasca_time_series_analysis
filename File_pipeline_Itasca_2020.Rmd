@@ -1,0 +1,136 @@
+---
+title: "File_pipeline"
+author: "Sara"
+date: "11/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readxl)
+library(glue)
+library(stringr)
+
+
+```
+
+## List Files
+
+```{r }
+m <- list.files("./RAW_DATA/", pattern = "*.csv")
+
+file_df <- data.frame(paths = m, name = str_replace(m, ".csv",""), full_paths = list.files("./RAW_DATA/", pattern = "*.csv", full.names = TRUE))
+
+f <- file_df$name #intermediate step, assigning "name" column to a variable to be used in g.
+g <- as.data.frame(str_split_fixed(f, "_", 3))
+
+master <- cbind(file_df,g)
+colnames(master) <- c("paths", "name", "full_paths", "sensor", "serial" , "upload_date")
+
+
+head(master)
+```
+## Endgame:
+We will be using pwalk or map2 from tidyverse to iterate the create_csv function over a list of files. We will first create the function, and then we will create the list of inputs to use with our iterating function (pwalk or map2).
+
+## Sara's function
+
+-function, requiring the inputs full_paths and sensor. 
+-create object "temps" by reading each csv file, skip the first 20 rows.
+-column names within temps will be: "date.time", "unit", "value". Change these titles as needed.
+-write a new csv using the object temps. File path will be: "./CLEAN_DATA{sensor}_2020.csv"
+
+"./" means in working directory
+
+## Creating the input list
+create new dataframe: "df_master" by putting master through the following:
+select the full_path and sensor columns, mutate the full_paths column to character.
+  -we did this because R was giving us an error that full_paths needed to be a string.
+
+Last line of code: create_csv function test on iButton 11.
+It's a good idea to run a test on one file before using pwalk or map2, which will run the function over the whole set.
+
+## Iterate
+Use pwalk or map2. In this case, pwalk is fed the dataframe df_master, and will perform the function create_csv over each row.
+map2 uses 2 columns (df_master$full_paths, df_master$sensor) and uses the row position to match the inputs together. Both approaches will work.
+
+```{r }
+
+create_csv <- function(full_paths, sensor){
+  temps <- read_csv(full_paths, skip = 20)
+  colnames(temps) <- c("date.time", "unit", "value")
+  write_csv(temps, glue("./CLEAN_DATA/{sensor}_2020.csv"))
+}
+
+#Test the function
+create_csv("./RAW_DATA/i11_3E00000069B0E841_083020.csv", "i11")
+
+
+#creating list of full_paths and sensors for input into the create_csv function
+df_master <- master %>% 
+  select(full_paths, sensor) %>% 
+  mutate(full_paths = as.character(full_paths))
+
+head(df_master)
+
+
+#Iterate! If you want to see something really satisfying, open the folder that you're saving these to and watch the files pop in.
+
+pwalk(df_master, create_csv)
+
+
+map2(df_master$full_paths, df_master$sensor, create_csv)
+
+
+```
+
+
+##Let's try this on the remaining files.
+changed location name to RAW_DATA_B2
+
+```{r }
+
+
+m <- list.files("./RAW_DATA_B2/", pattern = "*.csv")
+m
+
+file_df <- data.frame(paths = m, name = str_replace(m, ".csv",""), full_paths = list.files("./RAW_DATA_B2/", pattern = "*.csv", full.names = TRUE))
+
+summary(file_df)
+
+f <- file_df$name 
+g <- as.data.frame(str_split_fixed(f, "_", 3))
+
+
+master <- cbind(file_df,g)
+colnames(master) <- c("paths", "name", "full_paths", "sensor", "serial" , "upload_date")
+
+summary(master)
+
+create_csv <- function(full_paths, sensor){
+  temps <- read_csv(full_paths, skip = 20)
+  colnames(temps) <- c("date.time", "unit", "value")
+  write_csv(temps, glue("./CLEAN_DATA/{sensor}_2020.csv"))
+}
+
+df_master <- master %>% 
+  select(full_paths, sensor) %>% 
+  mutate(full_paths = as.character(full_paths))
+
+summary(df_master)
+
+pwalk(df_master, create_csv)
+
+
+map2(df_master$full_paths, df_master$sensor, create_csv)
+
+
+create_csv("./RAW_DATA_B2/i11_3E00000069B0E841_083020.csv", "i11")
+
+
+
+```
+## Not sure why there are missing column names filled in. In the newly-created csv file, 3-4 columns are filled with NA. 
+What's going on here?
