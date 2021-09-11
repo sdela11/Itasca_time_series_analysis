@@ -1,8 +1,18 @@
 ---
 title: "File_pipeline"
-author: "Sara"
-date: "11/19/2020"
+author: "Sara DeLaurentis"
+date: "09/11/2021"
 output: html_document
+
+
+Purpose:
+Create clean .csv's from raw iButton uploads. Modifications will need to be made according to file-naming format. Further modifications may need to be made for data uploaded from older iButton models.
+
+Outline:
+1. Create dataframe based on list of files.
+2. Function: create csv after the following modifications: skip the first "n" rows, rename the columns
+3. Create list of inputs for pwalk or map2
+4. Iterate using pwalk or map2
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +26,7 @@ library(stringr)
 
 ```
 
-## List Files
+## 1. List Files
 
 ```{r }
 m <- list.files("./RAW_DATA/", pattern = "*.csv")
