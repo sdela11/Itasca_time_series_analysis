@@ -248,9 +248,8 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   #Read the csv file given by the filepath.
   #convert the date.time column to the proper format
   #subset the dataframe to a set date range
-  #figure out what color the plotted line should be, based on a series of "if" statements. For example, if it finds the string "air" in the filename, the color will be gray74.
-    #If not, it moves to the next statement. If the filename has none of the matching words "air", "m0surf", etc., the line will be yellow and you'll know something went wrong.
-  
+  #figure out what color the plotted line should be, based on a series of "if/if else/else" statements. For example, if it finds the string "air" in the filename, "gray74" is added to a list of colors called "legend_color".
+    #plots a line, using "value" (temperature) as a function of "date.time", and the color determined by the if statements above. 
   
   for(i in data_names){
     #if(skipper != 0){
@@ -317,8 +316,9 @@ legelist <- c(legelist, legend_color)
 ## 
 
 
-lotsaplots(C2A_R1_filenames, "Low Invasion C2A R1", c("air", "lsurf", "msurf", "m10", "m30", "m50"))
+lotsaplots(C2A_R1_filenames, "TEST Low Invasion C2A R1.png", "TEST Low Invastion C2A R1", c("air", "lsurf", "msurf", "m10", "m30", "m50"), "annotation here")
 dev.off()
+print(C2A_R1_filenames)
 
 #str(C2A_R1_filenames_exp)
 
@@ -331,7 +331,7 @@ str(C5A_R1_filenames)
 
 ## 
 
-
+getwd()
 
 my_data <- list.files("./CLEAN_DATA", full.names = TRUE)
 print(my_data)
