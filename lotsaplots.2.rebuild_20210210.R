@@ -1,6 +1,6 @@
 ---
 #title: "lotsaplots.2.rebuild"
-#author: "Sara"
+#author: "Sara DeLaurentis"
 #date: "02/10/2021"
 #output: html_document
 
@@ -8,7 +8,17 @@
 ---
   
 
+##SETUP##  
+
   
+
+#If necessary, install the following packages by uncommenting and running the following code:
+#install.packages("lubridate")
+#install.packages("stringr")
+#install.packages("tidyverse")
+
+
+#Call the packages:
 
 library(lubridate)
 library(stringr)
@@ -16,8 +26,12 @@ library(tidyverse)
 install.packages("plotrix")
 library(plotrix)
 
-getwd()
 
+#Check your working directory. This is where your files are stored:
+getwd()
+setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_2020_Fall")
+pwd()
+getwd()
 
 #Amazing code for reading in file names, separating the file name elements into 
 #a dataframe (adding a filename column), and selecting rows by values within a 
@@ -47,6 +61,12 @@ getwd()
 #head(name.df) to check
 
 
+
+
+# Step 1:
+
+
+
 file.names <- list.files("./CLEAN_DATA", full.names = FALSE)
 #class(file.names)
 head(file.names)
@@ -74,47 +94,33 @@ colnames(name.df) <- c("file.names", "treatment", "rep", "position", "buttonID",
 head(name.df)
 str(name.df)
 
-class(name.df$treatment)
-
 #class(name.df)
 #str(name.df)
 
 
 
-#Selecting groups of .csv files from the filenames data frame using BASE R 
-#selection tools. For dplyr use of filter() and select(), see next section.
-
-#First example is extracting all rows from the data frame that were part of 
-#treatment C2A. Select rows of data that have "C2A" in the treatment column. 
-#Since the column is unspecified (no entry after the comma), it will select all 
-#columns.
-
-
-
-C2A <- name.df[name.df$treatment == "C2A",]
-C2A_file_names <- C2A[, "file.names"]
-C2A_file_names
-
-
-?subset
-C2A_R1_rows <- name.df[name.df$treatment == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
-
-C2A_R1_filenames <- C2A_R1_rows$file.names
-C2A_R1_filenames
-
-
 ######### Best .csv File Selection Code, as of 02/08/2021 ###########
 
+## Here is where you create a list of the group of files that you want to compare. You will then "feed" this list into the function.
+
+#Here we select the rows in name.df that meet the following criteria: "C2A" in the treatment column AND ("R1" OR "R0") in the rep column. The next line creates a character string out of just the $file.names column.
+
 
 C2A_R1_rows <- name.df[name.df$treatment == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
-C2A_R1_filenames<- C2A_R1_rows$file.names
-print(C2A_R1_filenames_exp)
-#print(C2_trt)
-
+C2A_R1_filenames<- as.list(C2A_R1_rows$file.names)
+print(C2A_R1_filenames)
+str(C2A_R1_filenames)
 
 C5A_R1_rows <- name.df[name.df$treatment == "C5A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
 C5A_R1_filenames <- C5A_R1_rows$file.names
 print(C5A_R1_filenames)
+
+#Another example:
+#Another thing we could compare would be litter surface temperature across 3 reps at site C2A. 
+#In order to do that, I would write the following code:
+
+#    m10_group_rows <- name.df[name.df$position == "lsurf" & name.df$site == "C2A"]
+#     m10_group_filenames <- m10_group_rows$file.names
 
 
 
@@ -184,7 +190,7 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   ##PLOT CODE
   # Rotate x-axis tick labels so they fit better.
   
-  png(file = "png_name")# Spring or Fall
+  png(filename = png_name, width = 2000, height = 700)# Spring or Fall
   par(mar = c(8,10,10,6)) # expand figure margins to fit the large axis titles
   plot(x = "",
        y = "",
@@ -237,7 +243,14 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   ?abline
   ?ablineclip
   
-  ### THE FOR LOOP ###
+ 
+   ### THE FOR LOOP ###
+  #The "money" part of the function. We fed the function a group of character strings (file names), and for every entry (every "i") in the list, R will execute the following:
+  #Read the csv file given by the filepath.
+  #convert the date.time column to the proper format
+  #subset the dataframe to a set date range
+  #figure out what color the plotted line should be, based on a series of "if/if else/else" statements. For example, if it finds the string "air" in the filename, "gray74" is added to a list of colors called "legend_color".
+    #plots a line, using "value" (temperature) as a function of "date.time", and the color determined by the if statements above. 
   
   for(i in data_names){
     #if(skipper != 0){
@@ -303,9 +316,9 @@ legelist <- c(legelist, legend_color)
 
 ## 
 
-
-lotsaplots(C2A_R1_filenames, "Low Invasion C2A R1", c("air", "lsurf", "msurf", "m10", "m30", "m50"))
+lotsaplots(C2A_R1_filenames, "TEST Low Invasion C2A R1.png", "TEST Low Invastion C2A R1", c("air", "lsurf", "msurf", "m10", "m30", "m50"), "annotation here")
 dev.off()
+print(C2A_R1_filenames)
 
 #str(C2A_R1_filenames_exp)
 
@@ -318,7 +331,7 @@ str(C5A_R1_filenames)
 
 ## 
 
-
+setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_2020_Fall")
 
 my_data <- list.files("./CLEAN_DATA", full.names = TRUE)
 print(my_data)
