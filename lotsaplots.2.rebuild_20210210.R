@@ -107,8 +107,9 @@ str(name.df)
 
 
 C2A_R1_rows <- name.df[name.df$treatment == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
-C2A_R1_filenames<- C2A_R1_rows$file.names
+C2A_R1_filenames<- as.list(C2A_R1_rows$file.names)
 print(C2A_R1_filenames)
+str(C2A_R1_filenames)
 
 C5A_R1_rows <- name.df[name.df$treatment == "C5A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
 C5A_R1_filenames <- C5A_R1_rows$file.names
@@ -189,7 +190,7 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   ##PLOT CODE
   # Rotate x-axis tick labels so they fit better.
   
-  png(file = "png_name")# Spring or Fall
+  png(filename = png_name, width = 2000, height = 700)# Spring or Fall
   par(mar = c(8,10,10,6)) # expand figure margins to fit the large axis titles
   plot(x = "",
        y = "",
@@ -315,7 +316,6 @@ legelist <- c(legelist, legend_color)
 
 ## 
 
-
 lotsaplots(C2A_R1_filenames, "TEST Low Invasion C2A R1.png", "TEST Low Invastion C2A R1", c("air", "lsurf", "msurf", "m10", "m30", "m50"), "annotation here")
 dev.off()
 print(C2A_R1_filenames)
@@ -331,7 +331,7 @@ str(C5A_R1_filenames)
 
 ## 
 
-getwd()
+setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_2020_Fall")
 
 my_data <- list.files("./CLEAN_DATA", full.names = TRUE)
 print(my_data)
