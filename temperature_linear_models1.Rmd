@@ -26,19 +26,12 @@ EarlyWinter_17.18.lme <- lme(weeklyAvg~Treatment*week.x*Sensor.depth,
 
 ```
 EarlyWinter_17.18.lme = the new R object containing the output of the mixed effect model
-
 weeklyAvg = a continuous variable containing temperature averaged over weekly timescales
-
 Treatment = a factor variable containing information about what treatment was applied (e.g., "Removal" or "Control", in this case)
-
 week.x = a factor variable created from weekBeginDate (a Date variable) (e.g., 2017-10-21 date variable = 1 week.x factor variable, etc.)
-
 Sensor.depth = a continuous variable describing the depth below the soil at which a sensor was installed
-
 Site = a factor variable describing the research site location
-
 weekBeginDate = a date variable describing the date beginning the week for the weekly averaged temperature data (weeklyAvg)
-
 EarlyWinter_17.18 = the R object containing the data being used to generate the mixed effect model
 
 
@@ -61,17 +54,11 @@ EW1718.pairwise
 
 ```
 EarlyWinter_17.18.lme - mixed effects model (described above)
-
 EarlyWinter_17.18.lsm - least square means object
-
 EW1718.pairwise - pairwise regression line comparison by Sensor.depth and week.x
-
 Treatment - factor variable describing the treatment type; in this case, "Removal" or "Control"
-
 Sensor.depth - continuous variable describing the soil depth at which sensors were installed (e.g. 5, 10, 15, 20, 40, and 60cm)
-
 week.x - factor variable created from weekBeginDate (a Date variable) (e.g., 2017-10-21 date variable = 1 week.x factor variable, etc.)
-
 
 ```{r }
 
