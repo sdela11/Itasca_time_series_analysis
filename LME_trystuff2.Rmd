@@ -34,7 +34,24 @@ head(temp_names)
 temps <- read.csv(temp_names)
 head(temps)
 
-temps <- temps
+
+file.names <- list.files(pattern = ".csv", full.names = FALSE)
+name.data <- file.names %>%  
+  str_replace(".csv", "") %>% 
+  as_data_frame()
+head(name.data)
+
+full.file.names <- list.files(pattern = ".csv", full.names = TRUE) %>% 
+  as_data_frame()
+
+full.file.names <- list.files(pattern = ".csv", full.names = TRUE)
+head(full.file.names)
+
+df_daily_input <- cbind(full.file.names, name.data)
+colnames(df_daily_input) <- c("full_paths", "labels")
+head(df_daily_input)
+tail(df_daily_input)
+
 
 fileNM <- labels %>%  
       str_split_fixed("_", n=5)
