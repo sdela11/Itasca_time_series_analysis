@@ -53,7 +53,7 @@ head(df_daily_input)
 tail(df_daily_input)
 
 
-fileNM <- labels %>%  
+fileNM <- df_daily_input$labels %>%  
       str_split_fixed("_", n=5)
     
     treatment <- fileNM[,1]
@@ -61,6 +61,8 @@ fileNM <- labels %>%
     position <- fileNM[,3]
     buttonID <- fileNM[,4]
     season <- fileNM[,5]
+    
+  head(fileNM)
     
     #new dataframe with metadata, setting length equal to the number of rows in the temp_intA, longdate column:
     metadata_df <- tibble(labels, treatment, rep, position, buttonID, year, .rows = length(temp_intA$longdate))
@@ -73,7 +75,7 @@ fileNM <- labels %>%
   #write the .csv. CHANGE TO dailytest folder IF YOU'RE TESTING
       
   write_csv(temp_df, glue("./dailytest/Daily_{labels}.csv"))
-}
+
 
 
 
