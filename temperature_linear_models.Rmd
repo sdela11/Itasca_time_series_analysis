@@ -10,6 +10,16 @@ I'm not sure what this first section does...
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+
+library(tidyverse)
+library(stringr)
+library(stringi)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+
+
 ```
 
 ## R Markdown
@@ -62,9 +72,33 @@ Sensor.depth - continuous variable describing the soil depth at which sensors we
 week.x - factor variable created from weekBeginDate (a Date variable) (e.g., 2017-10-21 date variable = 1 week.x factor variable, etc.)
 
 ```{r }
+temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
+view(temps)
+class(temps$longdate)
 
+temps$longdate <- as.Date(temps$longdate) 
 
+temps$week <- week(temps$longdate)
+view(temps)
 
+#separate('date.time',
+ #          into = c('longdate', 'time'),
+  #         sep = ' ') %>% 
+#  separate('longdate',
+ #               into = c('year', 'month', 'day'),
+  #              sep = '-',
+   #             remove = FALSE) %>% 
+#  group_by(year, month, day) %>% 
+#  summarise(meantemp = mean(value)) 
+  
+  
+  
+  
+temps <- temps %>%  
+  group_by(week) %>%
+  summarise(week_avg = mean(value))
+  
+  
 ```
 
 
