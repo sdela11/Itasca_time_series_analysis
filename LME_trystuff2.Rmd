@@ -1,0 +1,83 @@
+---
+title: "LME_trystuff2"
+author: "Sara DeLaurentis"
+date: "1/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(stringr)
+library(stringi)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+
+
+```
+
+
+
+
+
+```{r }
+getwd()
+#setwd()
+
+temp_names <- list.files(pattern = ".csv")
+?list.files
+
+head(temp_names)
+temps <- read.csv(temp_names)
+head(temps)
+
+
+file.names <- list.files(pattern = ".csv", full.names = FALSE)
+name.data <- file.names %>%  
+  str_replace(".csv", "") %>% 
+  as_data_frame()
+head(name.data)
+
+full.file.names <- list.files(pattern = ".csv", full.names = TRUE) %>% 
+  as_data_frame()
+
+full.file.names <- list.files(pattern = ".csv", full.names = TRUE)
+head(full.file.names)
+
+df_daily_input <- cbind(full.file.names, name.data)
+colnames(df_daily_input) <- c("full_paths", "labels")
+head(df_daily_input)
+tail(df_daily_input)
+
+
+fileNM <- df_daily_input$labels %>%  
+      str_split_fixed("_", n=5)
+    
+    treatment <- fileNM[,1]
+    rep <- fileNM[,2]
+    position <- fileNM[,3]
+    buttonID <- fileNM[,4]
+    season <- fileNM[,5]
+    
+  head(fileNM)
+    
+    #new dataframe with metadata, setting length equal to the number of rows in the temp_intA, longdate column:
+    metadata_df <- tibble(labels, treatment, rep, position, buttonID, year, .rows = length(temp_intA$longdate))
+    #print(metadata_df)
+    
+    #bind the metadata_df and temperature data for the final csv output.
+    temp_df <- cbind(metadata_df, temp_intB)
+    
+      
+  #write the .csv. CHANGE TO dailytest folder IF YOU'RE TESTING
+      
+  write_csv(temp_df, glue("./dailytest/Daily_{labels}.csv"))
+
+
+
+
+
+```

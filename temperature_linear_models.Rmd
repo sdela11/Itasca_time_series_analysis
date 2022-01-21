@@ -10,6 +10,16 @@ I'm not sure what this first section does...
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+
+library(tidyverse)
+library(stringr)
+library(stringi)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+
+
 ```
 
 ## R Markdown
@@ -61,10 +71,31 @@ Treatment - factor variable describing the treatment type; in this case, "Remova
 Sensor.depth - continuous variable describing the soil depth at which sensors were installed (e.g. 5, 10, 15, 20, 40, and 60cm)
 week.x - factor variable created from weekBeginDate (a Date variable) (e.g., 2017-10-21 date variable = 1 week.x factor variable, etc.)
 
+
+
+#Summarizing data by week:
+Set date format.
+Create object week.START to start the point of reference for counting the weeks
+Create a column, temps$week.begin, using floor_date to calculate the start date of each week.
+Create a column, temps$week.no, that subtracts the current date from the week.START and adds 1.
+Then group the data by week.no and calculate the weekly mean.
+
 ```{r }
+temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
+view(temps)
+class(temps$longdate)
 
+temps$longdate <- as.Date(temps$longdate) 
+week.START <- as.Date("2019-11-10")
+temps$week.begin <- floor_date(as.Date(temps$longdate), unit = "weeks")
+temps$week.no <- 1 + difftime(temps$week.begin, week.START, units = "weeks")
 
-
+  
+temps <- temps %>%  
+  group_by(week.no) %>%
+  mutate(week_avg = mean(value))
+view(temps)
+  
 ```
 
 
