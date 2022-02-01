@@ -76,7 +76,7 @@ week.x - factor variable created from weekBeginDate (a Date variable) (e.g., 201
 #Summarizing data by week:
 Set date format.
 Create object week.START to start the point of reference for counting the weeks
-Create a column, temps$week.begin, using floor_date to calculate the start date of each week.
+Create a column "temps$week.begin", using floor_date to calculate the start date of each week.
 Create a column, temps$week.no, that subtracts the current date from the week.START and adds 1.
 Then group the data by week.no and calculate the weekly mean.
 
@@ -93,8 +93,12 @@ temps$week.no <- 1 + difftime(temps$week.begin, week.START, units = "weeks")
   
 temps <- temps %>%  
   group_by(week.no) %>%
-  mutate(week_avg = mean(value))
+  mutate(week_avg = mean(value)) %>%  #mutate will create another column, but will not condense to a single value per week. To condense, which I think is optimal, use summarise/summarize.
+  summarize
+  
 view(temps)
+
+
   
 ```
 
