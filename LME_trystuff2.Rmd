@@ -35,27 +35,27 @@ temps <- read.csv(temp_names)
 head(temps)
 
 
-file.names <- list.files(pattern = ".csv", full.names = FALSE)
-name.data <- file.names %>%  
-  str_replace(".csv", "") %>% 
-  as_data_frame()
+file.names <- list.files(pattern = ".csv", full.names = FALSE) #create list of .csv files
+name.data <- file.names %>%  #create dataframe from file.names
+  str_replace(".csv", "") %>%  #remove ".csv"
+  as_data_frame() #coerce to dataframe
 head(name.data)
 
-full.file.names <- list.files(pattern = ".csv", full.names = TRUE) %>% 
+full.file.names <- list.files(pattern = ".csv", full.names = TRUE) %>% #create dataframe out of list of full file names.
   as_data_frame()
 
-full.file.names <- list.files(pattern = ".csv", full.names = TRUE)
-head(full.file.names)
+#full.file.names <- list.files(pattern = ".csv", full.names = TRUE) 
+#head(full.file.names)
 
-df_daily_input <- cbind(full.file.names, name.data)
+df_daily_input <- cbind(full.file.names, name.data) #bind the two dataframes together
 colnames(df_daily_input) <- c("full_paths", "labels")
 head(df_daily_input)
 tail(df_daily_input)
 
-
+#create a dataframe of the "label" elements
 fileNM <- df_daily_input$labels %>%  
       str_split_fixed("_", n=5)
-    
+    #name all the columns
     treatment <- fileNM[,1]
     rep <- fileNM[,2]
     position <- fileNM[,3]
@@ -65,11 +65,11 @@ fileNM <- df_daily_input$labels %>%
   head(fileNM)
     
     #new dataframe with metadata, setting length equal to the number of rows in the temp_intA, longdate column:
-    metadata_df <- tibble(labels, treatment, rep, position, buttonID, year, .rows = length(temp_intA$longdate))
+  #  metadata_df <- tibble(labels, treatment, rep, position, buttonID, year, .rows = length(temp_intA$longdate))
     #print(metadata_df)
     
     #bind the metadata_df and temperature data for the final csv output.
-    temp_df <- cbind(metadata_df, temp_intB)
+    temp_df <- cbind(metadata_df, temps)
     
       
   #write the .csv. CHANGE TO dailytest folder IF YOU'RE TESTING

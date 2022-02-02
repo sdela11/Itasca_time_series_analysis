@@ -1,0 +1,28 @@
+---
+title: "Thermal time"
+author: "Sara DeLaurentis"
+date: "2/1/2022"
+output: html_document
+purpose: tabulate (and plot?) thermal time for Itasca Project
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+```{r }
+
+
+
+
+```
+
+
+
+```{r }
+
+```
+
