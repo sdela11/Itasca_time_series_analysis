@@ -16,6 +16,8 @@ library(dplyr)
 library(ggplot2)
 
 library(nlme)
+library(car)
+
 
 
 ```
@@ -34,6 +36,8 @@ temps <- temps %>%
   mutate(daily_avg = mean(value)) %>% 
   distinct(longdate, .keep_all = TRUE)
 head(temps)
+
+
 
 plot(daily_avg ~ longdate, data = temps)
 #developing thermal time code section
