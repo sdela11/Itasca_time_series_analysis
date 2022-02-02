@@ -8,6 +8,16 @@ purpose: tabulate (and plot?) thermal time for Itasca Project
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(stringi)
+library(stringr)
+library(dplyr)
+library(ggplot2)
+
+library(nlme)
+
+
 ```
 
 ## R Markdown
@@ -15,8 +25,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r }
 
+temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
+head(temps)
 
-
+fm1 <- ()
 
 ```
 
