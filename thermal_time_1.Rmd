@@ -28,14 +28,36 @@ library(car)
 
 ```{r }
 
+#for one file testing
 temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
 head(temps)
 temps$longdate <- as.POSIXct(temps$longdate)
 
+
+#for multiple file testing (4 or more files merged together)
+
+csv_files <- list.files(pattern = ".csv", full.names = TRUE)
+head(csv_files)
+
+merged_ibuttons <- map_dfr(csv_files, read.csv) #map_dfr reads csv files and joins them by rowbind.
+head(merged_ibuttons)
+str(merged_ibuttons)
+
+temps <- merged_ibuttons
+
+#write.csv(merged_ibuttons, file = "merged_ibuttons.csv")
+
+
+str(temps)
+
+View(temps)
+
+
+
 temps <- temps %>% 
-  group_by(longdate) %>% 
-  mutate(daily_avg = mean(value)) %>% 
-  distinct(longdate, .keep_all = TRUE)
+  group_by(labels, longdate) %>% #groups by label and longdate. this keeps all the ibuttons separate during this process.
+  mutate(daily_avg = mean(value)) %>%  #create daily_avg column
+  distinct(longdate, .keep_all = TRUE) #only keep distinct longdate rows (for each ibutton label group)
 head(temps)
 
 
@@ -73,14 +95,6 @@ fm2 <- lm(daily_avg ~ longdate + treatment, data = temps)
 ```
 ```{r }
 
-csv_files <- list.files(pattern = ".csv", full.names = TRUE)
-head(csv_files)
-
-merged_ibuttons <- map_dfr(csv_files, read.csv) #map_dfr reads csv files and joins them by rowbind.
-head(merged_ibuttons)
-str(merged_ibuttons)
-
-write.csv(merged_ibuttons, file = "merged_ibuttons.csv")
 
 
 ```
