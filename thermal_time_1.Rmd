@@ -57,7 +57,8 @@ View(temps)
 temps <- temps %>% 
   group_by(labels, longdate) %>% #groups by label and longdate. this keeps all the ibuttons separate during this process.
   mutate(daily_avg = mean(value)) %>%  #create daily_avg column
-  distinct(longdate, .keep_all = TRUE) #only keep distinct longdate rows (for each ibutton label group)
+  distinct(longdate, .keep_all = TRUE) %>% #only keep distinct longdate rows (for each ibutton label group)
+  ungroup() 
 head(temps)
 
 
@@ -89,8 +90,8 @@ durbinWatsonTest(fm1)
 
 
 
-fm2 <- lm(daily_avg ~ longdate + treatment, data = temps)
-
+fm2 <- lm(daily_avg ~ longdate * treatment, data = temps)
+summary(fm2)
 
 ```
 ```{r }
