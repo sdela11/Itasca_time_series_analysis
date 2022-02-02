@@ -27,14 +27,38 @@ library(nlme)
 
 temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
 head(temps)
+temps$longdate <- as.POSIXct(temps$longdate)
 
-fm1 <- ()
+temps <- temps %>% 
+  group_by(longdate) %>% 
+  mutate(daily_avg = mean(value)) %>% 
+  distinct(longdate, .keep_all = TRUE)
+head(temps)
+
+plot(daily_avg ~ longdate, data = temps)
+#developing thermal time code section
+
+#sum(df$column == value, na.rm=TRUE)
+
+sum(temps$value >= 0, na.rm=TRUE)
+
+
 
 ```
 
+##Linear model practice
 
 
 ```{r }
+
+
+fm1 <- lm(daily_avg ~ longdate, data = temps) #daily avg as a function of date
+summary(fm1) 
+plot(daily_avg ~ longdate, data = temps)
+lines(fitted.values(fm1))
+
+
+fm2 <- lm()
 
 ```
 
