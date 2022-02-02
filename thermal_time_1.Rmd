@@ -14,6 +14,7 @@ library(stringi)
 library(stringr)
 library(dplyr)
 library(ggplot2)
+library(purrr)
 
 library(nlme)
 library(car)
@@ -60,9 +61,26 @@ fm1 <- lm(daily_avg ~ longdate, data = temps) #daily avg as a function of date
 summary(fm1) 
 plot(daily_avg ~ longdate, data = temps)
 lines(fitted.values(fm1))
+residualPlot(fm1)
+
+durbinWatsonTest(fm1)
 
 
-fm2 <- lm()
+
+fm2 <- lm(daily_avg ~ longdate + treatment, data = temps)
+
 
 ```
+```{r }
 
+csv_files <- list.files(pattern = ".csv", full.names = TRUE)
+head(csv_files)
+
+merged_ibuttons <- map_dfr(csv_files, read.csv) #map_dfr reads csv files and joins them by rowbind.
+head(merged_ibuttons)
+str(merged_ibuttons)
+
+write.csv(merged_ibuttons, file = "merged_ibuttons.csv")
+
+
+```
