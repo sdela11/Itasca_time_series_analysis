@@ -105,7 +105,21 @@ residualPlot(fm2)
 
 durbinWatsonTest(fm2)
 
+
+fm3 <- lme(daily_avg ~ treatment * julian(as.Date(longdate)), data = temps, random = ~ 1 | treatment)
+
+julian(as.Date("1970-04-12"))
+
+
+summary(fm3)
+#residualPlot(fm3)
+#durbinWatsonTest(fm3)
+
+AIC(fm3)
+
 ```
+
+
 ```{r }
 
 
