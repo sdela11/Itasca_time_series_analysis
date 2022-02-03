@@ -159,17 +159,25 @@ View(temps)
 temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
 view(temps)
 class(temps$longdate)
+class(week.START)
 
+
+## for these tests, START HERE ##
+temps <- merged_ibuttons
 temps$longdate <- as.Date(temps$longdate) 
 week.START <- as.Date("2019-11-10") #assign variable for week.START
+week.END <- as.Date("2020-06-30")
+temps <- temps %>% 
+  filter(longdate >= as.Date(week.START) & longdate <= as.Date(week.END))
 temps$week.begin <- floor_date(as.Date(temps$longdate), unit = "weeks") #create column of 1st day of each week
 temps$week.no <- 1 + difftime(temps$week.begin, week.START, units = "weeks") #week number, starting at origin. Instead of a column in a dataframe, it could potentially be part of a formula.
   
 temps <- temps %>%  
-  group_by(week.no) %>%
-  mutate(week_avg = mean(value)) %>%  #mutate will create another column, but will not condense to a single value per week. To condense, which I think is optimal, use summarise/summarize.
+  group_by(labels, week.no) %>% #VERY IMPORTANT to include labels in the grouping structure.
+  mutate(week_avg = mean(value)) %>%  #mutate will create another column, but will not condense to a single value per week. 
   distinct(week.no, .keep_all = TRUE) %>% #only keep distinct week.no rows (for each ibutton label group)
-  ungroup() 
+  ungroup()
+temps$value = NULL
 head(temps)
   
   
