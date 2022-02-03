@@ -118,6 +118,11 @@ AIC(fm3)
 
 ```
 ##Weekly summaries
+2/3/2022: It's a CLEAN CHUNK
+Requires: 
+  -one or more csv files saved in the current directory.
+  -a column with dates only, labeled "longdate"
+  -metadata "labels" column attached, so the data can be grouped by them
 
 ```{r }
 
@@ -140,11 +145,9 @@ str(merged_ibuttons)
 
 temps <- merged_ibuttons
 
-#write.csv(merged_ibuttons, file = "merged_ibuttons.csv")
-
+#write.csv(merged_ibuttons, file = "merged_ibuttons.csv") #if you want to create a csv from the four merged files.
 
 str(temps)
-
 View(temps)
 
 
@@ -156,10 +159,11 @@ View(temps)
 #Then group the data by week.no and calculate the weekly mean.
 
 #```{r }
-temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
-view(temps)
-class(temps$longdate)
-class(week.START)
+#for one file practice:
+#temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
+#view(temps)
+#class(temps$longdate)
+#class(week.START)
 
 
 ## for these tests, START HERE ##
@@ -179,24 +183,15 @@ temps <- temps %>%
   ungroup()
 temps$value = NULL
 head(temps)
-  
-  
 view(temps)
+str(temps)
 
 
+#ggplot(week_avg ~ week.begin, data = temps, type = "p", col = c("red", "orange", "blue", "purple"))
 
-
-
-
-temps <- temps %>% 
-  group_by(labels, longdate) %>% #groups by label and longdate. this keeps all the ibuttons separate during this process.
-  mutate(daily_avg = mean(value)) %>%  #create daily_avg column
-  distinct(longdate, .keep_all = TRUE) %>% #only keep distinct longdate rows (for each ibutton label group)
-  ungroup() 
-head(temps)
-
-
-
-plot(daily_avg ~ longdate, data = temps)
+I = ggplot() +
+  geom_line(data = temps, aes(x = as.Date(week.begin), y = week_avg, group = labels, colour = labels)) +
+  ggtitle("Quick plot: Weekly average vs. Week start date", subtitle = "Mineral surface sensors at C2B and C5A")
+print(I)
 
 ```
