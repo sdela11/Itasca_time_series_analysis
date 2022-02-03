@@ -107,9 +107,7 @@ durbinWatsonTest(fm2)
 
 
 fm3 <- lme(daily_avg ~ treatment * julian(as.Date(longdate)), data = temps, random = ~ 1 | treatment)
-
-julian(as.Date("1970-04-12"))
-
+#NOTE: julian calculates the number of days since the origin. The default origin is 1970-01-01.
 
 summary(fm3)
 #residualPlot(fm3)
