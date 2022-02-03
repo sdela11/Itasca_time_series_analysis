@@ -15,6 +15,7 @@ library(stringr)
 library(dplyr)
 library(ggplot2)
 library(purrr)
+library(lubridate)
 
 library(nlme)
 library(car)
@@ -158,15 +159,19 @@ View(temps)
 temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
 view(temps)
 class(temps$longdate)
+
 temps$longdate <- as.Date(temps$longdate) 
 week.START <- as.Date("2019-11-10") #assign variable for week.START
 temps$week.begin <- floor_date(as.Date(temps$longdate), unit = "weeks") #create column of 1st day of each week
-temps$week.no <- 1 + difftime(temps$week.begin, week.START, units = "weeks") #of weeks since origin. Instead of a column in a dataframe, it could potentially be part of a formula.
+temps$week.no <- 1 + difftime(temps$week.begin, week.START, units = "weeks") #week number, starting at origin. Instead of a column in a dataframe, it could potentially be part of a formula.
   
 temps <- temps %>%  
   group_by(week.no) %>%
   mutate(week_avg = mean(value)) %>%  #mutate will create another column, but will not condense to a single value per week. To condense, which I think is optimal, use summarise/summarize.
-  summarize
+  distinct(week.no, .keep_all = TRUE) %>% #only keep distinct week.no rows (for each ibutton label group)
+  ungroup() 
+head(temps)
+  
   
 view(temps)
 
