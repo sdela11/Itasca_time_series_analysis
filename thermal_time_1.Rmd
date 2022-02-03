@@ -90,8 +90,20 @@ durbinWatsonTest(fm1)
 
 
 
-fm2 <- lm(daily_avg ~ longdate * treatment, data = temps)
+fm2 <- lm(daily_avg ~ treatment * as.Date(longdate), data = temps)
+
+#data set as of 2/2/2022, 10pm. All the same depth, sites C2B and C5A, R1 and R2 at each: 
+#"./C2B_R1_m0surf_i105_2020.csv" 
+#"./C2B_R2_m0surf_i101_2020.csv" 
+#"./C5A_R1_m0surf_i16_2020.csv"  
+#"./C5A_R2_m0surf_i21_2020.csv"
+
 summary(fm2)
+anova(fm2)
+
+residualPlot(fm2)
+
+durbinWatsonTest(fm2)
 
 ```
 ```{r }
