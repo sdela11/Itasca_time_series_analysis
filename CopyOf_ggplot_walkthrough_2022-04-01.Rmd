@@ -1,0 +1,266 @@
+---
+title: "ggplot_walkthrough_2022-04-01"
+author: "Sara DeLaurentis"
+date: "4/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## 
+```{r }
+library(tidyverse)
+library(viridis)
+library(hrbrthemes)
+library(stringr)
+#install.packages("viridis")
+#install.packages("hrbrthemes")
+#hrbrthemes::import_roboto_condensed()
+#install.packages("wesanderson")
+library(wesanderson)
+library(glue)
+
+#names(wes_palettes)
+#getAnywhere(wes_palettes)
+
+
+```
+
+
+## Test plots with one line
+
+mygraph = ggplot() +
+  geom_line(data = set, aes(x = as.POSIXct(date.time, format = "%m/%d/%Y %H:%M"), y = value), size = 1.1) 
+
+
+#10/31/2020 16:00
+
+```{r }
+#data <- read.csv("C:/Users/sbaue/coding/R_TEMPRY/Itasca_project_19-21/CLEAN_DATA_copy/C2B_R3_lsurf_i110_2020.csv")
+#view(data)
+
+mygraph = ggplot() +
+  geom_line(data = finalTable, aes(x = as.POSIXct(date.time, format = "%m/%d/%Y %H:%M"), y = value), size = 1.1, group = "position") +
+  scale_color_discrete()
+
+#FOR POSSIBLE ADDITION OF SNOW/PRECIP:
+
+#SNOW DATA
+#NOAA <- read.csv("./NOAA_data_RAW.csv")
+#NOAA$DATE <- as.Date(NOAA$DATE)
+#UMN1 <- NOAA %>% 
+#  filter(STATION == "USC00214106")
+
+#mygraph = mygraph + geom_line(data = UMN1, aes(x = as.Date(DATE), y = SNWD), colour = "light blue", alpha = 0.5, lwd = (2.2))
+print(mygraph)
+
+#PLOT START AND STOP DATES
+start <- as.POSIXct("2019-11-01") #set up start and end dates
+end <- as.POSIXct("2020-08-01")
+
+#PNG FILE DIMENSIONS
+png(file = "testplot_0401.png", width = 2500, height = 1000, units = 'px')
+
+mygraph = mygraph + ggtitle("C2B_test_plot") +
+  ylab("Degrees C") +
+  xlab("Date")
+
+
+#axes adjustments and background adjustments
+
+mygraph = mygraph + scale_x_datetime(date_breaks = "2 weeks", date_labels = "%m/%d/%y", limits = c(start,end)) + #set x-axis scale and label format
+  scale_y_continuous(breaks = seq(-20,25,5), minor_breaks = NULL) #set the y scale
+#seq arguments: seq(from (lowest value), to (highest value), interval)
+args(scale_x_datetime)
+
+mygraph = mygraph + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.9,
+                                                     hjust = 0.9, size = rel(2))) +
+  theme(axis.text.y = element_text(size = rel(2)))+
+  coord_cartesian(xlim = c(start, end), ylim = c(-20, 35)) +
+  theme(legend.position = c(0.9, 0.7)) 
+  #theme(legend.justification = c("bottom", "right")) 
+
+
+mygraph = mygraph + theme(plot.title = element_text(hjust = 0.5, size = rel(2.5), face = "bold")) +
+  theme(axis.title = element_text(size = rel(2.75)))
+
+mygraph = mygraph + 
+  labs(subtitle = "INSERT SUBTITLE HERE", color = "position") +
+  theme(plot.subtitle = element_text(size = rel(1.75), face = "italic", hjust = 0.5)) +
+  theme(legend.text=element_text(size= rel(1.75)))+
+  theme(legend.title=element_text(size = rel(1.9), face = "bold"))
+#mygraph = mygraph + theme(plot.caption = element_text(size = rel(2))) + 
+  theme(plot.margin = unit(c(20,45,5,20), "pt"))
+
+
+?labs
+
+print(mygraph)
+dev.off()
+
+
+```
+
+##Create a dataframe to enable selection of .csv files.
+
+```{r }
+#create list of .csv files
+m <- list.files("C:/Users/sbaue/coding/R_TEMPRY/Itasca_project_19-21/CLEAN_DATA_copy", pattern = "*.csv")
+m
+
+file_df <- data.frame(paths = m, name = str_replace(m, ".csv", ""), full_paths = list.files("C:/Users/sbaue/coding/R_TEMPRY/Itasca_project_19-21/CLEAN_DATA_copy", pattern = "*.csv", full.names = TRUE))
+
+file_df
+
+meta <- file_df$name %>%   #take the name column 
+   str_split_fixed("_", n=5) %>% #split the strings, with _ as separator.
+   as.data.frame() #COERCE
+  colnames(meta) <- c("site", "rep", "position", "buttonID", "season") #
+  meta$CLEAN = NULL 
+  
+  
+data.list.df <- cbind(file_df, meta)
+  #  temp_df <- temp_df[, c(6,1,2,3,4,5,7,8)] # column re-ordering if necessary
+ 
+view(data.list.df)
+
+```
+
+#DATA SELECTION
+
+```{r }
+
+#select data:
+C2A <- filter(data.list.df, site == "C2A")
+#at some point I'm going to put the selection criteria as an input in a super-automated ggplot function.
+
+view(C2A)
+class(C2A)
+
+```
+
+
+### THIS IS THE CODE YOU'VE BEEN LOOKING FOR !!! ###
+### VERY COOOlll lists ###
+
+#What this does:
+
+#1. Takes the dataframe we created from the names of the selected files, turns each ROW into ONE list element with "site", "rep", etc. as named elements contained inside.
+
+#2. Uses lapply to read in the .csv files and attaches metadata.
+
+
+```{r }
+#Step 1: Turn each row of metadata into a list element with filenames, site, rep, etc. as named elements within.
+
+
+files.meta.list <- list()                   # Create empty list
+
+
+#Next, we can use a for-loop to store each row of our data frame as list element.
+
+for(i in 1:nrow(C2A)) {   #for(each variable in the sequence "1 through the number of rows in C2A"):
+                          
+  files.meta.list[[i]] <- C2A[i , ]  #create an element in files.meta.list from each row found in C2A
+}
+
+#check it out: each element of the list (each [[x]]) contains the filenames and metadata, and they've maintained their column names as labels, so we can call out that named element when we want.
+C2A
+print(files.meta.list)
+
+
+#Step 2: Use lapply to perform the following on each list element:
+#Read .csv file given by the full_paths list element.
+#Assign metadata columns based on the other named elements.
+#Then, rbind all of those dataframes together for your finalTable
+
+csv_LIST <- lapply(seq_along(files.meta.list), function(i){   #perform the given function along this list, each element in the list is the input.
+  df <- read.csv(files.meta.list[[i]]$full_paths, header=TRUE, sep = ",") #create "df" by reading the .csv given by full_paths.
+  df$site <- files.meta.list[[i]]$site    #next few rows are the addition of metadata columns based on the named element in the list. "Make a site column using the thing in the list at [[i]], that's labeled "site"
+  df$rep <- files.meta.list[[i]]$rep
+  df$position <- files.meta.list[[i]]$position
+  df$buttonID <- files.meta.list[[i]]$buttonID
+  df$season <- files.meta.list[[i]]$season
+  df #VERY IMPORTANT. I don't know why, but without this call for the whole dataframe, you get left with just the last column you created.
+  
+  })
+
+finalTable <- do.call(rbind, csv_LIST) ##JOIN TOGETHER
+view(finalTable)
+
+ggplot(finalTable, aes(x=as.POSIXct(date.time, format = "%m/%d/%Y %H:%M"), y=value, group = position, color = position)) + 
+  geom_line() + 
+  xlab("Date/Time") + 
+  ylab("Temperature in C")
+
+
+```
+
+
+### COPY of the super-good list code: ###
+```{r }
+
+indexed_vector <- function(df, i){setNames(as.list(df[i]), paste0("vector_", i))}
+
+#Step 1: Turn each row of metadata into a list element with filenames, site, rep, etc. as named elements within.
+create_table <- function(set_name){
+
+files.meta.list <- list()                   # Create empty list
+
+
+
+#Next, we can use a for-loop to store each row of our data frame as list element.
+
+for(i in 1:nrow(set_name)) {   #for(each variable in the sequence "1 through the number of rows in C2A"):
+                          
+  files.meta.list[[i]] <- set_name[i , ]  #create an element in files.meta.list from each row found in C2A
+}
+
+set_name <- set_name
+
+#check it out: each element of the list (each [[x]]) contains the filenames and metadata, and they've maintained their column names as labels, so we can call out that named element when we want.
+
+print(files.meta.list)
+
+
+#Step 2: Use lapply to perform the following on each list element:
+#Read .csv file given by the full_paths list element.
+#Assign metadata columns based on the other named elements.
+#Then, rbind all of those dataframes together for your finalTable
+
+csv_LIST <- lapply(seq_along(files.meta.list), function(i){   #perform the given function along this list, each element in the list is the input.
+  df <- read.csv(files.meta.list[[i]]$full_paths, header=TRUE, sep = ",") #create "df" by reading the .csv given by full_paths.
+  df$site <- files.meta.list[[i]]$site    #next few rows are the addition of metadata columns based on the named element in the list. "Make a site column using the thing in the list at [[i]], that's labeled "site"
+  df$rep <- files.meta.list[[i]]$rep
+  df$position <- files.meta.list[[i]]$position
+  df$buttonID <- files.meta.list[[i]]$buttonID
+  df$season <- files.meta.list[[i]]$season
+  df #VERY IMPORTANT. I don't know why, but without this call for the whole dataframe, you get left with just the last column you created.
+  
+  })
+
+#table_name <- glue('{table_name}.finalTable')
+finalTable <- do.call(rbind, csv_LIST) ##JOIN TOGETHER
+
+print(finalTable)
+
+
+}  ##End function
+
+
+
+
+
+create_table(C2A)
+
+ggplot(finalTable, aes(x=as.POSIXct(date.time, format = "%m/%d/%Y %H:%M"), y=value, group = position, color = position)) + 
+  geom_line() + 
+  xlab("Date/Time") + 
+  ylab("Temperature in C")
+?assign
+
+```
