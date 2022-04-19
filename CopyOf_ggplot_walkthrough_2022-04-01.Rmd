@@ -201,7 +201,8 @@ ggplot(finalTable, aes(x=as.POSIXct(date.time, format = "%m/%d/%Y %H:%M"), y=val
 ```
 
 
-### COPY of the super-good list code: ###
+## COPY of the super-good list code: ##
+And messing around
 ```{r }
 
 indexed_vector <- function(df, i){setNames(as.list(df[i]), paste0("vector_", i))}
