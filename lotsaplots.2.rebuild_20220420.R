@@ -75,12 +75,12 @@ class(file.names)
 
 name.full <- file.names %>% 
   str_replace(".csv", "")  #just the full name
-head(name.full)
+#head(name.full)
+#class(name.full)
 
-name.split <- name.full %>%
+name.split <- name.full[,1] %>%
   str_split_fixed("_", n=5)  #split the full name into 5 parts
-
-head(name.split)
+#head(name.split)
 
 full.file.names <- list.files("./ibuttons", full.names = TRUE) #add column of full file names.
 head(full.file.names)
@@ -96,7 +96,7 @@ tail(name.data)
 name.df <- as.data.frame(name.data, stringsAsFactors = FALSE)
 ?as.data.frame
 
-colnames(name.df) <- c("file.names", "treatment", "rep", "position", "buttonID", "season")
+colnames(name.df) <- c("file.names", "name", "site", "rep", "position", "buttonID", "season")
 head(name.df)
 str(name.df)
 
@@ -109,15 +109,15 @@ str(name.df)
 
 ## Here is where you create a list of the group of files that you want to compare. You will then "feed" this list into the function.
 
-#Here we select the rows in name.df that meet the following criteria: "C2A" in the treatment column AND ("R1" OR "R0") in the rep column. The next line creates a character string out of just the $file.names column.
+#Here we select the rows in name.df that meet the following criteria: "C2A" in the site column AND ("R1" OR "R0") in the rep column. The next line creates a character string out of just the $file.names column.
 
 
-C2A_R1_rows <- name.df[name.df$treatment == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
+C2A_R1_rows <- name.df[name.df$site == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
 C2A_R1_filenames<- as.list(C2A_R1_rows$file.names)
 print(C2A_R1_filenames)
 str(C2A_R1_filenames)
 
-C5A_R1_rows <- name.df[name.df$treatment == "C5A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
+C5A_R1_rows <- name.df[name.df$site == "C5A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
 C5A_R1_filenames <- C5A_R1_rows$file.names
 print(C5A_R1_filenames)
 
@@ -139,13 +139,13 @@ print(C5A_R1_filenames)
 
 
 
-#C2A_filtered <- filter(name.df, treatment == "C2A")
+#C2A_filtered <- filter(name.df, site == "C2A")
 #print(C2A_filtered)
 
-#C2_trt_filtered <- filter(name.df, treatment == "C2A" | treatment == "C2B")
+#C2_trt_filtered <- filter(name.df, site == "C2A" | site == "C2B")
 #print(C2_trt_filtered)
 
-#C2_trt_air <- filter(name.df, (treatment =="C2A" | treatment == "C2B") & position == "air")
+#C2_trt_air <- filter(name.df, (site =="C2A" | site == "C2B") & position == "air")
 print(C2_trt_air)
 
 ##for input into read.csv functions:
@@ -155,7 +155,7 @@ print(C2_trt_air)
 #print(C2_trt_filenames)
 
 
-#C2A_R1_filt <- filter(name.df, treatment == "C2A" & rep == "R1")
+#C2A_R1_filt <- filter(name.df, site == "C2A" & rep == "R1")
 #C2A_R1_filt
 
 # <- select(C2A_R1_filt, file.names) 
