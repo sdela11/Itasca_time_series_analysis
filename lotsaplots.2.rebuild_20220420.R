@@ -25,7 +25,7 @@ library(stringr)
 library(tidyverse)
 #install.packages("plotrix")
 library(plotrix)
-
+library(glue)
 
 #Check your working directory. This is where your files are stored:
 getwd()
@@ -349,3 +349,20 @@ iterate_csv(C2A_R1_filenames, "Low Invasion C2A R1", c("air temp", "surface", "0
 
 ```
 
+## Selections:
+
+#For 2021 only:
+name.df <- name.df %>% 
+  filter(season == "2021")
+#head(name.df)
+view(name.df)
+class(name.df)
+C2A_R1 <- name.df[grepl("C2A_R1", name.df$name) | grepl("C2A_R0", name.df$name),]
+C2A_R1
+
+set <- "C2A_R1" # set = set for function
+air.name <- glue("{substr(set, 1, 3)}_R0")
+#air.name
+
+data_names <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),]
+print(data_names)
