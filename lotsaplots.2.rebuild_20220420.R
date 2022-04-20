@@ -208,7 +208,7 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   # print x axis tick marks, but leave labels blank
   axis.POSIXct(side = 1, at = xlab, labels = FALSE,
             cex.axis = 2)
-  axis(side = 2, at = seq(-20,30,5), cex = 3)
+  axis(side = 2, at = seq(-20,40,5), cex = 3)
   # We'll use the text() function to print the rotated labels, but first we need
   # to figure out where the lower limit of the y-axis is so that we can draw
   # text below it
