@@ -186,6 +186,7 @@ lotsaplots <- function(set, annotate) {
   #Create label objects for limits and axes:
   xlims <- as.POSIXct(c("2020-08-01 00:00", "2021-10-31 00:00"))
   xlab <- seq(as.POSIXct("2020-08-01"), as.POSIXct("2021-10-31"),"2 weeks")
+  
 
   
   ##PLOT CODE
@@ -205,10 +206,10 @@ lotsaplots <- function(set, annotate) {
        yaxt = 'n') # blank x axis tick marks
      
   mytitle = glue("{set} 2021")
-  mtext(mytitle, side = 3, line = 3, cex = 3) #print as margin text
+  mtext(mytitle, side = 3, line = 2, cex = 3) #print as margin text
   
   myxlabel = "Date" #create x axis title
-  mtext(myxlabel, side = 1, line = 3, cex = 2.2) #print as margin text
+  mtext(myxlabel, side = 1, line = 4, cex = 2.5) #print as margin text
   
   myYlabel = "Degrees C" # create y label
   mtext(myYlabel, side = 2, line = 6, cex = 2.2) #print as margin text
@@ -231,17 +232,24 @@ lotsaplots <- function(set, annotate) {
        pos = 1,
        offset = 1, #place labels below the y coordinate.
  #      srt = 0, # rotate text 45 degrees
-       cex = 1.4, # enlarge labels
+       cex = 1.7, # enlarge labels
        #adj = c(1.1,1.2)
        ) 
   ylabs = seq(-30,45,10)
   xlow = par()$usr[1]
-  print(xlow)
+  xhigh = par()$usr[2]
+  print(as.POSIXct(xlow, origin = "1970-01-01", tz=""))
+  print(as.POSIXct(xhigh, origin = "1970-01-01", tz=""))
   text(x = xlow,
        y = seq(-30,45,10), 
        labels = ylabs,
        cex = 2,
-       )
+       pos = 2)
+  text(x = xhigh,
+       y = seq(-30,45,10), 
+       labels = ylabs,
+       cex = 2,
+       pos = 4)
   # move label position to line up under tick marks
   # Using the adj argument to move rotated tick labels is weird. If the value is
   # (0,0), the base of the first letter/number will sit just above the tick
