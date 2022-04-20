@@ -233,8 +233,8 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   
   #experimenting with ablineclip but encountering errors.
   
-  ablineclip(h = c(-20,-10,0,10,20,30), x1=as.POSIXct("2019-11-01 00:00"), x2=as.POSIXct("2019-11-01 00:00"),  lty = 1, lwd = 1.5, col = "gray")
-  ablineclip(h = c(-15,-5,0,5,15,25), x1=as.POSIXct("2019-11-01 00:00"), x2=as.POSIXct("2019-11-01 00:00"), col = "gray")
+  ablineclip(h = c(-20,-10,0,10,20,30), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2021-10-31 00:00"),  lty = 1, lwd = 1.5, col = "gray")
+  ablineclip(h = c(-15,-5,0,5,15,25), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2020-08-01 00:00"), col = "gray")
   ablineclip(v = xlab, y1 = -20, y2 = 30)
   par = op # reset plotting options to turn on masking
   # Place an x-axis title
@@ -260,7 +260,7 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
       #print(i)
       temp_data_next <- read.csv(i)
       temp_data_next$date.time <- as.POSIXct(temp_data_next[,1], format = "%m/%d/%Y %H:%M")
-      temp_data_next <- subset(temp_data_next, date.time>= "2019-11-05 03:00" & date.time<= "2019-12-31 00:00")
+      temp_data_next <- subset(temp_data_next, date.time>= "2020-08-01 03:00" & date.time<= "2021-10-31 00:00") #changing the date range
       #str(temp_data_next)
       
       
@@ -337,9 +337,8 @@ my_data <- list.files("./CLEAN_DATA", full.names = TRUE)
 print(my_data)
 iterate_csv(C2A_R1_filenames, "Low Invasion C2A R1", c("air temp", "surface", "0", "-10", "-30"))
 
-lotsaplots(sorted_data[c(104,5:9)], "High Invasion C5B R2", c("air temp", "surface", "0", "-10", "-30", "-50"))
-
-lotsaplots(sorted_data[c(104,10:13)], "High Invasion C5B R3", c("air temp", "2", "-2", "-10", "-30"))
+#lotsaplots(sorted_data[c(104,5:9)], "High Invasion C5B R2", c("air temp", "surface", "0", "-10", "-30", "-50"))
+#lotsaplots(sorted_data[c(104,10:13)], "High Invasion C5B R3", c("air temp", "2", "-2", "-10", "-30"))
 
 
 ```
