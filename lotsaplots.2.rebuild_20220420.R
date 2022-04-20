@@ -70,18 +70,24 @@ getwd()
 file.names <- list.files("./ibuttons", full.names = FALSE)
 #class(file.names)
 head(file.names)
+class(file.names)
 #tail(file.names)
 
-name.data <- file.names %>%  
-  str_replace(".csv", "")%>%
-  str_split_fixed("_", n=5)
+name.full <- file.names %>% 
+  str_replace(".csv", "")  #just the full name
+head(name.full)
 
-head(name.data)
+name.split <- name.full %>%
+  str_split_fixed("_", n=5)  #split the full name into 5 parts
 
-full.file.names <- list.files("./ibuttons", full.names = TRUE)
+head(name.split)
+
+full.file.names <- list.files("./ibuttons", full.names = TRUE) #add column of full file names.
 head(full.file.names)
 
-name.data <- cbind(full.file.names, name.data)
+name.data <- data.frame(full.file.names, name.full, name.split)
+ 
+ cbind(full.file.names, name.data)
 str(full.file.names)
 head(name.data)
 tail(name.data)
