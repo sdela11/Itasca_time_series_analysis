@@ -23,14 +23,14 @@
 library(lubridate)
 library(stringr)
 library(tidyverse)
-install.packages("plotrix")
+#install.packages("plotrix")
 library(plotrix)
 
 
 #Check your working directory. This is where your files are stored:
 getwd()
-setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_2020_Fall")
-pwd()
+setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_project_19-21")
+#UGGGHHHHH. Set wd manually using console.
 getwd()
 
 #Amazing code for reading in file names, separating the file name elements into 
@@ -67,7 +67,7 @@ getwd()
 
 
 
-file.names <- list.files("./CLEAN_DATA", full.names = FALSE)
+file.names <- list.files("./ibuttons", full.names = FALSE)
 #class(file.names)
 head(file.names)
 #tail(file.names)
@@ -78,7 +78,7 @@ name.data <- file.names %>%
 
 head(name.data)
 
-full.file.names <- list.files("./CLEAN_DATA", full.names = TRUE)
+full.file.names <- list.files("./ibuttons", full.names = TRUE)
 head(full.file.names)
 
 name.data <- cbind(full.file.names, name.data)
@@ -90,7 +90,7 @@ tail(name.data)
 name.df <- as.data.frame(name.data, stringsAsFactors = FALSE)
 ?as.data.frame
 
-colnames(name.df) <- c("file.names", "treatment", "rep", "position", "buttonID", "year")
+colnames(name.df) <- c("file.names", "treatment", "rep", "position", "buttonID", "season")
 head(name.df)
 str(name.df)
 
