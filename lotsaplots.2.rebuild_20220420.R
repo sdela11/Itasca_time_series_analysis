@@ -207,12 +207,12 @@ lotsaplots <- function(set, annotate) {
   # Rotate x-axis tick labels so they fit better.
   
   png(filename = glue("{set}_2021.png"), width = 6000, height = 700)# 2000 Spring or Fall, >4000 for whole year
-  par(mar = c(8,10,10,6)) # expand figure margins to fit the large axis titles
+  par(mar = c(8,10,8,6)) # expand figure margins to fit the large axis titles (bottom, left, top, right)
   plot(x = "",
        y = "",
        type = "n",
        xlim = xlims,
-       ylim = c(-20,40),
+       ylim = c(-30,40),
        #cex.axis = 2.5, # expand axis tick labels,
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
@@ -225,11 +225,11 @@ lotsaplots <- function(set, annotate) {
   # print x axis tick marks, but leave labels blank
   axis.POSIXct(side = 1, at = xlab, labels = FALSE,
             cex.axis = 2)
-  axis(side = 2, at = seq(-20,40,5), cex = 3)
+  axis(side = 2, at = seq(-30,40,5), cex = 3)
   # We'll use the text() function to print the rotated labels, but first we need
   # to figure out where the lower limit of the y-axis is so that we can draw
   # text below it
-  xlow = par()$usr[3] # 3rd value is minimum y value
+  xlow = par()$usr[3] # call: parameters, usr parameter, element 3. 3rd value is minimum y value. usr is a vector of the form: c(x1,x2,y1,y2)
   print(xlow)
   op = par(xpd = NA) # turn off clipping
   text(x = xlab, # specify location of labels relative to x
