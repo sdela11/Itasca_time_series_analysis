@@ -192,7 +192,7 @@ lotsaplots <- function(set, annotate) {
   # Rotate x-axis tick labels so they fit better.
   
   png(filename = glue("{set}_2021.png"), width = 6000, height = 700)# 2000 Spring or Fall, >4000 for whole year
-  par(mar = c(8,10,8,6)) # expand figure margins to fit the large axis titles (bottom, left, top, right)
+  par(mar = c(6,10,6,6)) # expand figure margins to fit the large axis titles (bottom, left, top, right)
   plot(x = "",
        y = "",
        type = "n",
@@ -201,12 +201,17 @@ lotsaplots <- function(set, annotate) {
        #cex.axis = 2.5, # expand axis tick labels,
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
-       xaxt = 'n', # blank x axis tick marks
-       main = set) 
-  # create y label
-  myYlabel = "Degrees C"
-  # print y axis title on current plot
-  mtext(myYlabel, side = 2, line = 7, cex = 3)
+       xaxt = 'n') # blank x axis tick marks
+     
+  mytitle = glue("{set} 2021")
+  mtext(mytitle, side = 3, line = 3, cex = 3) #print as margin text
+  
+  myxlabel = "Date" #create x axis title
+  mtext(myxlabel, side = 1, line = 3, cex = 2.2) #print as margin text
+  
+  myYlabel = "Degrees C" # create y label
+  mtext(myYlabel, side = 2, line = 6, cex = 2.2) #print as margin text
+  
   # print x axis tick marks, but leave labels blank
   axis.POSIXct(side = 1, at = xlab, labels = FALSE,
             cex.axis = 2)
@@ -217,11 +222,12 @@ lotsaplots <- function(set, annotate) {
   xlow = par()$usr[3] # call: parameters, usr parameter, element 3. 3rd value is minimum y value. usr is a vector of the form: c(x1,x2,y1,y2)
   print(xlow)
   op = par(xpd = NA) # turn off clipping
-  text(x = xlab, # specify location of labels relative to x
+  text(x = xlab, # specify coordinate location of labels relative to x
        y = xlow, # specify location of labels relative to y-axis
        labels = format(xlab, "%m/%d/%Y"),
-       srt = 0, # rotate text 45 degrees
-       cex = 1, # enlarge labels
+       pos = 1, #place labels below the y coordinate. use default offset value for now.
+ #      srt = 0, # rotate text 45 degrees
+       cex = 1.2, # enlarge labels
        #adj = c(1.1,1.2)
        ) 
   # move label position to line up under tick marks
