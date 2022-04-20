@@ -201,7 +201,8 @@ lotsaplots <- function(set, annotate) {
        #cex.axis = 2.5, # expand axis tick labels,
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
-       xaxt = 'n') # blank x axis tick marks
+       xaxt = 'n',
+       yaxt = 'n') # blank x axis tick marks
      
   mytitle = glue("{set} 2021")
   mtext(mytitle, side = 3, line = 3, cex = 3) #print as margin text
@@ -212,24 +213,35 @@ lotsaplots <- function(set, annotate) {
   myYlabel = "Degrees C" # create y label
   mtext(myYlabel, side = 2, line = 6, cex = 2.2) #print as margin text
   
-  # print x axis tick marks, but leave labels blank
+  
   axis.POSIXct(side = 1, at = xlab, labels = FALSE,
-            cex.axis = 2)
-  axis(side = 2, at = seq(-30,40,5), cex = 3)
+            cex.axis = 2) # print x axis tick marks, but leave labels blank
+  axis(side = 2, at = seq(-30,40,5), cex = 3, labels = FALSE) #print y axis tick marks, leave labels blank
+  
+  ## X-axis labels:
   # We'll use the text() function to print the rotated labels, but first we need
   # to figure out where the lower limit of the y-axis is so that we can draw
   # text below it
-  xlow = par()$usr[3] # call: parameters, usr parameter, element 3. 3rd value is minimum y value. usr is a vector of the form: c(x1,x2,y1,y2)
-  print(xlow)
+  ylow = par()$usr[3] # call: parameters, usr parameter, element 3. 3rd value is minimum y value. usr is a vector of the form: c(x1,x2,y1,y2)
+  print(ylow)
   op = par(xpd = NA) # turn off clipping
   text(x = xlab, # specify coordinate location of labels relative to x
-       y = xlow, # specify location of labels relative to y-axis
+       y = ylow, # specify location of labels relative to y-axis
        labels = format(xlab, "%m/%d/%Y"),
-       pos = 1, #place labels below the y coordinate. use default offset value for now.
+       pos = 1,
+       offset = 1, #place labels below the y coordinate.
  #      srt = 0, # rotate text 45 degrees
-       cex = 1.2, # enlarge labels
+       cex = 1.4, # enlarge labels
        #adj = c(1.1,1.2)
        ) 
+  ylabs = seq(-30,45,10)
+  xlow = par()$usr[1]
+  print(xlow)
+  text(x = xlow,
+       y = seq(-30,45,10), 
+       labels = ylabs,
+       cex = 2,
+       )
   # move label position to line up under tick marks
   # Using the adj argument to move rotated tick labels is weird. If the value is
   # (0,0), the base of the first letter/number will sit just above the tick
@@ -247,7 +259,7 @@ lotsaplots <- function(set, annotate) {
   ablineclip(v = xlab, y1 = -30, y2 = 40)
   par = op # reset plotting options to turn on masking
   # Place an x-axis title
-  mtext('Time', side = 1, line = 6.5, cex = 2.5)
+  #mtext('Time', side = 1, line = 6.5, cex = 2.5)
   
   ?abline
   ?ablineclip
@@ -313,13 +325,13 @@ lotsaplots <- function(set, annotate) {
       
 legelist <- c(legelist, legend_color)
       
-   lines(temp_data_next$date.time, temp_data_next$value, type = "l", col = as.character(legend_color))
+   lines(temp_data_next$date.time, temp_data_next$value, type = "l", lwd = 2, col = as.character(legend_color))
       
    # }
     
   }
   
-  legend("topleft", legend = plot_names, col = legelist, lty = 1, cex = 0.8, title="Position (cm)", text.font=4)
+  legend("topleft", legend = plot_names, col = legelist, lty = 1, cex = 2, title="Position (cm)", text.font=4)
   #return()
 }
 
