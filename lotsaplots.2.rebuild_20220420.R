@@ -170,21 +170,22 @@ print(C2_trt_air)
 
 
 #lotsaplots <- function(set, png_name, graph_title, plot_names, annotate) {
-lotsaplots <- function(set, png_name, annotate) {
+lotsaplots <- function(set, annotate) {
 
   air.name <- glue("{substr(set, 1, 3)}_R0")
   #air.name
   
-  data_names <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),1] #use 1 as long as full file.names is the first one
+  data.df <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),]
+  data_names <- data.df[,1]#use 1 as long as full file.names is the first one
   print(data_names)
   
-  plot_names <- c(name.df$position) #create legend elements
-  
+  plot_names <- c(data.df$position) #create legend elements
+  print(plot_names)
   legelist <- vector()
   
   #Create label objects for limits and axes:
   xlims <- as.POSIXct(c("2020-08-01 00:00", "2021-10-31 00:00"))
-  xlab <- seq(as.POSIXct("2020-08-01 00:00"),as.POSIXct("2021-12-31 00:00"),"2 weeks")
+  xlab <- seq(as.POSIXct("2020-08-01"), as.POSIXct("2021-12-31"),"2 weeks")
 
     
 #To DO: Get rid of temp_data_1 stuff.
@@ -205,7 +206,7 @@ lotsaplots <- function(set, png_name, annotate) {
   ##PLOT CODE
   # Rotate x-axis tick labels so they fit better.
   
-  png(filename = glue("{set}_2021.csv"), width = 4000, height = 700)# 2000 Spring or Fall, >4000 for whole year
+  png(filename = glue("{set}_2021.png"), width = 6000, height = 700)# 2000 Spring or Fall, >4000 for whole year
   par(mar = c(8,10,10,6)) # expand figure margins to fit the large axis titles
   plot(x = "",
        y = "",
@@ -216,7 +217,7 @@ lotsaplots <- function(set, png_name, annotate) {
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
        xaxt = 'n') # blank x axis tick marks
-  main = (set)
+  main = set
   # create y label
   myYlabel = "Degrees C"
   # print y axis title on current plot
@@ -232,9 +233,9 @@ lotsaplots <- function(set, png_name, annotate) {
   op = par(xpd = NA) # turn off clipping
   text(x = xlab, # specify location of labels relative to x
        y = xlow, # specify location of labels relative to y-axis
-       labels = xlab,
+       labels = format(xlab, "%mm/%dd/%YYYY"),
        srt = 0, # rotate text 45 degrees
-       cex = 2, # enlarge labels
+       cex = 1, # enlarge labels
        #adj = c(1.1,1.2)
        ) 
   # move label position to line up under tick marks
@@ -249,9 +250,9 @@ lotsaplots <- function(set, png_name, annotate) {
   
   #experimenting with ablineclip but encountering errors.
   
-  ablineclip(h = c(-20,-10,0,10,20,30), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2021-10-31 00:00"),  lty = 1, lwd = 1.5, col = "gray")
-  ablineclip(h = c(-15,-5,0,5,15,25), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2020-08-01 00:00"), col = "gray")
-  ablineclip(v = xlab, y1 = -20, y2 = 30)
+  ablineclip(h = c(-30,-20,-10,0,10,20,30,40), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2021-10-31 00:00"),  lty = 1, lwd = 1.5, col = "gray")
+  ablineclip(h = c(-25,-15,-5,0,5,15,25,35), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2020-08-01 00:00"), col = "gray")
+  ablineclip(v = xlab, y1 = -30, y2 = 40)
   par = op # reset plotting options to turn on masking
   # Place an x-axis title
   mtext('Time', side = 1, line = 6.5, cex = 2.5)
@@ -330,9 +331,13 @@ legelist <- c(legelist, legend_color)
   #return()
 }
 
-
+lotsaplots("C2A_R1", "annotation here")
+dev.off()
 ## 
 
+
+
+getwd()
 lotsaplots(C2A_R1_filenames, "TEST Low Invasion C2A R1.png", "TEST Low Invastion C2A R1", c("air", "lsurf", "msurf", "m10", "m30", "m50"), "annotation here")
 dev.off()
 print(C2A_R1_filenames)
