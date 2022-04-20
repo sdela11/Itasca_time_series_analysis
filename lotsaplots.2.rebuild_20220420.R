@@ -233,7 +233,7 @@ lotsaplots <- function(set, annotate) {
   op = par(xpd = NA) # turn off clipping
   text(x = xlab, # specify location of labels relative to x
        y = xlow, # specify location of labels relative to y-axis
-       labels = format(xlab, "%mm/%dd/%YYYY"),
+       labels = format(xlab, "%m/%d/%Y"),
        srt = 0, # rotate text 45 degrees
        cex = 1, # enlarge labels
        #adj = c(1.1,1.2)
