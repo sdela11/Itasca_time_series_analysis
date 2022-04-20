@@ -185,7 +185,7 @@ lotsaplots <- function(set, annotate) {
   
   #Create label objects for limits and axes:
   xlims <- as.POSIXct(c("2020-08-01 00:00", "2021-10-31 00:00"))
-  xlab <- seq(as.POSIXct("2020-08-01"), as.POSIXct("2021-12-31"),"2 weeks")
+  xlab <- seq(as.POSIXct("2020-08-01"), as.POSIXct("2021-10-31"),"2 weeks")
 
     
 #To DO: Get rid of temp_data_1 stuff.
@@ -216,8 +216,8 @@ lotsaplots <- function(set, annotate) {
        #cex.axis = 2.5, # expand axis tick labels,
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
-       xaxt = 'n') # blank x axis tick marks
-  main = set
+       xaxt = 'n', # blank x axis tick marks
+       main = set) 
   # create y label
   myYlabel = "Degrees C"
   # print y axis title on current plot
@@ -230,6 +230,7 @@ lotsaplots <- function(set, annotate) {
   # to figure out where the lower limit of the y-axis is so that we can draw
   # text below it
   xlow = par()$usr[3] # 3rd value is minimum y value
+  print(xlow)
   op = par(xpd = NA) # turn off clipping
   text(x = xlab, # specify location of labels relative to x
        y = xlow, # specify location of labels relative to y-axis
