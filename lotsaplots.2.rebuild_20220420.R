@@ -169,7 +169,16 @@ print(C2_trt_air)
 
 
 
-lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) {
+#lotsaplots <- function(set, png_name, graph_title, plot_names, annotate) {
+lotsaplots <- function(set, png_name, annotate) {
+
+  air.name <- glue("{substr(set, 1, 3)}_R0")
+  #air.name
+  
+  data_names <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),1] #use 1 as long as full file.names is the first one
+  print(data_names)
+  
+  plot_names <- c(name.df$position) #create legend elements
   
   legelist <- vector()
   
@@ -196,7 +205,7 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   ##PLOT CODE
   # Rotate x-axis tick labels so they fit better.
   
-  png(filename = png_name, width = 2000, height = 700)# Spring or Fall
+  png(filename = glue("{set}_2021.csv"), width = 4000, height = 700)# 2000 Spring or Fall, >4000 for whole year
   par(mar = c(8,10,10,6)) # expand figure margins to fit the large axis titles
   plot(x = "",
        y = "",
@@ -207,6 +216,7 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
        xaxt = 'n') # blank x axis tick marks
+  main = (set)
   # create y label
   myYlabel = "Degrees C"
   # print y axis title on current plot
@@ -265,7 +275,8 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
       #print(color_no)
       #print(i)
       temp_data_next <- read.csv(i)
-      temp_data_next$date.time <- as.POSIXct(temp_data_next[,1], format = "%m/%d/%Y %H:%M")
+      temp_data_next$date.time <- mdy_hms(temp_data_next$date.time)
+      # temp_data_next$date.time <- as.POSIXct(temp_data_next[,1], format = "%m/%d/%Y %H:%M")
       temp_data_next <- subset(temp_data_next, date.time>= "2020-08-01 03:00" & date.time<= "2021-10-31 00:00") #changing the date range
       #str(temp_data_next)
       
@@ -357,7 +368,7 @@ name.df <- name.df %>%
 #head(name.df)
 view(name.df)
 class(name.df)
-C2A_R1 <- name.df[grepl("C2A_R1", name.df$name) | grepl("C2A_R0", name.df$name),]
+C2A_R1 <- name.df[grepl("C2A_R1", name.df$name) | grepl("C2A_R0", name.df$name),1]
 C2A_R1
 
 set <- "C2A_R1" # set = set for function
