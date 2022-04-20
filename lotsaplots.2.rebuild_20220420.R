@@ -187,21 +187,6 @@ lotsaplots <- function(set, annotate) {
   xlims <- as.POSIXct(c("2020-08-01 00:00", "2021-10-31 00:00"))
   xlab <- seq(as.POSIXct("2020-08-01"), as.POSIXct("2021-10-31"),"2 weeks")
 
-    
-#To DO: Get rid of temp_data_1 stuff.
-
-  #Put in the if statements for color
-  #Create legendcolor list
-  #Add graphing parameters and create blank graph
-  #
-  
-    #print(length(data_names))  
-  #temp_data_1 <- read.csv(data_names[1])
-  #temp_data_1$date.time <- as.POSIXct(temp_data_1[,1], format = "%m/%d/%Y %H:%M")
-  #temp_data_1 <- subset(temp_data_1, date.time>= "2020-04-18 03:00" & date.time<= "2020-06-25 00:00")
-  #date.time>= "2019-11-07 03:00" & date.time<= "2020-08-27 00:00"  #full range
-  
-  #legend_color <- c("gray74")
   
   ##PLOT CODE
   # Rotate x-axis tick labels so they fit better.
