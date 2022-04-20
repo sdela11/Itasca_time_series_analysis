@@ -196,7 +196,7 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
        y = "",
        type = "n",
        xlim = xlims,
-       ylim = c(-20,32),
+       ylim = c(-20,40),
        #cex.axis = 2.5, # expand axis tick labels,
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
