@@ -168,8 +168,8 @@ lotsaplots <- function(data_names, png_name, graph_title, plot_names, annotate) 
   legelist <- vector()
   
   #Create label objects for limits and axes:
-  xlims <- as.POSIXct(c("2019-11-05 00:00", "2019-12-31 00:00"))
-  xlab <- seq(as.POSIXct("2019-11-05 00:00"),as.POSIXct("2019-12-31 00:00"),"2 weeks")
+  xlims <- as.POSIXct(c("2020-08-01 00:00", "2021-10-31 00:00"))
+  xlab <- seq(as.POSIXct("2020-08-01 00:00"),as.POSIXct("2021-12-31 00:00"),"2 weeks")
 
     
 #To DO: Get rid of temp_data_1 stuff.
