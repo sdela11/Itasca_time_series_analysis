@@ -168,6 +168,8 @@ print(C2_trt_air)
 
 
 
+## --------   lotsaplots FUNCTION!!!   ---------
+
 
 #lotsaplots <- function(set, png_name, graph_title, plot_names, annotate) {
 lotsaplots <- function(set, annotate) {
@@ -181,6 +183,7 @@ lotsaplots <- function(set, annotate) {
   
   plot_names <- c(data.df$position) #create legend elements
   print(plot_names)
+  
   legelist <- vector()
   
   #Create label objects for limits and axes:
@@ -204,7 +207,7 @@ lotsaplots <- function(set, annotate) {
        xlab = '',  # blank x axis label
        xaxt = 'n', # blank axis tick marks
        yaxt = 'n',
-       xaxs = "i") #plz do not add 4% to the x axis window
+       xaxs = "i") #plz do not add 4% to the x axis window. "r" if you want it back.
   
   
   mytitle = glue("{set} 2021")
@@ -247,12 +250,14 @@ lotsaplots <- function(set, annotate) {
   # to the right in the process, so play with both values of adj = c(1.1,1.2)
   
   
-  ylabs = seq(-30,45,10)
-  xlow = par()$usr[1]
+  ylabs = seq(-30,45,10) #create ylabs object
+  xlow = par()$usr[1] #get outer bounds for the plot window
   xhigh = par()$usr[2]
   print(as.POSIXct(xlow, origin = "1970-01-01", tz=""))
   print(as.POSIXct(xhigh, origin = "1970-01-01", tz=""))
+  
   #Y-AXIS labels: same thing as with x-labels, but copied to be on BOTH sides of the plot.
+  
   #near side (left)
   text(x = xlow, 
        y = seq(-30,45,10), 
@@ -268,7 +273,6 @@ lotsaplots <- function(set, annotate) {
   
   
   #abline(). #Put in some lines. Find a way to clip the lines at the axes. Currently 
-  
   #experimenting with ablineclip but encountering errors.
   
   ablineclip(h = c(-30,-20,-10,0,10,20,30,40), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2021-10-31 00:00"),  lty = 1, lwd = 1.5, col = "gray")
@@ -351,11 +355,11 @@ dev.off()
 
 ## 
 
-setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_2020_Fall")
+#setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_2020_Fall")
 
-my_data <- list.files("./CLEAN_DATA", full.names = TRUE)
-print(my_data)
-iterate_csv(C2A_R1_filenames, "Low Invasion C2A R1", c("air temp", "surface", "0", "-10", "-30"))
+#my_data <- list.files("./CLEAN_DATA", full.names = TRUE)
+#print(my_data)
+#iterate_csv(C2A_R1_filenames, "Low Invasion C2A R1", c("air temp", "surface", "0", "-10", "-30"))
 
 #lotsaplots(sorted_data[c(104,5:9)], "High Invasion C5B R2", c("air temp", "surface", "0", "-10", "-30", "-50"))
 #lotsaplots(sorted_data[c(104,10:13)], "High Invasion C5B R3", c("air temp", "2", "-2", "-10", "-30"))
