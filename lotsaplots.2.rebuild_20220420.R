@@ -172,10 +172,10 @@ print(C2_trt_air)
 
 
 #lotsaplots <- function(set, png_name, graph_title, plot_names, annotate) {
-lotsaplots <- function(set, annotate) {
+lotsaplots <- function(set) {
 
-  air.name <- glue("{substr(set, 1, 3)}_R0")
-  #air.name
+  #automated file name selection!!!
+  air.name <- glue("{substr(set, 1, 3)}_R0") #create the air.name to use in grepl
   
   data.df <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),]
   data_names <- data.df[,1]#use 1 as long as full file.names is the first one
@@ -184,7 +184,7 @@ lotsaplots <- function(set, annotate) {
   plot_names <- c(data.df$position) #create legend elements
   print(plot_names)
   
-  legelist <- vector()
+  legelist <- vector() #create the list that you will append your colors into
   
   #Create label objects for limits and axes:
   xlims <- as.POSIXct(c("2020-08-01 00:00", "2021-10-31 00:00"))
