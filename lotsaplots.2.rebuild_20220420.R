@@ -220,6 +220,7 @@ lotsaplots <- function(set, annotate) {
   axis.POSIXct(side = 1, at = xlab, labels = FALSE,
             cex.axis = 2) # print x axis tick marks, but leave labels blank
   axis(side = 2, at = seq(-30,40,5), cex = 3, labels = FALSE) #print y axis tick marks, leave labels blank
+  axis(side = 4, at = seq(-30,40,5), cex = 3, labels = FALSE) #print far vert axis tick marks.
   
   ## X-axis labels:
   # We'll use the text() function to print the rotated labels, but first we need
