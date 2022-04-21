@@ -106,69 +106,6 @@ str(name.df)
 
 
 
-######### Best .csv File Selection Code, as of 02/08/2021 ###########
-
-## Here is where you create a list of the group of files that you want to compare. You will then "feed" this list into the function.
-
-#Here we select the rows in name.df that meet the following criteria: "C2A" in the site column AND ("R1" OR "R0") in the rep column. The next line creates a character string out of just the $file.names column.
-
-
-C2A_R1_rows <- name.df[name.df$site == "C2A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
-C2A_R1_filenames<- as.list(C2A_R1_rows$file.names)
-print(C2A_R1_filenames)
-str(C2A_R1_filenames)
-
-C5A_R1_rows <- name.df[name.df$site == "C5A" & (name.df$rep == "R1" | name.df$rep == "R0"),]
-C5A_R1_filenames <- C5A_R1_rows$file.names
-print(C5A_R1_filenames)
-
-#Another example:
-#Another thing we could compare would be litter surface temperature across 3 reps at site C2A. 
-#In order to do that, I would write the following code:
-
-#    m10_group_rows <- name.df[name.df$position == "lsurf" & name.df$site == "C2A"]
-#     m10_group_filenames <- m10_group_rows$file.names
-
-
-
-#Using dplyr package (of the tidyverse)
-
-#filter() selects rows
-#select() selects columns
-#I found that putting them in separate functions was the most helpful. This doesn't seem to return the correct output after selection.
-
-
-
-
-#C2A_filtered <- filter(name.df, site == "C2A")
-#print(C2A_filtered)
-
-#C2_trt_filtered <- filter(name.df, site == "C2A" | site == "C2B")
-#print(C2_trt_filtered)
-
-#C2_trt_air <- filter(name.df, (site =="C2A" | site == "C2B") & position == "air")
-print(C2_trt_air)
-
-##for input into read.csv functions:
-
-#C2_trt_filenames <- select(C2_trt_filtered, file.names)
-
-#print(C2_trt_filenames)
-
-
-#C2A_R1_filt <- filter(name.df, site == "C2A" & rep == "R1")
-#C2A_R1_filt
-
-# <- select(C2A_R1_filt, file.names) 
-#C2A_R1_filenames
-
-#C2A_R1_filenames <- as.list(C2A_R1_filenames)
-#C2A_R1_filenames <- as.matrix(C2A_R1_filenames)
-#print(C2A_R1_filenames)
-
-
-
-
 ## --------   lotsaplots FUNCTION!!!   ---------
 
 
