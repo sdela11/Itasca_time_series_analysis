@@ -302,12 +302,203 @@ set <- as.list(c("C2A_R1", "C2A_R2", "C2A_R3",
 
 lapply(set, lotsaplots.sites)
 
-
-set <- as.list(c("C5A_R1", "C5A_R2"))
-
 #for testing
-lotsaplots("C2A_R1", "annotation here")
+lotsaplots("C2A_R1")
 dev.off()
+
+
+
+
+## ------ lotsaplots for custom set creation ------- ##
+
+#INPUTS:
+#list of names (or shortened names), png name, title
+
+#1: Create the set
+#list <- list()  use an empty list to append multiples together
+set.df <- name.df[grepl("C5A_R1", name.df$name) | grepl("C5A_R2_m0surf", name.df$name) | grepl("C5A_R0", name.df$name),]
+set.df
+
+lotsaplots(set, "C5A Compare 2021.png", "C5A Compare 2021")
+
+
+lotsaplots <- function(set.df, png_name, title) {
+  
+  #automated file name selection!!!
+  
+  data_names <- set.df[,1]#use 1 as long as full file.names is the first one
+  print(data_names)
+  
+  plot_names <- c(set.df$position) #create legend elements
+  print(plot_names)
+  
+  legelist <- vector() #create the list that you will append your colors into
+  
+  #Create label objects for limits and axes:
+  xlims <- as.POSIXct(c("2020-08-01 00:00", "2021-10-31 00:00"))
+  xlab <- seq(as.POSIXct("2020-08-01"), as.POSIXct("2021-10-31"),"2 weeks")
+  
+  
+  
+  ##PLOT CODE
+  # Rotate x-axis tick labels so they fit better.
+  
+  png(filename = png_name, width = 6000, height = 1000)# 2000 Spring or Fall, >4000 for whole year
+  par(mar = c(6,10,6,6)) # expand figure margins to fit the large axis titles (bottom, left, top, right)
+  plot(x = "",
+       y = "",
+       type = "n",
+       xlim = xlims,
+       ylim = c(-30,90),
+       #cex.axis = 2.5, # expand axis tick labels,
+       ylab = '',  # blank y axis label
+       xlab = '',  # blank x axis label
+       xaxt = 'n', # blank axis tick marks
+       yaxt = 'n',
+       xaxs = "i",
+       yaxs = "i") #plz do not add 4% to the x axis window. "r" if you want it back.
+  
+  
+  mytitle = title
+  mtext(mytitle, side = 3, line = 2, cex = 3) #print as margin text
+  
+  myxlabel = "Date" #create x axis title
+  mtext(myxlabel, side = 1, line = 4, cex = 2.5) #print as margin text
+  
+  myYlabel = "Degrees C" # create y label
+  mtext(myYlabel, side = 2, line = 6, cex = 2.2) #print as margin text
+  
+  
+  axis.POSIXct(side = 1, at = xlab, labels = FALSE,
+               cex.axis = 2) # print x axis tick marks, but leave labels blank
+  axis(side = 2, at = seq(-30,90,5), cex = 3, labels = FALSE) #print y axis tick marks, leave labels blank
+  axis(side = 4, at = seq(-30,90,5), cex = 3, labels = FALSE) #print far vert axis tick marks.
+  
+  ## X-axis labels:
+  # We'll use the text() function to print the rotated labels, but first we need
+  # to figure out where the lower limit of the y-axis is so that we can draw
+  # text below it
+  ylow = par()$usr[3] # call: parameters, usr parameter, element 3. 3rd value is minimum y value. usr is a vector of the form: c(x1,x2,y1,y2)
+  print(ylow)
+  op = par(xpd = NA) # turn off clipping
+  text(x = xlab, # specify coordinate location of labels relative to x
+       y = ylow, # specify location of labels relative to y-axis
+       labels = format(xlab, "%m/%d/%Y"),
+       pos = 1,
+       offset = 1, #place labels below the y coordinate.
+       #      srt = 0, # rotate text 45 degrees
+       cex = 1.7, # enlarge labels
+       #adj = c(1.1,1.2)
+  ) 
+  # move label position to line up under tick marks
+  # Using the adj argument to move rotated tick labels is weird. If the value is
+  # (0,0), the base of the first letter/number will sit just above the tick
+  # mark. Adjusting the first value to adj = c(1,0) will move the label so the
+  # end of the last character of the label is to the left and below the tick mark.
+  # You'll still want to move the label down a bit further, and probably move it
+  # to the right in the process, so play with both values of adj = c(1.1,1.2)
+  
+  
+  ylabs = seq(-30,45,10) #create ylabs object
+  xlow = par()$usr[1] #get outer bounds for the plot window
+  xhigh = par()$usr[2]
+  print(as.POSIXct(xlow, origin = "1970-01-01", tz=""))
+  print(as.POSIXct(xhigh, origin = "1970-01-01", tz=""))
+  
+  #Y-AXIS labels: same thing as with x-labels, but copied to be on BOTH sides of the plot.
+  
+  #near side (left)
+  text(x = xlow, 
+       y = seq(-30,45,10), 
+       labels = ylabs,
+       cex = 2.5,
+       pos = 2)
+  #far side (right)
+  text(x = xhigh,
+       y = seq(-30,45,10), 
+       labels = ylabs,
+       cex = 2.5,
+       pos = 4)
+  
+  
+  #abline(). #Put in some lines. Find a way to clip the lines at the axes. Currently 
+  #experimenting with ablineclip but encountering errors.
+  
+  ablineclip(h = c(-30,-20,-10,0,10,20,30,90), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2021-10-31 00:00"),  lty = 1, lwd = 1.5, col = "gray")
+  ablineclip(h = c(-25,-15,-5,0,5,15,25,35), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2020-08-01 00:00"), col = "gray")
+  ablineclip(v = xlab, y1 = -30, y2 = 90)
+  par = op # reset plotting options to turn on masking
+  
+  
+  ### THE FOR LOOP ###
+  #The "money" part of the function. We fed the function a group of character strings (file names), and for every entry (every "i") in the list, R will execute the following:
+  #Read the csv file given by the filepath.
+  #convert the date.time column to the proper format
+  #subset the dataframe to a set date range
+  #figure out what color the plotted line should be, based on a series of "if/if else/else" statements. For example, if it finds the string "air" in the filename, "gray74" is added to a list of colors called "legend_color".
+  #plots a line, using "value" (temperature) as a function of "date.time", and the color determined by the if statements above. 
+  
+  for(i in data_names){
+    #if(skipper != 0){
+    #if(skipper >= 8){skipper = 1}
+    #color_no = colorlist[skipper]
+    #print(color_no)
+    #print(i)
+    temp_data_next <- read.csv(i)
+    temp_data_next$date.time <- mdy_hms(temp_data_next$date.time)
+    # temp_data_next$date.time <- as.POSIXct(temp_data_next[,1], format = "%m/%d/%Y %H:%M")
+    temp_data_next <- subset(temp_data_next, date.time>= "2020-08-01 03:00" & date.time<= "2021-10-31 00:00") #changing the date range
+    #str(temp_data_next)
+    
+    
+    if(grepl("air", i)){
+      legend_color <- "gray74"
+      #     legelist <- c(legelist, legend_color)
+    }
+    else if(grepl("lsurf", i, fixed = TRUE)){
+      legend_color <- c("darksalmon")
+      #   legelist <- c(legelist, legend_color)
+    }
+    else if(grepl("m01surf", i, fixed = TRUE)){
+      legend_color <- c("darksalmon")
+      #      legelist <- c(legelist, legend_color)
+    }
+    else if(grepl("m0surf", i, fixed = TRUE)){
+      legend_color <- c("green3")
+      #        legelist <- c(legelist, legend_color)
+    }
+    else if(grepl("m02surf", i, fixed = TRUE)){
+      legend_color <- c("green3")
+      #     legelist <- c(legelist, legend_color)
+    }
+    else if(grepl("m10", i, fixed = TRUE)){
+      legend_color <- c("royalblue2")
+      #     legelist <- c(legelist, legend_color)
+    }
+    else if(grepl("m30", i, fixed = TRUE)){
+      legend_color <- c("orchid")
+      #    legelist <- c(legelist, legend_color)
+    }
+    else if(grepl("m50", i, fixed = TRUE)){
+      legend_color <- c("pink")
+      #     legelist <- c(legelist, legend_color)
+    }
+    else{
+      legend_color <- c("yellow")
+      #        legelist <- c(legelist, legend_color)
+    }
+    
+    legelist <- c(legelist, legend_color)
+    
+    lines(temp_data_next$date.time, temp_data_next$value, type = "l", lwd = 2, col = as.character(legend_color))
+    
+  }
+  
+  legend("topleft", legend = plot_names, col = legelist, lty = 1, cex = 2, lwd = 3, title="Position (cm)", text.font=4)
+  #return()
+  dev.off()
+  
+}
 
 
 ## 
