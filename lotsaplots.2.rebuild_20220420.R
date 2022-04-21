@@ -195,19 +195,20 @@ lotsaplots <- function(set) {
   ##PLOT CODE
   # Rotate x-axis tick labels so they fit better.
   
-  png(filename = glue("{set}_2021.png"), width = 6000, height = 700)# 2000 Spring or Fall, >4000 for whole year
+  png(filename = glue("{set}_2021_TALL.png"), width = 6000, height = 1000)# 2000 Spring or Fall, >4000 for whole year
   par(mar = c(6,10,6,6)) # expand figure margins to fit the large axis titles (bottom, left, top, right)
   plot(x = "",
        y = "",
        type = "n",
        xlim = xlims,
-       ylim = c(-30,40),
+       ylim = c(-30,90),
        #cex.axis = 2.5, # expand axis tick labels,
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
        xaxt = 'n', # blank axis tick marks
        yaxt = 'n',
-       xaxs = "i") #plz do not add 4% to the x axis window. "r" if you want it back.
+       xaxs = "i",
+       yaxs = "i") #plz do not add 4% to the x axis window. "r" if you want it back.
   
   
   mytitle = glue("{set} 2021")
@@ -222,8 +223,8 @@ lotsaplots <- function(set) {
   
   axis.POSIXct(side = 1, at = xlab, labels = FALSE,
             cex.axis = 2) # print x axis tick marks, but leave labels blank
-  axis(side = 2, at = seq(-30,40,5), cex = 3, labels = FALSE) #print y axis tick marks, leave labels blank
-  axis(side = 4, at = seq(-30,40,5), cex = 3, labels = FALSE) #print far vert axis tick marks.
+  axis(side = 2, at = seq(-30,90,5), cex = 3, labels = FALSE) #print y axis tick marks, leave labels blank
+  axis(side = 4, at = seq(-30,90,5), cex = 3, labels = FALSE) #print far vert axis tick marks.
   
   ## X-axis labels:
   # We'll use the text() function to print the rotated labels, but first we need
@@ -275,9 +276,9 @@ lotsaplots <- function(set) {
   #abline(). #Put in some lines. Find a way to clip the lines at the axes. Currently 
   #experimenting with ablineclip but encountering errors.
   
-  ablineclip(h = c(-30,-20,-10,0,10,20,30,40), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2021-10-31 00:00"),  lty = 1, lwd = 1.5, col = "gray")
+  ablineclip(h = c(-30,-20,-10,0,10,20,30,90), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2021-10-31 00:00"),  lty = 1, lwd = 1.5, col = "gray")
   ablineclip(h = c(-25,-15,-5,0,5,15,25,35), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2020-08-01 00:00"), col = "gray")
-  ablineclip(v = xlab, y1 = -30, y2 = 40)
+  ablineclip(v = xlab, y1 = -30, y2 = 90)
   par = op # reset plotting options to turn on masking
   
  
