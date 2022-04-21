@@ -110,7 +110,7 @@ str(name.df)
 
 
 #lotsaplots <- function(set, png_name, graph_title, plot_names, annotate) {
-lotsaplots <- function(set) {
+lotsaplots.sites <- function(set) {
 
   #automated file name selection!!!
   air.name <- glue("{substr(set, 1, 3)}_R0") #create the air.name to use in grepl
@@ -300,8 +300,10 @@ set <- as.list(c("C2A_R1", "C2A_R2", "C2A_R3",
                  "D5A_R1", "D5A_R2", "D5A_R3"))
 #print(set)
 
-lapply(set, lotsaplots)
+lapply(set, lotsaplots.sites)
 
+
+set <- as.list(c("C5A_R1", "C5A_R2"))
 
 #for testing
 lotsaplots("C2A_R1", "annotation here")
