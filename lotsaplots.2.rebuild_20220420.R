@@ -347,23 +347,7 @@ legelist <- c(legelist, legend_color)
 
 lotsaplots("C2A_R1", "annotation here")
 dev.off()
-## 
 
-
-
-getwd()
-lotsaplots(C2A_R1_filenames, "TEST Low Invasion C2A R1.png", "TEST Low Invastion C2A R1", c("air", "lsurf", "msurf", "m10", "m30", "m50"), "annotation here")
-dev.off()
-print(C2A_R1_filenames)
-
-#str(C2A_R1_filenames_exp)
-
-lotsaplots(C5A_R1_filenames, "DUMMY High Invasion C5A R1", c("lsurf", "msurf", "m10", "m30", "m50"))
-dev.off()
-
-
-C5A_R1_filenames
-str(C5A_R1_filenames)
 
 ## 
 
@@ -378,21 +362,3 @@ iterate_csv(C2A_R1_filenames, "Low Invasion C2A R1", c("air temp", "surface", "0
 
 
 ```
-
-## Selections:
-
-#For 2021 only:
-name.df <- name.df %>% 
-  filter(season == "2021")
-#head(name.df)
-view(name.df)
-class(name.df)
-C2A_R1 <- name.df[grepl("C2A_R1", name.df$name) | grepl("C2A_R0", name.df$name),1]
-C2A_R1
-
-set <- "C2A_R1" # set = set for function
-air.name <- glue("{substr(set, 1, 3)}_R0")
-#air.name
-
-data_names <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),]
-print(data_names)
