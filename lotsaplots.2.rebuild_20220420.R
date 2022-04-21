@@ -30,6 +30,7 @@ library(glue)
 #Check your working directory. This is where your files are stored:
 getwd()
 setwd("C:/Users/sbaue/Documents/R TEMPRY/Itasca_project_19-21")
+
 #UGGGHHHHH. Set wd manually using console.
 getwd()
 
@@ -65,7 +66,7 @@ getwd()
 
 # Step 1:
 
-
+getwd()
 
 file.names <- list.files("./ibuttons", full.names = FALSE)
 #class(file.names)
@@ -75,28 +76,28 @@ class(file.names)
 
 name.full <- file.names %>% 
   str_replace(".csv", "")  #just the full name
-#head(name.full)
+head(name.full)
 #class(name.full)
 
-name.split <- name.full[,1] %>%
+name.split <- name.full %>%
   str_split_fixed("_", n=5)  #split the full name into 5 parts
-#head(name.split)
+head(name.split)
 
 full.file.names <- list.files("./ibuttons", full.names = TRUE) #add column of full file names.
-head(full.file.names)
+#head(full.file.names)
 
 name.data <- data.frame(full.file.names, name.full, name.split)
  
- cbind(full.file.names, name.data)
-str(full.file.names)
-head(name.data)
-tail(name.data)
+cbind(full.file.names, name.data)
+#str(full.file.names)
+#head(name.data)
+#tail(name.data)
 
 #class(name.data)
 name.df <- as.data.frame(name.data, stringsAsFactors = FALSE)
-?as.data.frame
-
 colnames(name.df) <- c("file.names", "name", "site", "rep", "position", "buttonID", "season")
+
+name.df <- name.df[name.df$season == "2021",] #select only 2021
 head(name.df)
 str(name.df)
 
