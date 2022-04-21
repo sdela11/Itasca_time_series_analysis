@@ -237,21 +237,6 @@ lotsaplots <- function(set, annotate) {
        cex = 1.7, # enlarge labels
        #adj = c(1.1,1.2)
        ) 
-  ylabs = seq(-30,45,10)
-  xlow = par()$usr[1]
-  xhigh = par()$usr[2]
-  print(as.POSIXct(xlow, origin = "1970-01-01", tz=""))
-  print(as.POSIXct(xhigh, origin = "1970-01-01", tz=""))
-  text(x = xlow,
-       y = seq(-30,45,10), 
-       labels = ylabs,
-       cex = 2,
-       pos = 2)
-  text(x = xhigh,
-       y = seq(-30,45,10), 
-       labels = ylabs,
-       cex = 2,
-       pos = 4)
   # move label position to line up under tick marks
   # Using the adj argument to move rotated tick labels is weird. If the value is
   # (0,0), the base of the first letter/number will sit just above the tick
@@ -259,6 +244,27 @@ lotsaplots <- function(set, annotate) {
   # end of the last character of the label is to the left and below the tick mark.
   # You'll still want to move the label down a bit further, and probably move it
   # to the right in the process, so play with both values of adj = c(1.1,1.2)
+  
+  
+  ylabs = seq(-30,45,10)
+  xlow = par()$usr[1]
+  xhigh = par()$usr[2]
+  print(as.POSIXct(xlow, origin = "1970-01-01", tz=""))
+  print(as.POSIXct(xhigh, origin = "1970-01-01", tz=""))
+  #Y-AXIS labels: same thing as with x-labels, but copied to be on BOTH sides of the plot.
+  #near side (left)
+  text(x = xlow, 
+       y = seq(-30,45,10), 
+       labels = ylabs,
+       cex = 2.5,
+       pos = 2)
+  #far side (right)
+  text(x = xhigh,
+       y = seq(-30,45,10), 
+       labels = ylabs,
+       cex = 2.5,
+       pos = 4)
+  
   
   #abline(). #Put in some lines. Find a way to clip the lines at the axes. Currently 
   
@@ -268,11 +274,6 @@ lotsaplots <- function(set, annotate) {
   ablineclip(h = c(-25,-15,-5,0,5,15,25,35), x1=as.POSIXct("2020-08-01 00:00"), x2=as.POSIXct("2020-08-01 00:00"), col = "gray")
   ablineclip(v = xlab, y1 = -30, y2 = 40)
   par = op # reset plotting options to turn on masking
-  # Place an x-axis title
-  #mtext('Time', side = 1, line = 6.5, cex = 2.5)
-  
-  ?abline
-  ?ablineclip
   
  
    ### THE FOR LOOP ###
@@ -336,12 +337,10 @@ lotsaplots <- function(set, annotate) {
 legelist <- c(legelist, legend_color)
       
    lines(temp_data_next$date.time, temp_data_next$value, type = "l", lwd = 2, col = as.character(legend_color))
-      
-   # }
     
   }
   
-  legend("topleft", legend = plot_names, col = legelist, lty = 1, cex = 2, title="Position (cm)", text.font=4)
+  legend("topleft", legend = plot_names, col = legelist, lty = 1, cex = 2, lwd = 3, title="Position (cm)", text.font=4)
   #return()
 }
 
