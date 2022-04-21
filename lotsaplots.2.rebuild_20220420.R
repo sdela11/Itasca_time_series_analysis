@@ -202,9 +202,27 @@ lotsaplots <- function(set, annotate) {
        #cex.axis = 2.5, # expand axis tick labels,
        ylab = '',  # blank y axis label
        xlab = '',  # blank x axis label
-       xaxt = 'n',
-       yaxt = 'n') # blank x axis tick marks
+       xaxt = 'n', # blank axis tick marks
+       yaxt = 'n',
+       xaxs = "i") #plz do not add 4% to the x axis window
      
+ # plot(x, y, xlim = c(min(x) - p*diff(range(x)), max(x) + p*diff(range(x))), 
+ #      xaxs = "i", 
+ #      ylim = c(min(y) - p*diff(range(y)), max(y) + p*diff(range(y))), 
+  #     yaxs = "i")  
+ # p = .5
+#  plot(x = "",
+ #      y = "",
+  #     type = "n",
+  #     xlim = c(xlims[1] - p*diff(range(xlims)), xlims[2] + p*diff(range(xlims))),   
+  #     ylim = c(-30,40),
+       #cex.axis = 2.5, # expand axis tick labels,
+  #     ylab = '',  # blank y axis label
+ #      xlab = '',  # blank x axis label
+  #    xaxt = 'n',
+   #    yaxt = 'n') # blank x axis tick marks
+  
+  
   mytitle = glue("{set} 2021")
   mtext(mytitle, side = 3, line = 2, cex = 3) #print as margin text
   
