@@ -61,4 +61,6 @@ find.read <- function(string){
 }
 
 find.read("C2B_R3_lsurf")
-
+find.read("C5B_R3_lsurf")
+find.read("D2B_R1_lsurf")
+find.read("D2B_R3_lsurf")
