@@ -24,27 +24,19 @@ library(wesanderson)
 names(wes_palettes)
 getAnywhere(wes_palettes)
 
-#Re-create "merged_dailies.csv" as needed:
 
-csv_files <- list.files(path = "./dailies", full.names = TRUE)
-head(csv_files)
+#TO-DO:  Summarize temperatures by week (see weeklies rebuild)
+#Summarize temperatures by rolling weeklies (see weeklies rebuild)
 
-#05/19/2021: you need to find a different way to do this now because the annotations have been manually added to merged_dailies.csv
-#merged_dailies <- map_dfr(csv_files, read_csv) #glue all of the csv files together. map_dfr() specifically returns a data frame created by row-binding.
-?map_dfr
 
-merged_dailies <- read.csv("./merged_dailies.csv")
-
-head(merged_dailies) #check
-tail(merged_dailies) #check
-
-#write.csv(merged_dailies, file = "merged_dailies.csv") #write the csv file
 
 
 #Series selection component:
 
-dailydata <- read.csv("merged_dailies.csv")
-dailydata$longdate <- as.Date(dailydata$longdate) #change longdate column to correct format
+ALL <- read.csv("ALL.csv")
+view()
+
+data$longdate <- as.Date(dailydata$longdate) #change longdate column to correct format
 
 head(dailydata)
 class(dailydata$longdate)
@@ -72,13 +64,13 @@ print(set)
 
 ##### FUNCTION START #####
 
-ggplotFUN.dDIFF <- function(set, title, pngname){
+ggplotFUN.wMEAN <- function(set){
   
   #SNOW DATA
-  NOAA <- read.csv("./NOAA_data_RAW.csv")
-  NOAA$DATE <- as.Date(NOAA$DATE)
-  UMN1 <- NOAA %>% 
-    filter(STATION == "USC00214106")
+  #NOAA <- read.csv("./NOAA_data_RAW.csv")
+  #NOAA$DATE <- as.Date(NOAA$DATE)
+  #UMN1 <- NOAA %>% 
+  #  filter(STATION == "USC00214106")
   
   #COLOR LIST  
   group.colors <- c(air = "gray74", lsurf = "#e9967a", m01surf = "#e9967a", m0surf = "#668d4e", m02surf = "#668d4e", m10 = "#3B9AB2", m30 = "#663a82", m50 = "#b491c8")  
@@ -87,11 +79,12 @@ ggplotFUN.dDIFF <- function(set, title, pngname){
   print(group.colors)
   
   #PLOT START AND STOP DATES
-  start <- as.Date("2019-11-01") #set up start and end dates
-  end <- as.Date("2020-08-01")
+  start <- as.Date("2020-10-01 00:00:00") #set up start and end dates
+  end <- as.Date("2021-10-01 00:00:00")
   
   #PNG FILE DIMENSIONS
-  png(file = pngname, width = 2500, height = 1000, units = 'px')
+  png(file = glue("{set}_weekly_mean_2021.png"), width = 2500, height = 1000, units = 'px')
+  
   
   #GGPLOT INPUTS AND PARAMETERS
   mygraph = ggplot() +
@@ -105,21 +98,21 @@ ggplotFUN.dDIFF <- function(set, title, pngname){
   
   mygraph = mygraph + scale_colour_manual(values = group.colors) +
     #theme_ipsum()+
-    ggtitle(title) +
+    ggtitle(glue("{set} Weekly Mean Temp 2021")) +
     ylab("Degrees C") +
     xlab("Date")
   
   #axes adjustments and background adjustments
   
   
-  mygraph = mygraph + scale_x_date(date_breaks = "2 weeks", date_labels = "%m/%d/%y") + 
-    scale_y_continuous(breaks = seq(0,35,5), minor_breaks = NULL)
+  mygraph = mygraph + scale_x_date(date_breaks = "4 weeks", date_labels = "%m/%d/%y") + 
+    scale_y_continuous(breaks = seq(0,30,5), minor_breaks = NULL)
   
   mygraph = mygraph + 
     theme(axis.text.x = element_text(angle = 45, vjust = 0.9,
                                      hjust = 0.9, size = rel(2))) +
     theme(axis.text.y = element_text(size = rel(2)))+
-    coord_cartesian(xlim = c(start, end), ylim = c(-2, 35)) +
+    coord_cartesian(xlim = c(start, end), ylim = c(-20, 30)) +
     theme(legend.position = c(0.9, 0.7)) 
   #theme(legend.justification = c("bottom", "right")) 
   
@@ -128,19 +121,20 @@ ggplotFUN.dDIFF <- function(set, title, pngname){
   #ANNOTATION PRE-WORK
   
   #create note.df
-  note.df <- merged_dailies %>% #note.df is created using merged_dailies, grouped by treatment and rep, then multiple columns are created by pasting the unique values of each
+  #note.df <- merged_dailies %>% #note.df is created using merged_dailies, grouped by treatment and rep, then multiple columns are created by pasting the unique values of each
     #column
-    group_by(treatment, rep) %>% 
-    summarise(O_thk = paste(unique(O_thk)), description = paste(unique(description)), note1 = paste(unique(note1)), note2 = paste(unique(note2)))
-  head(note.df)
+  #  group_by(treatment, rep) %>% 
+  #  summarise(O_thk = paste(unique(O_thk)), description = paste(unique(description)), note1 = paste(unique(note1)), note2 = paste(unique(note2)))
+ # head(note.df)
   
   #selecting annotation. deparsing the set name, separating and using the name elements to select the correct row in the annotation dataframe (note.df).
   
-  set.name <- deparse(substitute(set)) %>% #this selects just the name of the set, ex: C2A_R1
-    str_split_fixed("_", n = 2) #this splits it into two parts, separated by "_"
-  print(set.name)
-  annotation <- filter(note.df, treatment == set.name[,1] & rep == set.name[,2]) #select the rows in the note.df dataframe based on the elements in set.name
-  print(annotation)
+  
+  #set.name <- deparse(substitute(set)) %>% #this selects just the name of the set, ex: C2A_R1
+ #   str_split_fixed("_", n = 2) #this splits it into two parts, separated by "_"
+  #print(set.name)
+ # annotation <- filter(note.df, treatment == set.name[,1] & rep == set.name[,2]) #select the rows in the note.df dataframe based on the elements in set.name
+ # print(annotation)
   # for later? select(O_thk, description, note1, note2)
   
   
@@ -148,19 +142,20 @@ ggplotFUN.dDIFF <- function(set, title, pngname){
   #ANNOTATIONS
   #includes subtitle
   
-  mygraph = mygraph + annotate(geom = "text", x=as.Date("2020-04-27"), y=-2, #this creates an annotation positioned at specific x,y coordinates on the plotting area.
-                               label = glue("{annotation$note1}
-            {annotation$note2}"), 
-                               color="black", size = rel(6), hjust = 0)
+  #mygraph = mygraph + annotate(geom = "text", x=as.Date("2020-04-27"), y=-2, #this creates an annotation positioned at specific x,y coordinates on the plotting area.
+  #                             label = glue("{annotation$note1}
+  #          {annotation$note2}"), 
+  #                             color="black", size = rel(6), hjust = 0)
   #annotate(geom = "text", x = as.Date("2020-04-27"), y=-17, label)
   #mygraph = mygraph + geom_text(data = UMN1, color = "black")
   
   
   mygraph = mygraph + theme(plot.title = element_text(hjust = 0.5, size = rel(2.5), face = "bold")) +
     theme(axis.title = element_text(size = rel(2.75))) +
-    labs(subtitle = glue("{annotation$description}
-                       Avg. O thickness: {annotation$O_thk} cm"), legend.title = "Sensor Position") +  
-    theme(plot.subtitle = element_text(size = rel(1.75), face = "italic", hjust = 0.5)) +
+   # labs(subtitle = glue("{annotation$description}
+  #                     Avg. O thickness: {annotation$O_thk} cm"))
+    labs(legend.title = "Sensor Position") +  
+    #theme(plot.subtitle = element_text(size = rel(1.75), face = "italic", hjust = 0.5)) +
     theme(legend.text=element_text(size= rel(1.75)))+
     theme(legend.title=element_text(size = rel(1.9), face = "bold"))
   mygraph = mygraph + theme(plot.caption = element_text(size = rel(2))) + 
@@ -205,5 +200,17 @@ class(group.colors)
 
 
 
+### ---  extra, if needed for automatical set selection  ---- ###
+#automated file name selection!!!
 
+air.name <- glue("{substr(set, 1, 3)}_R0") #create the air.name to use in grepl
+
+data.df <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),]
+data_names <- data.df[,1]#use 1 as long as full file.names is the first one
+print(data_names)
+
+plot_names <- c(data.df$position) #create legend elements
+print(plot_names)
+
+legelist <- vector() #create the list that you will append your colors into
 
