@@ -291,7 +291,7 @@ legelist <- c(legelist, legend_color)
 }
 
 #create and run the set
-set <- as.list(c("C2A_R1", "C2A_R2", "C2A_R3", 
+set.list <- as.list(c("C2A_R1", "C2A_R2", "C2A_R3", 
                  "C2B_R1", "C2B_R2", "C2B_R3",
                  "C5A_R1", "C5A_R2", "C5A_R3",
                  "C5B_R1", "C5B_R2", "C5B_R3",
@@ -300,7 +300,7 @@ set <- as.list(c("C2A_R1", "C2A_R2", "C2A_R3",
                  "D5A_R1", "D5A_R2", "D5A_R3"))
 #print(set)
 
-lapply(set, lotsaplots.sites)
+lapply(set.list, lotsaplots.sites)
 
 #for testing
 lotsaplots("C2A_R1")
@@ -309,7 +309,9 @@ dev.off()
 
 
 
-## ------ lotsaplots for custom set creation ------- ##
+## ------ LOTSAPLOTS FOR CUSTOM SET CREATION ------- ##
+
+
 
 #INPUTS:
 #list of names (or shortened names), png name, title
