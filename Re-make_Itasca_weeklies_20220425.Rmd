@@ -1,0 +1,107 @@
+---
+title: "Re-make_Itasca_weeklies"
+author: "Sara DeLaurentis"
+date: "4/25/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(stringr)
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+```
+
+## R Markdown
+
+
+```{r }
+data <- read.csv("ALL.csv")
+
+data$date.time <- data$date.time %>% as.POSIXlt(tz = "")
+head(data$date.time)
+data <- 
+  
+
+
+START <- as.POSIXlt("2020-10-01 00:00:00", tz = "")
+#BREAK <- as.POSIXlt("2020-08-25", tz = "")
+#RESUME <- as.POSIXlt("2020-09-30", tz = "")
+END <- as.POSIXlt("2021-10-01 00:00:00", tz = "")
+
+
+data <- data %>% 
+  subset.data.frame(date.time >= START & date.time <= END) %>% #subset the whole df                         
+  filter(!is.na(value))  # Apply filter & is.na
+
+annual.sums.df.OCT <- data %>%
+  group_by(site, rep, position) %>% 
+  summarise(meantemp = mean(value), 
+            min = min(value),
+            min_temp_time = date(date.time[which.min(x = value)]),
+            max = max(value),
+            max_temp_time = date(date.time[which.max(x = value)]),
+            length = length(date.time)) 
+
+#how many values are in each group? Use this column to weed out sensors with only a few cells of data.
+
+annual.sums.df.OCT <- annual.sums.df.OCT %>% 
+  subset.data.frame(length > 500) #only select rows where the length column value is greater than 500.
+annual.sums.df.OCT$length = NULL # delete length column 
+
+#From "temperature_linear_models.Rmd"
+temps <- read.csv("C2A_R3_m0surf_i39_2020.csv")
+view(temps)
+class(temps$longdate)
+
+temps$longdate <- as.Date(temps$longdate) 
+week.START <- as.Date("2019-11-10")
+temps$week.begin <- floor_date(as.Date(temps$longdate), unit = "weeks")
+temps$week.no <- 1 + difftime(temps$week.begin, week.START, units = "weeks")
+
+  
+temps <- temps %>%  
+  group_by(week.no) %>%
+  mutate(week_avg = mean(value)) %>%  #mutate will create another column, but will not condense to a single value per week. To condense, which I think is optimal, use summarise/summarize.
+  summarize
+  
+view(temps)
+
+
+
+
+
+
+#might not need the stuff below here
+data <- mutate(date.time = mdy_hm(date.time)) %>% 
+  separate('date.time',
+           into = c('longdate', 'time'),
+           sep = ' ') %>% 
+  separate('longdate',
+                into = c('year', 'month', 'day'),
+                sep = '-',
+                remove = FALSE) %>% 
+  group_by(year, month, week) %>% 
+  summarise(meantemp = mean(value)) 
+
+
+
+
+
+
+
+
+```
+
+## 
+
+```{r }
+
+
+
+
+```
+
+
