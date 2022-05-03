@@ -178,7 +178,7 @@ ggplotFUN.wMEAN <- function(set){
                                      hjust = 0.9, size = rel(2))) +
     theme(axis.text.y = element_text(size = rel(2)))+
     coord_cartesian(xlim = c(start, end), ylim = c(-30, 30)) +
-    theme(legend.position = c(0.9, 0.7)) 
+    theme(legend.position = c(0.9, 0.3)) 
   #theme(legend.justification = c("bottom", "right")) 
   
   
@@ -221,8 +221,8 @@ ggplotFUN.wMEAN <- function(set){
   #                     Avg. O thickness: {annotation$O_thk} cm"))
     labs(legend.title = "Sensor Position") +  
     #theme(plot.subtitle = element_text(size = rel(1.75), face = "italic", hjust = 0.5)) +
-    theme(legend.text=element_text(size= rel(1.75)))+
-    theme(legend.title=element_text(size = rel(1.9), face = "bold"))
+    theme(legend.text=element_text(size= rel(3)))+
+    theme(legend.title=element_text(size = rel(2.8), face = "bold"))
   mygraph = mygraph + theme(plot.caption = element_text(size = rel(2))) + 
     theme(plot.margin = unit(c(20,45,5,20), "pt"))
   #Don't know what I'm doing with these numbers, but it works for now.
