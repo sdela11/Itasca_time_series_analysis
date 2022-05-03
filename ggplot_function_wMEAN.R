@@ -158,8 +158,8 @@ ggplotFUN.wMEAN <- function(set){
   #axes adjustments and background adjustments
   
   
-  mygraph = mygraph + scale_x_date(date_breaks = "2 weeks", date_labels = "%m/%d/%y") + 
-    scale_y_continuous(breaks = seq(-30,30,5), minor_breaks = NULL)
+  mygraph = mygraph + scale_x_date(date_breaks = "2 weeks", date_labels = "%m/%d/%y", limits = c(start, end), expand = expansion(mult = 0.01)) + 
+    scale_y_continuous(breaks = seq(-30,30,5), minor_breaks = NULL, expand = c(0,0))
   
   mygraph = mygraph + 
     theme(axis.text.x = element_text(angle = 45, vjust = 0.9,
@@ -223,7 +223,7 @@ ggplotFUN.wMEAN <- function(set){
 
 
 ggplotFUN.wMEAN("C2A_R1")
-
+dev.off()
 #Testing the function:
 ggplotFUN.dDIFF(D5B_R1, "function test", "338.png")
 dev.off()
