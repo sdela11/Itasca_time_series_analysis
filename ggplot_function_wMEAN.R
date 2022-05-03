@@ -126,10 +126,18 @@ ggplotFUN.wMEAN <- function(set){
   #  filter(STATION == "USC00214106")
   
   #COLOR LIST  
-  group.colors <- c(air = "gray74", lsurf = "#e9967a", m01surf = "#e9967a", m0surf = "#668d4e", m02surf = "#668d4e", m10 = "#3B9AB2", m30 = "#663a82", m50 = "#b491c8")  
-  #group.colors <- c(air = "gray74", lsurf = "#3B9AB2", m01surf = "#3B9AB2", m0surf = "#99d4e9", m02surf = "#99d4e9", m10 = "#EBCC2A", m30 = "#ff8b3d", m50 = "#F21A00")
-  #group.colors <- c(air = "gray74", lsurf = "#8d4e85", m01surf = "#8d4e85", m0surf = "#8d624e", m02surf = "#8d624e", m10 = "#6c8d4e", m30 = "#4e8d7b", m50 = "#4e538d")
+  positions.present <- as.character(unique(data.df$position))
+  print(positions.present)
+  class(positions.present)
+  
+  group.colors <- c(air = "gray74", lsurf = "#e9967a", m01surf = "#e9967a", m0surf = "#668d4e", m02surf = "#668d4e", m10 = "#3B9AB2", m30 = "#663a82", m50 = "#b491c8")
+  group.colors <- group.colors[names(group.colors) %in% positions.present]
   print(group.colors)
+ 
+  #class(group.colors)
+ # str(group.colors)
+   #group.colors <- c(air = "gray74", lsurf = "#3B9AB2", m01surf = "#3B9AB2", m0surf = "#99d4e9", m02surf = "#99d4e9", m10 = "#EBCC2A", m30 = "#ff8b3d", m50 = "#F21A00")
+  #group.colors <- c(air = "gray74", lsurf = "#8d4e85", m01surf = "#8d4e85", m0surf = "#8d624e", m02surf = "#8d624e", m10 = "#6c8d4e", m30 = "#4e8d7b", m50 = "#4e538d")
   
   #PLOT START AND STOP DATES
   start <- as.Date("2020-10-01 00:00:00") #set up start and end dates
@@ -144,7 +152,7 @@ ggplotFUN.wMEAN <- function(set){
     geom_line(data = data.df, aes(x = as.Date(week.begin), y = meantemp, group = position, colour = position), size = 1.1) 
  # mygraph = mygraph + geom_line(data = UMN1, aes(x = as.Date(DATE), y = SNWD), colour = "light blue", alpha = 0.5, lwd = (2.2))  #for UMN snow data
   
-  mygraph = mygraph + geom_hline(yintercept = 0, colour = "black", lwd = 1)
+  mygraph = mygraph + geom_hline(yintercept = 0, colour = "black", lwd = 1, alpha = 0.4)
   
   #?geom_line
   #  geom_line(data = UMN1, aes(x = as.Date(DATE), y = SNWD), colour = "light blue", alpha = 0.25, lwd = 2)
@@ -224,6 +232,9 @@ ggplotFUN.wMEAN <- function(set){
 
 ggplotFUN.wMEAN("C2A_R1")
 dev.off()
+
+
+
 #Testing the function:
 ggplotFUN.dDIFF(D5B_R1, "function test", "338.png")
 dev.off()
