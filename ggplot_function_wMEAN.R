@@ -212,7 +212,8 @@ ggplotFUN.wMEAN <- function(set){
     theme(plot.margin = unit(c(20,45,5,20), "pt"))
   #Don't know what I'm doing with these numbers, but it works for now.
   
-  print(mygraph)}
+  print(mygraph)
+  }
 
 
 ##### FUNCTION END #####
