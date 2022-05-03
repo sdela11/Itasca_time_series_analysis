@@ -25,7 +25,9 @@ names(wes_palettes)
 getAnywhere(wes_palettes)
 
 
-#TO-DO:  Summarize temperatures by week (see weeklies rebuild)
+#TO-DO:  
+
+#Summarize temperatures by week (see weeklies rebuild)
 #Summarize temperatures by rolling weeklies (see weeklies rebuild)
 
 
@@ -33,17 +35,57 @@ getAnywhere(wes_palettes)
 
 #Series selection component:
 
-ALL <- read.csv("ALL.csv")
-view()
+data <- read.csv("ALL.csv")
+data$date.time <- data$date.time %>% as.POSIXlt(tz = "") #set date/time class to POSIXlt for greater ease in parsing date elements.
+head(data$date.time)
 
-data$longdate <- as.Date(dailydata$longdate) #change longdate column to correct format
+# -- subset by date, add week-counting columns, calculate weekly means --
 
-head(dailydata)
-class(dailydata$longdate)
+START <- as.POSIXlt("2020-10-01 00:00:00", tz = "")
+#BREAK <- as.POSIXlt("2020-08-25", tz = "")
+#RESUME <- as.POSIXlt("2020-09-30", tz = "")
+END <- as.POSIXlt("2021-10-01 00:00:00", tz = "")
+
+data <- data %>% 
+  subset.data.frame(date.time >= START & date.time <= END) %>% #subset the whole df                         
+  filter(!is.na(value))  # Apply filter & !is.na
+
+# WEEKLY.MEANS.DF STARTING AT "data"
+
+data.2 <- data %>%
+  group_by(site, rep, position) %>% 
+  mutate(length = length(date.time)) %>% 
+  filter(length > 500)
+
+
+#```
+
+
+##Code for means at set weeks. See next chunk for rolling means.
+
+#```{r }
+
+week.START <- as.POSIXlt("2020-10-01 00:00:00", tz = "") #set the starting date of the week calculations.
+wday.no <- as.POSIXlt(week.START)$wday #store weekday integer
+data.2$week.begin <- floor_date(as.POSIXlt(data.2$date.time), unit = "weeks", week_start = wday.no) #create week.begin column
+data.2$week.no <- (1 + difftime(data.2$week.begin, week.START, units = "weeks")) %>% 
+  round()
+data[1:25,]
+
+#Set weeks
+weekly.means.df <- data.2 %>%
+  group_by(site, rep, position, week.no) %>% 
+  mutate(meantemp = round(mean(value), 2))
+
+weekly.means.df <- distinct(weekly.means.df, site, rep, position, week.begin, .keep_all = TRUE)
+length(weekly.means.df$week.begin)
+
+print(weekly.means.df)
 
 #selection examples and setup:
-C2A_R0_air <- filter(dailydata, labels == "C2A_R0_air_i106_2020")
-C2A_R1_lsurf <- filter(dailydata, labels == "C2A_R1_lsurf_i34")
+
+#C2A_R0_air <- filter(dailydata, labels == "C2A_R0_air_i106_2020")
+#C2A_R1_lsurf <- filter(dailydata, labels == "C2A_R1_lsurf_i34")
 
 #use this code to create your "set"
 set <- dailydata %>% 
