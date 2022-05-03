@@ -143,6 +143,10 @@ ggplotFUN.wMEAN <- function(set){
   start <- as.Date("2020-10-01 00:00:00") #set up start and end dates
   end <- as.Date("2021-10-01 00:00:00")
   
+  break.vec <- c(as.Date("2020-10-01 00:00:00"),
+                 seq(from = as.Date("2020-10-01 00:00:00"), to = as.Date("2021-10-01 00:00:00"),
+                     by = "2 weeks"))
+  
   #PNG FILE DIMENSIONS
   png(file = glue("{set}_weekly_mean_2021.png"), width = 2500, height = 1000, units = 'px')
   
@@ -166,7 +170,7 @@ ggplotFUN.wMEAN <- function(set){
   #axes adjustments and background adjustments
   
   
-  mygraph = mygraph + scale_x_date(date_breaks = "2 weeks", date_labels = "%m/%d/%y", limits = c(start, end), expand = expansion(mult = 0.01)) + 
+  mygraph = mygraph + scale_x_date(breaks = break.vec, date_labels = "%m/%d/%y", expand = expansion(mult = 0.01)) + 
     scale_y_continuous(breaks = seq(-30,30,5), minor_breaks = NULL, expand = c(0,0))
   
   mygraph = mygraph + 
