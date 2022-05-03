@@ -108,6 +108,14 @@ print(set)
 
 ggplotFUN.wMEAN <- function(set){
   
+  #selection from set name
+  air.name <- glue("{substr(set, 1, 3)}_R0") #create the air.name to use in grepl
+  
+  data.df <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),]
+  data_names <- data.df[,1]#use 1 as long as full file.names is the first one
+  print(data_names)
+  
+  
   #SNOW DATA
   #NOAA <- read.csv("./NOAA_data_RAW.csv")
   #NOAA$DATE <- as.Date(NOAA$DATE)
