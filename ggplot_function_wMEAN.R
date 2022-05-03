@@ -57,7 +57,6 @@ data.2 <- data %>%
   mutate(length = length(date.time)) %>% 
   filter(length > 500)
 
-
 #```
 
 
@@ -109,12 +108,14 @@ print(set)
 ggplotFUN.wMEAN <- function(set){
   
   #selection from set name
+  
+  set <- "C2A_R1"
   air.name <- glue("{substr(set, 1, 3)}_R0") #create the air.name to use in grepl
   
-  data.df <- name.df[grepl(set, name.df$name) | grepl(air.name, name.df$name),]
+  data.df <- weekly.means.df[(grepl(substr(set, 1, 3), weekly.means.df$site) & (grepl(substr(set, 5,6), weekly.means.df$rep))) | grepl(air.name, weekly.means.df$name),]
   data_names <- data.df[,1]#use 1 as long as full file.names is the first one
   print(data_names)
-  
+  print(set)
   
   #SNOW DATA
   #NOAA <- read.csv("./NOAA_data_RAW.csv")
@@ -138,8 +139,8 @@ ggplotFUN.wMEAN <- function(set){
   
   #GGPLOT INPUTS AND PARAMETERS
   mygraph = ggplot() +
-    geom_line(data = set, aes(x = as.Date(longdate), y = difference, group = position, colour = position), size = 1.1) 
-  mygraph = mygraph + geom_line(data = UMN1, aes(x = as.Date(DATE), y = SNWD), colour = "light blue", alpha = 0.5, lwd = (2.2))
+    geom_line(data = data.df, aes(x = as.Date(week.begin), y = meantemp, group = position, colour = position), size = 1.1) 
+ # mygraph = mygraph + geom_line(data = UMN1, aes(x = as.Date(DATE), y = SNWD), colour = "light blue", alpha = 0.5, lwd = (2.2))  #for UMN snow data
   
   
   
