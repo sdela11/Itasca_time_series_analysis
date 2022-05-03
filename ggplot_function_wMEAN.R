@@ -15,6 +15,7 @@ library(tidyverse)
 library(viridis)
 #library(hrbrthemes)
 library(stringr)
+library(glue)
 #install.packages("viridis")
 #install.packages("hrbrthemes")
 #hrbrthemes::import_roboto_condensed()
@@ -212,11 +213,14 @@ ggplotFUN.wMEAN <- function(set){
     theme(plot.margin = unit(c(20,45,5,20), "pt"))
   #Don't know what I'm doing with these numbers, but it works for now.
   
-  print(mygraph)}
+  print(mygraph)
+  }
 
 
 ##### FUNCTION END #####
 
+
+ggplotFUN.wMEAN("C2A_R1")
 
 #Testing the function:
 ggplotFUN.dDIFF(D5B_R1, "function test", "338.png")
