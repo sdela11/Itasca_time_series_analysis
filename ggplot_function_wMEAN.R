@@ -144,7 +144,7 @@ ggplotFUN.wMEAN <- function(set){
     geom_line(data = data.df, aes(x = as.Date(week.begin), y = meantemp, group = position, colour = position), size = 1.1) 
  # mygraph = mygraph + geom_line(data = UMN1, aes(x = as.Date(DATE), y = SNWD), colour = "light blue", alpha = 0.5, lwd = (2.2))  #for UMN snow data
   
-  
+  mygraph = mygraph + geom_hline(yintercept = 0, colour = "black", lwd = 1)
   
   #?geom_line
   #  geom_line(data = UMN1, aes(x = as.Date(DATE), y = SNWD), colour = "light blue", alpha = 0.25, lwd = 2)
@@ -158,14 +158,14 @@ ggplotFUN.wMEAN <- function(set){
   #axes adjustments and background adjustments
   
   
-  mygraph = mygraph + scale_x_date(date_breaks = "4 weeks", date_labels = "%m/%d/%y") + 
-    scale_y_continuous(breaks = seq(0,30,5), minor_breaks = NULL)
+  mygraph = mygraph + scale_x_date(date_breaks = "2 weeks", date_labels = "%m/%d/%y") + 
+    scale_y_continuous(breaks = seq(-30,30,5), minor_breaks = NULL)
   
   mygraph = mygraph + 
     theme(axis.text.x = element_text(angle = 45, vjust = 0.9,
                                      hjust = 0.9, size = rel(2))) +
     theme(axis.text.y = element_text(size = rel(2)))+
-    coord_cartesian(xlim = c(start, end), ylim = c(-20, 30)) +
+    coord_cartesian(xlim = c(start, end), ylim = c(-30, 30)) +
     theme(legend.position = c(0.9, 0.7)) 
   #theme(legend.justification = c("bottom", "right")) 
   
