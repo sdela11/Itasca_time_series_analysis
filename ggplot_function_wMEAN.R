@@ -13,7 +13,7 @@
 
 library(tidyverse)
 library(viridis)
-library(hrbrthemes)
+#library(hrbrthemes)
 library(stringr)
 #install.packages("viridis")
 #install.packages("hrbrthemes")
@@ -109,10 +109,9 @@ ggplotFUN.wMEAN <- function(set){
   
   #selection from set name
   
-  set <- "C2A_R1"
   air.name <- glue("{substr(set, 1, 3)}_R0") #create the air.name to use in grepl
   
-  data.df <- weekly.means.df[(grepl(substr(set, 1, 3), weekly.means.df$site) & (grepl(substr(set, 5,6), weekly.means.df$rep))) | grepl(air.name, weekly.means.df$name),]
+  data.df <- weekly.means.df[(grepl(set, weekly.means.df$name) | grepl(air.name, weekly.means.df$name)),] #create dataframe from selected rows.
   data_names <- data.df[,1]#use 1 as long as full file.names is the first one
   print(data_names)
   print(set)
