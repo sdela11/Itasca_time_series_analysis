@@ -8,7 +8,7 @@
 #Notes:
 #Code examples are from Lukemiller.org, 
 #r-graph-gallery.com/line-chart-several-groups-ggplot2.html
-#changes from ggplotFUN: function name, "y =" param, scale_y_continuous, coord_cartesian, coordinates for legend placement, coordinates for annotation (note1, note2)
+#changes from ggplotFUN: function name, "y =" param, scale_y_continuous, coord_cartesian, coordinates for legend placement, coordinates for annotations (note1, note2)
 # png length (2500 from 2000)
 
 library(tidyverse)
@@ -41,6 +41,7 @@ getAnywhere(wes_palettes)
 data <- read.csv("ALL.csv")
 data$date.time <- data$date.time %>% as.POSIXlt(tz = "") #set date/time class to POSIXlt for greater ease in parsing date elements.
 head(data$date.time)
+head(data)
 
 # -- subset by date, add week-counting columns, calculate weekly means --
 
@@ -199,20 +200,9 @@ ggplotFUN.wMEAN <- function(set){
   note.df <- read_csv("Replicate_annotations.csv") 
   head(note.df)
   
-  annotate.list <- list()                   # Create empty list
-  
-  for(i in 1:nrow(note.df)) {   #for(each variable in the sequence "1 through the number of rows in note.df"):
-    
-    annotate.list[[i]] <- note.df[i , ]  #create an element in annotate.list from each row found in note.df
-  }
-  print(annotate.list)
-  
-  
-  #set.name <- deparse(substitute(set)) %>% #this selects just the name of the set, ex: C2A_R1
- #   str_split_fixed("_", n = 2) #this splits it into two parts, separated by "_"
-  #print(set.name)
- annotation.row <- annotate.list[annotate.list$site_rep == set,]    #select the rows in the note.df dataframe based on the elements in set.name
-  print(annotation.row)
+  annotations <- note.df[note.df$site_rep == set,] #select the rows in the note.df dataframe based on the elements in set.name
+  print(annotations)
+  view(annotations)
   # for later? select(O_thk, description, note1, note2)
   
   
@@ -220,20 +210,20 @@ ggplotFUN.wMEAN <- function(set){
   #ANNOTATIONS
   #includes subtitle
   
-  #mygraph = mygraph + annotate(geom = "text", x=as.Date("2020-04-27"), y=-2, #this creates an annotation positioned at specific x,y coordinates on the plotting area.
-  #                             label = glue("{annotation$note1}
-  #          {annotation$note2}"), 
-  #                             color="black", size = rel(6), hjust = 0)
-  #annotate(geom = "text", x = as.Date("2020-04-27"), y=-17, label)
+  mygraph = mygraph + annotate(geom = "text", x=as.Date("2021-04-27"), y=-2, #this creates an annotation positioned at specific x,y coordinates on the plotting area.
+                               label = glue("{annotations$note1}
+            {annotations$note2}"), 
+                               color="black", size = rel(6), hjust = 0)
+  annotate(geom = "text", x = as.Date("2021-04-27"), y=-17, label)
   #mygraph = mygraph + geom_text(data = UMN1, color = "black")
   
   
   mygraph = mygraph + theme(plot.title = element_text(hjust = 0.5, size = rel(2.5), face = "bold")) +
     theme(axis.title = element_text(size = rel(2.75))) +
-   # labs(subtitle = glue("{annotation$description}
-  #                     Avg. O thickness: {annotation$O_thk} cm"))
+    labs(subtitle = glue("{annotations$description}
+  #                     Avg. O thickness (2-year): {annotations$2yr_avg_O} cm"))
     labs(legend.title = "Sensor Position") +  
-    #theme(plot.subtitle = element_text(size = rel(1.75), face = "italic", hjust = 0.5)) +
+    theme(plot.subtitle = element_text(size = rel(1.75), face = "italic", hjust = 0.5)) +
     theme(legend.text=element_text(size= rel(3)))+
     theme(legend.title=element_text(size = rel(2.8), face = "bold"))
   mygraph = mygraph + theme(plot.caption = element_text(size = rel(2))) + 
