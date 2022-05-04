@@ -115,7 +115,10 @@ set.list <- as.list(c("C2A_R1", "C2A_R2", "C2A_R3",
                       "D5A_R1", "D5A_R2", "D5A_R3"))
 #print(set)
 
-lapply(set.list, lotsaplots.sites)
+lapply(set.list, ggplotFUN.wMEAN)
+
+
+
 
 ##### FUNCTION START #####
 
@@ -198,6 +201,7 @@ ggplotFUN.wMEAN <- function(set){
   
   #create note.df
   note.df <- read_csv("Replicate_annotations.csv") 
+  note.df$O_2yr_avg <- as.character(note.df$O_2yr_avg)
   head(note.df)
   
   annotations <- note.df[note.df$site_rep == set,] #select the rows in the note.df dataframe based on the elements in set.name
@@ -210,27 +214,30 @@ ggplotFUN.wMEAN <- function(set){
   #ANNOTATIONS
   #includes subtitle
   
-  mygraph = mygraph + annotate(geom = "text", x=as.Date("2021-04-27"), y=-2, #this creates an annotation positioned at specific x,y coordinates on the plotting area.
+  mygraph = mygraph + annotate(geom = "text", x=as.Date("2021-04-27"), y=-5, #this creates an annotation positioned at specific x,y coordinates on the plotting area.
                                label = glue("{annotations$note1}
             {annotations$note2}"), 
                                color="black", size = rel(6), hjust = 0)
-  annotate(geom = "text", x = as.Date("2021-04-27"), y=-17, label)
+  #annotate(geom = "text", x = as.Date("2021-04-27"), y=-17)
   #mygraph = mygraph + geom_text(data = UMN1, color = "black")
   
   
   mygraph = mygraph + theme(plot.title = element_text(hjust = 0.5, size = rel(2.5), face = "bold")) +
     theme(axis.title = element_text(size = rel(2.75))) +
     labs(subtitle = glue("{annotations$description}
-  #                     Avg. O thickness (2-year): {annotations$2yr_avg_O} cm"))
+                         Avg. O thickness (2-year): {annotations$O_2yr_avg} cm")) +
     labs(legend.title = "Sensor Position") +  
     theme(plot.subtitle = element_text(size = rel(1.75), face = "italic", hjust = 0.5)) +
-    theme(legend.text=element_text(size= rel(3)))+
+    theme(legend.text=element_text(size= rel(2.5)))+
     theme(legend.title=element_text(size = rel(2.8), face = "bold"))
   mygraph = mygraph + theme(plot.caption = element_text(size = rel(2))) + 
     theme(plot.margin = unit(c(20,45,5,20), "pt"))
   #Don't know what I'm doing with these numbers, but it works for now.
   
   print(mygraph)
+  
+  dev.off()
+  
   }
 
 
