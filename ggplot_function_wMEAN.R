@@ -196,20 +196,23 @@ ggplotFUN.wMEAN <- function(set){
   #ANNOTATION PRE-WORK
   
   #create note.df
-  #note.df <- merged_dailies %>% #note.df is created using merged_dailies, grouped by treatment and rep, then multiple columns are created by pasting the unique values of each
-    #column
-  #  group_by(treatment, rep) %>% 
-  #  summarise(O_thk = paste(unique(O_thk)), description = paste(unique(description)), note1 = paste(unique(note1)), note2 = paste(unique(note2)))
- # head(note.df)
+  note.df <- read_csv("Replicate_annotations.csv") 
+  head(note.df)
   
-  #selecting annotation. deparsing the set name, separating and using the name elements to select the correct row in the annotation dataframe (note.df).
+  annotate.list <- list()                   # Create empty list
+  
+  for(i in 1:nrow(note.df)) {   #for(each variable in the sequence "1 through the number of rows in note.df"):
+    
+    annotate.list[[i]] <- note.df[i , ]  #create an element in annotate.list from each row found in note.df
+  }
+  print(annotate.list)
   
   
   #set.name <- deparse(substitute(set)) %>% #this selects just the name of the set, ex: C2A_R1
  #   str_split_fixed("_", n = 2) #this splits it into two parts, separated by "_"
   #print(set.name)
- # annotation <- filter(note.df, treatment == set.name[,1] & rep == set.name[,2]) #select the rows in the note.df dataframe based on the elements in set.name
- # print(annotation)
+ annotation.row <- annotate.list[annotate.list$site_rep == set,]    #select the rows in the note.df dataframe based on the elements in set.name
+  print(annotation.row)
   # for later? select(O_thk, description, note1, note2)
   
   
