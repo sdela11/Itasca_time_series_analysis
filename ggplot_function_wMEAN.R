@@ -243,46 +243,21 @@ ggplotFUN.wMEAN <- function(set){
 
 ##### FUNCTION END #####
 
-
+#Testing the function:
 ggplotFUN.wMEAN("C2A_R1")
 dev.off()
 
 
 
-#Testing the function:
-ggplotFUN.dDIFF(D5B_R1, "function test", "338.png")
-dev.off()
-
-
-#Airtemp sets:
-set <- dailydata %>% 
-  filter(position %in% c("air"))
-
-head(set)
-set[1000,]
-
-ggplotFUN(set, "Avg Daily Air Temps", "Air_daily_average.png")
-dev.off()
-
-
-set <- dailydata %>% 
-  filter(treatment %in% c("C2A")) %>% 
-  filter(rep %in% c("R2"))
-head(set)
-
-ggplotFUN(set, "C2A R2 Avg Daily Temps", "C2A_R2_daily_average.png")
-dev.off()
-
-
-#What's going on with the color list?
-group.colors <- c(air = "black", lsurf = "darksalmon", m01surf = "darksalmon", m0surf = "green3", m02surf = "green3", m10 = "royalblue2", m30 = "orchid", m50 = "pink")  
-print(group.colors)
-class(group.colors)
 
 
 
-### ---  extra, if needed for automatical set selection  ---- ###
-#automated file name selection!!!
+
+
+### ---  extra, if needed  ---- ###
+
+
+#for automatical set selection 
 
 air.name <- glue("{substr(set, 1, 3)}_R0") #create the air.name to use in grepl
 
@@ -295,3 +270,13 @@ print(plot_names)
 
 legelist <- vector() #create the list that you will append your colors into
 
+
+#for Airtemp sets (old):
+set <- dailydata %>% 
+  filter(position %in% c("air"))
+
+head(set)
+set[1000,]
+
+ggplotFUN(set, "Avg Daily Air Temps", "Air_daily_average.png")
+dev.off()
