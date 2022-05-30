@@ -254,14 +254,22 @@ print(finalTable)
 
 
 
+C2A <- filter(data, site == "C2A")
+str(data)
 
 
-create_table(C2A)
-
-ggplot(finalTable, aes(x=as.POSIXct(date.time, format = "%m/%d/%Y %H:%M"), y=value, group = position, color = position)) + 
+myplot <- ggplot(C2A, aes(x=as.POSIXct(date.time, format = "%Y-%m-%d %H:%M:%S"), y=value, group = position, color = position)) + 
   geom_line() + 
   xlab("Date/Time") + 
   ylab("Temperature in C")
+
+colors <- c("lsurf" = "yellow", "m0surf" = "green", "m10" = "blue", "m30" = "purple", "m50" = "pink", "air" = "red")  #create a named vector with desired colors assigned to each depth.
+
+myplot <- myplot + labs(title = "C2A color test", subtitle = as.character(Sys.Date()), color = "Legend") +  #Use labs() argument to specify the name of the legend.
+  scale_color_manual(values = colors, breaks = names(colors)[c(4,5,1,3,2,6)]) #Set color scale and order the elements in the legend.
+print(myplot)
+
+
 ?assign
 
 ```
