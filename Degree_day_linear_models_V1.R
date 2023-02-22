@@ -4,3 +4,11 @@
 #Date: 2023-02-22
 #Purpose: Final coding for Degree Day data analysis outputs
 
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(dplyr)
+library(glue)
+library(lme4)
+library(lmerTest)
+library(emmeans)
