@@ -12,3 +12,8 @@ library(glue)
 library(lme4)
 library(lmerTest)
 library(emmeans)
+
+getwd()
+
+data <- read_csv("../ALL_A.csv")
+head(data)
