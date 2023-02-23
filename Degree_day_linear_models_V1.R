@@ -13,7 +13,8 @@ library(lme4)
 library(lmerTest)
 library(emmeans)
 
-getwd()
-
 data <- read_csv("../ALL_A.csv")
 head(data)
+
+DD.data <- read.csv("../Itasca_summary_code/degree_days_OCT_v2.csv")
+head(DD.data)
