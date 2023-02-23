@@ -14,6 +14,7 @@ library(lmerTest)
 library(emmeans)
 
 data <- read_csv("../ALL_A.csv")
+data$`...1` = NULL
 head(data)
 str(data)
 
