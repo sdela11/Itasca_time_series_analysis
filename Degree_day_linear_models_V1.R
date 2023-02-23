@@ -18,3 +18,11 @@ head(data)
 
 DD.data <- read.csv("../Itasca_summary_code/degree_days_OCT_v2.csv")
 head(DD.data)
+
+dailymeans.df <- 
+
+
+time.start <- 
+time.break.one <-
+time.break.two <- 
+time.end <- 
