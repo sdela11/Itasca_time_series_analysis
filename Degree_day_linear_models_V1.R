@@ -28,6 +28,23 @@ head(dailymeans.df)
 
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
+#setting up site,rep,position (SRP) names.
+
+SRP.df <- str_split_fixed(dailymeans.df$name, "_", 5)
+colnames(SRP.df) <- c("site", "rep", "position", "buttonID", "season")
+head(SRP.df)
+
+
+#more code for remembering:
+
+DD.df <- dailymeans.df %>% 
+  group_by(name) %>% 
+  summarise(name = name, #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+            degree.days = sum(meantemp)) %>% 
+  distinct(name, .keep_all = TRUE) %>% 
+  ungroup()
+view(DD.df)  
+
 
 #Helpful code for remembering.
 
