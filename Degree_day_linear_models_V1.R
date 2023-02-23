@@ -18,8 +18,8 @@ data$`...1` = NULL
 head(data)
 str(data)
 
-DD.data <- read.csv("../Itasca_summary_code/degree_days_OCT_v2.csv")
-head(DD.data)
+#DD.data <- read.csv("../Itasca_summary_code/degree_days_OCT_v2.csv")
+#head(DD.data)
 
 dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
   group_by(name, date(date.time)) %>% 
@@ -31,7 +31,7 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 #setting up site,rep,position (SRP) names.
 
-SRP.df <- as_data_frame(str_split_fixed(dailymeans.df$name, "_", 5))
+SRP.df <- as_tibble(str_split_fixed(dailymeans.df$name, "_", 5))
 colnames(SRP.df) <- c("site", "rep", "position", "buttonID", "season")
 head(SRP.df)
 SRP.df$SRP.name <- paste(SRP.df$site, SRP.df$rep, SRP.df$position, sep = "_")
