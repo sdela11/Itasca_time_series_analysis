@@ -104,5 +104,18 @@ DDsums.df <- DD.df.cut %>%
               degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
     distinct(site, rep, position, .keep_all = TRUE) %>% 
     ungroup()
-  view(DDsums.df)  
+  #view(DDsums.df)  
 
+
+##Adding treatment columns:
+#Worm invasion level (worm_lvl, LOW or HIGH)
+DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
+head(DDsums.df.a)
+view(DDsums.df.a)  
+
+#Vegetation (Veg, Coniferous or Deciduous)
+DDsums.df.b <- DDsums.df.a %>% mutate(Veg = if_else(grepl("C", DDsums.df$site), "Coniferous", "Deciduous"))
+head(DDsums.df.b)
+view(DDsums.df.b)  
+
+DDSUMS.df <- DDsums.df.b
