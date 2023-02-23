@@ -30,10 +30,15 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 #setting up site,rep,position (SRP) names.
 
-SRP.df <- str_split_fixed(dailymeans.df$name, "_", 5)
+SRP.df <- as_data_frame(str_split_fixed(dailymeans.df$name, "_", 5))
 colnames(SRP.df) <- c("site", "rep", "position", "buttonID", "season")
 head(SRP.df)
+SRP.df$SRP.name <- paste(SRP.df$site, SRP.df$rep, SRP.df$position, sep = "_")
+head(SRP.df)
 
+dailymeans2.df <- cbind(SRP.df$SRP.name,dailymeans.df)
+colnames(dailymeans2.df)[1] <- c("SRP.name")
+view(dailymeans2.df)
 
 #more code for remembering:
 
