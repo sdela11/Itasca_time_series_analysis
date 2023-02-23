@@ -86,3 +86,10 @@ DD.df.cut <- DD.df[(DD.df$date >= time.start) & (DD.df$date <= time.end),]
 
 view(DD.df.cut)
 
+DDsums.df <- DD.df.cut %>% 
+    group_by(SRP.name) %>% 
+    summarise(SRP.name = SRP.name,
+              degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+    distinct(SRP.name, .keep_all = TRUE) %>% 
+    ungroup()
+  view(DDsums.df)  
