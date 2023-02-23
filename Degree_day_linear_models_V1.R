@@ -26,6 +26,8 @@ dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-
 
 head(dailymeans.df)
 
+dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
+
 
 #Helpful code for remembering.
 
