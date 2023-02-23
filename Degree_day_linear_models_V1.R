@@ -31,7 +31,8 @@ head(dailymeans.df)
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 
-#setting up site,rep,position (SRP) names.
+#setting up site,rep,position (SRP) names for easier grouping.
+
 
 SRP.df <- as_tibble(str_split_fixed(dailymeans.df$name, "_", 5))
 colnames(SRP.df) <- c("site", "rep", "position", "buttonID", "season")
@@ -46,6 +47,7 @@ view(dailymeans2.df)
 #RENAME DF
 
 DD.df <- dailymeans2.df
+
 
 #code for remembering
 #DD.df <- dailymeans.df %>% 
@@ -93,3 +95,4 @@ DDsums.df <- DD.df.cut %>%
     distinct(SRP.name, .keep_all = TRUE) %>% 
     ungroup()
   view(DDsums.df)  
+
