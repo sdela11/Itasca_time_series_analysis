@@ -24,10 +24,12 @@ str(data)
 dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
   group_by(name, date(date.time)) %>% 
   summarise(meantemp = mean(value))
+colnames(dailymeans.df)[2]<- "date" #rename grouping column
 
 head(dailymeans.df)
 
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
+
 
 #setting up site,rep,position (SRP) names.
 
@@ -46,13 +48,13 @@ view(dailymeans2.df)
 DD.df <- dailymeans2.df
 
 #code for remembering
-DD.df <- dailymeans.df %>% 
-  group_by(SRP.name) %>% 
-  summarise(SRP.name = SRP.name,
-            degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
-  distinct(SRP.name, .keep_all = TRUE) %>% 
-  ungroup()
-view(DD.df)  
+#DD.df <- dailymeans.df %>% 
+#  group_by(SRP.name) %>% 
+#  summarise(SRP.name = SRP.name,
+#            degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+#  distinct(SRP.name, .keep_all = TRUE) %>% 
+#  ungroup()
+#view(DD.df)  
 
 
 #Helpful code for remembering.
@@ -68,10 +70,19 @@ view(DD.df)
 #  group_by(year, month, day) %>% 
 #  summarise(meantemp = mean(value)) 
   
-  
 
-time.start <- as.POSIXct("2020-04-01")
+### TIME BREAKS ###
+
+time.start <- as.Date("2020-04-01")
 time.break.one <-
 time.break.two <- 
-time.end <- as.POSIXct("2020-09-30")
+time.end <- as.Date("2020-09-30")
+print(time.start)
+print(time.end)
+
+### subsetting the dataframe
+
+DD.df.cut <- DD.df[(DD.df$date >= time.start) & (DD.df$date <= time.end),]
+
+view(DD.df.cut)
 
