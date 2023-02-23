@@ -40,13 +40,16 @@ dailymeans2.df <- cbind(SRP.df$SRP.name,dailymeans.df)
 colnames(dailymeans2.df)[1] <- c("SRP.name")
 view(dailymeans2.df)
 
-#more code for remembering:
+#RENAME DF
 
+DD.df <- dailymeans2.df
+
+#code for remembering
 DD.df <- dailymeans.df %>% 
-  group_by(name) %>% 
-  summarise(name = name, #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
-            degree.days = sum(meantemp)) %>% 
-  distinct(name, .keep_all = TRUE) %>% 
+  group_by(SRP.name) %>% 
+  summarise(SRP.name = SRP.name,
+            degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+  distinct(SRP.name, .keep_all = TRUE) %>% 
   ungroup()
 view(DD.df)  
 
