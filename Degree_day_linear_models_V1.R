@@ -69,7 +69,8 @@ view(DD.df)
   
   
 
-time.start <- 
+time.start <- as.POSIXct("2020-04-01")
 time.break.one <-
 time.break.two <- 
-time.end <- 
+time.end <- as.POSIXct("2020-09-30")
+
