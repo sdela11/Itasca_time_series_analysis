@@ -112,7 +112,7 @@ DDsums.df <- DD.df.cut %>%
 #Worm invasion level (worm_lvl, LOW or HIGH)
 DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
 head(DDsums.df.a)
-view(DDsums.df.a)  
+#view(DDsums.df.a)  
 
 #Vegetation (Veg, Coniferous or Deciduous)
 DDsums.df.b <- DDsums.df.a %>% mutate(Veg = if_else(grepl("C", DDsums.df$site), "Coniferous", "Deciduous"))
@@ -120,3 +120,13 @@ head(DDsums.df.b)
 view(DDsums.df.b)  
 
 DDSUMS.df <- DDsums.df.b
+head(DDSUMS.df)
+
+# ------------------------------------------ #
+
+## LINEAR MODEL TIME ##
+
+# This creates a model with degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
+
+mod1 <- lmer(data = DDSUMS.df, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
+
