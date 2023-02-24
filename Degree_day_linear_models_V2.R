@@ -125,8 +125,31 @@ head(DDSUMS.df)
 # ------------------------------------------ #
 
 ## LINEAR MODEL TIME ##
-
+DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
+view(DDSUMS.lsurf)
 # This creates a model with degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
 
-mod1 <- lmer(data = DDSUMS.df, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
+mod1 <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
 
+#View object
+mod1
+
+#summary of object
+summary(mod1)
+
+##Error:
+#" boundary (singular) fit: see help('isSingular') "
+
+#What happens if we remove the random effect for site?
+mod2 <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod2)
+#non-significant slopes for lsurf, which makes sense
+
+#linear model for m10. Note: for these regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
+#create m10 object:
+DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
+print(DDSUMS.m10)
+
+mod3 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod3)
+#significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
