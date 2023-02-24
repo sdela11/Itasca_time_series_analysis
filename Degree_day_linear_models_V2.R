@@ -76,8 +76,8 @@ DD.df <- dailymeans2.df
 ### TIME BREAKS ###
 
 time.start <- as.Date("2020-04-01")
-time.break.one <-
-time.break.two <- 
+#time.break.one <-
+#time.break.two <- 
 time.end <- as.Date("2020-09-30")
 print(time.start)
 print(time.end)
@@ -97,14 +97,15 @@ head(meta.df)
 DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
                          .before = "date")
 head(DD.df.cut)
+str(DD.df.cut)
 
 DDsums.df <- DD.df.cut %>% 
     group_by(site, rep, position) %>% 
-    summarise(site = site, name = name, position = position,
+    reframe(site = site, position = position,
               degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
-    distinct(site, rep, position, .keep_all = TRUE) %>% 
-    ungroup()
-  #view(DDsums.df)  
+    distinct(site, rep, position, .keep_all = TRUE) #%>% 
+    #ungroup()
+  view(DDsums.df)  
 
 
 ##Adding treatment columns:
