@@ -31,24 +31,6 @@ head(dailymeans.df)
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 
-#setting up site,rep,position (SRP) names for easier grouping.
-
-
-#SRP.df <- as_tibble(str_split_fixed(dailymeans.df$name, "_", 5))
-#colnames(SRP.df) <- c("site", "rep", "position", "buttonID", "season")
-#head(SRP.df)
-#SRP.df$SRP.name <- paste(SRP.df$site, SRP.df$rep, SRP.df$position, sep = "_")
-#head(SRP.df)
-
-#dailymeans2.df <- cbind(SRP.df$SRP.name,dailymeans.df)
-#colnames(dailymeans2.df)[1] <- c("SRP.name")
-#view(dailymeans2.df)
-
-#RENAME DF
-
-DD.df <- dailymeans2.df
-
-
 #code for remembering
 #DD.df <- dailymeans.df %>% 
 #  group_by(SRP.name) %>% 
@@ -99,13 +81,16 @@ DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], pos
 head(DD.df.cut)
 str(DD.df.cut)
 
+
+## Summarise, or reframe ##
+
 DDsums.df <- DD.df.cut %>% 
     group_by(site, rep, position) %>% 
     reframe(site = site, position = position,
               degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
     distinct(site, rep, position, .keep_all = TRUE) #%>% 
     #ungroup()
-  view(DDsums.df)  
+  view(DDsums.df)
 
 
 ##Adding treatment columns:
@@ -123,6 +108,7 @@ DDSUMS.df <- DDsums.df.b
 head(DDSUMS.df)
 
 # ------------------------------------------ #
+
 
 ## LINEAR MODEL TIME ##
 DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
