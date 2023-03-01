@@ -92,7 +92,6 @@ head(meta.df)
 DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
                          .before = "date")
 head(DD.df.cut)
-str(DD.df.cut)
 
 
 ## Summarise, or reframe ##
@@ -131,8 +130,9 @@ head(DDSUMS.df)
 ### LINEAR MODEL TIME ##
 
 
-## DD vegxworm lsurf (DDSUMS.lsurf)
-#This creates a model with degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
+## DD vegxworm lsurf mixed (DDSUMS.lsurf)
+#This model has degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
+#PARAMETERS: Timeframe: 2020-04-01 - 2020-09-30, position: lsurf
 
 DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
 view(DDSUMS.lsurf)
@@ -148,12 +148,20 @@ summary(mod1)
 ##Error:
 #" boundary (singular) fit: see help('isSingular') "
 
-#What happens if we remove the random effect for site?
+##What happens if we remove the random effect for site?
+
+## lm DD vegxworm lsurf 
+# linear model with no random effect:
+# PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: lsurf
+
 mod2 <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2)
 #non-significant slopes for lsurf, which makes sense
 
+## lm DD vegxworm m10
 #linear model for m10. Note: for these regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
+#PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
+
 #create m10 object:
 DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
 print(DDSUMS.m10)
