@@ -22,7 +22,6 @@ library(emmeans)
 data <- read_csv("../ALL_A.csv")
 data$`...1` = NULL #remove strange column that was created upon read-in.
 head(data)
-str(data)
 
 ## Summarize mean temps for each date
 
@@ -94,7 +93,7 @@ DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], pos
 head(DD.df.cut)
 
 
-## Summarise, or reframe ##
+## Summarise, or reframe. Final step for response variable df ##
 
 # Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
 # This gives you the response variable: degree days tabulated over the desired timeframe.
@@ -134,6 +133,7 @@ head(DDSUMS.df)
 #This model has degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
 #PARAMETERS: Timeframe: 2020-04-01 - 2020-09-30, position: lsurf
 
+#generate lsurf df for analysis
 DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
 view(DDSUMS.lsurf)
 
