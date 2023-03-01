@@ -4,6 +4,8 @@
 #Date: 2023-02-22
 #Purpose: Final coding for Degree Day data analysis outputs
 
+## LIBRARIES
+
 library(tidyverse)
 library(lubridate)
 library(stringr)
@@ -13,14 +15,20 @@ library(lme4)
 library(lmerTest)
 library(emmeans)
 
+## Read in data
+
+#Read in ALL_A.csv from the directory above (extra dot .). ALL_A.csv is the version with outliers and compromised data removed.
+
 data <- read_csv("../ALL_A.csv")
-data$`...1` = NULL
+data$`...1` = NULL #remove strange column that was created upon read-in.
 head(data)
 str(data)
 
-#DD.data <- read.csv("../Itasca_summary_code/degree_days_OCT_v2.csv")
-#head(DD.data)
+## Summarize mean temps for each date
 
+#Create a new df:
+# mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
+# rename the grouping column to "date", from the automatically created 'date(date.time)'
 dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
   group_by(name, date(date.time)) %>% 
   summarise(meantemp = mean(value))
@@ -28,6 +36,7 @@ colnames(dailymeans.df)[2]<- "date" #rename grouping column
 
 head(dailymeans.df)
 
+## Remove all values less than or equal to 0
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 
@@ -55,7 +64,7 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 #  summarise(meantemp = mean(value)) 
   
 
-### TIME BREAKS ###
+## TIME BREAKS ##
 
 time.start <- as.Date("2020-04-01")
 #time.break.one <-
@@ -64,18 +73,22 @@ time.end <- as.Date("2020-09-30")
 print(time.start)
 print(time.end)
 
-### subsetting the dataframe
 
+## subsetting the dataframe using the time breaks.
+#Selects data that is greater than time.start AND less than time.end
 DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
 
 view(DD.df.cut)
 
 
-##Add in metadata columns for final dataframe
 
+## Add in metadata columns for final dataframe
+
+#Split the name column into 5 separate columns
 meta.df <- str_split_fixed(DD.df.cut$name, "_", n = 5)
 head(meta.df)
 
+# Name and attach the columns from meta.df
 DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
                          .before = "date")
 head(DD.df.cut)
@@ -84,6 +97,8 @@ str(DD.df.cut)
 
 ## Summarise, or reframe ##
 
+# Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
+# This gives you the response variable: degree days tabulated over the desired timeframe.
 DDsums.df <- DD.df.cut %>% 
     group_by(site, rep, position) %>% 
     reframe(site = site, position = position,
@@ -93,27 +108,34 @@ DDsums.df <- DD.df.cut %>%
   view(DDsums.df)
 
 
-##Adding treatment columns:
+## Adding treatment columns:
+  
 #Worm invasion level (worm_lvl, LOW or HIGH)
+
 DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
 head(DDsums.df.a)
 #view(DDsums.df.a)  
 
 #Vegetation (Veg, Coniferous or Deciduous)
+
 DDsums.df.b <- DDsums.df.a %>% mutate(Veg = if_else(grepl("C", DDsums.df$site), "Coniferous", "Deciduous"))
 head(DDsums.df.b)
 view(DDsums.df.b)  
 
-DDSUMS.df <- DDsums.df.b
+DDSUMS.df <- DDsums.df.b # rename df
 head(DDSUMS.df)
 
 # ------------------------------------------ #
 
 
-## LINEAR MODEL TIME ##
+### LINEAR MODEL TIME ##
+
+
+## DD vegxworm lsurf (DDSUMS.lsurf)
+#This creates a model with degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
+
 DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
 view(DDSUMS.lsurf)
-# This creates a model with degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
 
 mod1 <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
 
