@@ -13,12 +13,12 @@ library(lme4)
 library(lmerTest)
 library(emmeans)
 
+## Read in data
+
+#Read in ALL_A.csv from the directory above. ALL_A.csv has all outliers and compromised data removed.
 data <- read_csv("../ALL_A.csv")
 head(data)
 str(data)
-
-DD.data <- read.csv("../Itasca_summary_code/degree_days_OCT_v2.csv")
-head(DD.data)
 
 dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
   group_by(name, date(date.time)) %>% 
