@@ -1,0 +1,141 @@
+#Degree_day_linear_models_V1.R
+#Degree Day Statistical Analysis with linear models V1
+#Created by: Sara DeLaurentis
+#Date: 2023-02-22
+#Purpose: Final coding for Degree Day data analysis outputs
+
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(dplyr)
+library(glue)
+library(lme4)
+library(lmerTest)
+library(emmeans)
+
+data <- read_csv("../ALL_A.csv")
+data$`...1` = NULL
+head(data)
+str(data)
+
+#DD.data <- read.csv("../Itasca_summary_code/degree_days_OCT_v2.csv")
+#head(DD.data)
+
+dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
+  group_by(name, date(date.time)) %>% 
+  summarise(meantemp = mean(value))
+colnames(dailymeans.df)[2]<- "date" #rename grouping column
+
+head(dailymeans.df)
+
+dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
+
+
+#code for remembering
+#DD.df <- dailymeans.df %>% 
+#  group_by(SRP.name) %>% 
+#  summarise(SRP.name = SRP.name,
+#            degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+#  distinct(SRP.name, .keep_all = TRUE) %>% 
+#  ungroup()
+#view(DD.df)  
+
+
+#Helpful code for remembering.
+
+#  C2A_R1_m10_dailymean <- mutate(C2A_R1_m10,'date.time' = mdy_hm(date.time)) %>% 
+#  separate('date.time',
+#           into = c('longdate', 'time'),
+#           sep = ' ') %>% 
+#  separate('longdate',
+#           into = c('year', 'month', 'day'),
+#           sep = '-',
+#           remove = FALSE) %>% 
+#  group_by(year, month, day) %>% 
+#  summarise(meantemp = mean(value)) 
+  
+
+### TIME BREAKS ###
+
+time.start <- as.Date("2020-04-01")
+#time.break.one <-
+#time.break.two <- 
+time.end <- as.Date("2020-09-30")
+print(time.start)
+print(time.end)
+
+### subsetting the dataframe
+
+DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
+
+view(DD.df.cut)
+
+
+##Add in metadata columns for final dataframe
+
+meta.df <- str_split_fixed(DD.df.cut$name, "_", n = 5)
+head(meta.df)
+
+DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
+                         .before = "date")
+head(DD.df.cut)
+str(DD.df.cut)
+
+
+## Summarise, or reframe ##
+
+DDsums.df <- DD.df.cut %>% 
+    group_by(site, rep, position) %>% 
+    reframe(site = site, position = position,
+              degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+    distinct(site, rep, position, .keep_all = TRUE) #%>% 
+    #ungroup()
+  view(DDsums.df)
+
+
+##Adding treatment columns:
+#Worm invasion level (worm_lvl, LOW or HIGH)
+DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
+head(DDsums.df.a)
+#view(DDsums.df.a)  
+
+#Vegetation (Veg, Coniferous or Deciduous)
+DDsums.df.b <- DDsums.df.a %>% mutate(Veg = if_else(grepl("C", DDsums.df$site), "Coniferous", "Deciduous"))
+head(DDsums.df.b)
+view(DDsums.df.b)  
+
+DDSUMS.df <- DDsums.df.b
+head(DDSUMS.df)
+
+# ------------------------------------------ #
+
+
+## LINEAR MODEL TIME ##
+DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
+view(DDSUMS.lsurf)
+# This creates a model with degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
+
+mod1 <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
+
+#View object
+mod1
+
+#summary of object
+summary(mod1)
+
+##Error:
+#" boundary (singular) fit: see help('isSingular') "
+
+#What happens if we remove the random effect for site?
+mod2 <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod2)
+#non-significant slopes for lsurf, which makes sense
+
+#linear model for m10. Note: for these regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
+#create m10 object:
+DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
+print(DDSUMS.m10)
+
+mod3 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod3)
+#significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
