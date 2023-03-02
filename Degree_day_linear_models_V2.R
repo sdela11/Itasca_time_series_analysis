@@ -35,6 +35,13 @@ colnames(dailymeans.df)[2]<- "date" #rename grouping column
 
 head(dailymeans.df)
 
+## Problem-solving
+C2A_R2_m10.means <- dailymeans.df %>% filter(grepl("C2A_R2_m10",name) == TRUE)
+view(C2A_R2_m10.means)
+
+C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
+view(C2A_R3_m10.means)
+
 ## Remove all values less than or equal to 0
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
@@ -92,7 +99,12 @@ DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], pos
                          .before = "date")
 head(DD.df.cut)
 
+## Cutting out incomplete datasets. Removes the group if the length is less than 50 days.
 
+DD.df.cut <- DD.df.cut %>% group_by(name) %>% filter((length(name) > 50) == TRUE)
+view(DD.df.cut)
+
+     
 ## Summarise, or reframe. Final step for response variable df ##
 
 # Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
@@ -105,6 +117,10 @@ DDsums.df <- DD.df.cut %>%
     #ungroup()
   view(DDsums.df)
 
+
+  
+
+  
 
 ## Adding treatment columns:
   
@@ -165,6 +181,7 @@ summary(mod2)
 #create m10 object:
 DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
 print(DDSUMS.m10)
+#view(DDSUMS.m10)
 
 mod3 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod3)
