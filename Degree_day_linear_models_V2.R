@@ -75,7 +75,7 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 time.start <- as.Date("2020-04-01")
 #time.break.one <-
 #time.break.two <- 
-time.end <- as.Date("2020-09-30")
+time.end <- as.Date("2020-08-27")
 print(time.start)
 print(time.end)
 
