@@ -118,9 +118,37 @@ DDsums.df <- DD.df.cut %>%
   view(DDsums.df)
 
 
-  
+## Creating full (expected) dataframe, to merge with the current dataframe.  
 
-  
+#  site <- c(rep("C2A", 14), rep("C2B", 14), rep("C5A", 14), rep("C5B", 14),
+#          rep("D2A", 14), rep("D2B", 14), rep("D5A", 14), rep("D5B", 14))
+#print(site)
+
+#rep <- c("R0", rep("R1",5), rep("R2", 4), rep("R3",4))  %>% 
+#  rep(8)
+#print(rep)
+
+sensor.list <- as_tibble(read_csv("../sensor_list.csv"))
+view(sensor.list)
+
+
+#Add column to DDsums.df and sensor.list to give a unique column to merge with.
+DDsums.df.A <- DDsums.df %>% 
+  mutate(srp.name = paste(site, rep, position, sep = "_"))
+head(DDsums.df.A)
+
+sensor.list.A <- sensor.list %>% 
+  mutate(srp.name = paste(site, rep, position, sep = "_"))
+head(sensor.list.A)
+
+DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, by = "srp.name", all.x = TRUE)
+
+
+
+view(DDsums.df.new)
+
+DDsums.df.new <- left_join(x = sensor.list.A, y = DDsums.df.A, join_by(srp.name == srp.name, site == site, rep == rep, position == position))
+
 
 ## Adding treatment columns:
   
@@ -128,7 +156,7 @@ DDsums.df <- DD.df.cut %>%
 
 DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
 head(DDsums.df.a)
-#view(DDsums.df.a)  
+#view(DDsums.df.a) 
 
 #Vegetation (Veg, Coniferous or Deciduous)
 
