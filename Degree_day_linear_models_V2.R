@@ -141,13 +141,11 @@ sensor.list.A <- sensor.list %>%
   mutate(srp.name = paste(site, rep, position, sep = "_"))
 head(sensor.list.A)
 
-DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, by = "srp.name", all.x = TRUE)
-
+#DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, by = "srp.name", all.x = TRUE)
+DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
 
 
 view(DDsums.df.new)
-
-DDsums.df.new <- left_join(x = sensor.list.A, y = DDsums.df.A, join_by(srp.name == srp.name, site == site, rep == rep, position == position))
 
 
 ## Adding treatment columns:
