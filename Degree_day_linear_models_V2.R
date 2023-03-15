@@ -109,13 +109,13 @@ view(DD.df.cut)
 
 # Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
 # This gives you the response variable: degree days tabulated over the desired timeframe.
-DDsums.df <- DD.df.cut %>% 
+DDsums.df.pre <- DD.df.cut %>% 
     group_by(site, rep, position) %>% 
     reframe(site = site, position = position,
               degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
     distinct(site, rep, position, .keep_all = TRUE) #%>% 
     #ungroup()
-  view(DDsums.df)
+  view(DDsums.df.pre)
 
 
 ## Creating full (expected) dataframe, to merge with the current dataframe.  
@@ -133,7 +133,7 @@ view(sensor.list)
 
 
 #Add column to DDsums.df and sensor.list to give a unique column to merge with.
-DDsums.df.A <- DDsums.df %>% 
+DDsums.df.A <- DDsums.df.pre %>% 
   mutate(srp.name = paste(site, rep, position, sep = "_"))
 head(DDsums.df.A)
 
@@ -142,10 +142,10 @@ sensor.list.A <- sensor.list %>%
 head(sensor.list.A)
 
 #DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, by = "srp.name", all.x = TRUE)
-DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
+DDsums.df <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
 
 
-view(DDsums.df.new)
+view(DDsums.df)
 
 
 ## Adding treatment columns:
