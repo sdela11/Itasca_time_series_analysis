@@ -176,7 +176,7 @@ head(DDSUMS.df)
 #PARAMETERS: Timeframe: 2020-04-01 - 2020-09-30, position: lsurf
 
 #generate lsurf df for analysis
-DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
+DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf" | position == "m01surf")
 view(DDSUMS.lsurf)
 
 mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
