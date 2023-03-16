@@ -202,6 +202,20 @@ mod2.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + V
 summary(mod2.lsurf)
 #non-significant slopes for lsurf, which makes sense
 
+
+##m0surf models
+#creation of m0surf object
+DDSUMS.m0surf <- DDSUMS.df %>% filter(position == "m0surf" | position == "m02surf")
+view(DDSUMS.m0surf)
+
+##m0surf lmer
+mod1.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
+summary(mod1.m0surf)
+
+##m0surf lm
+mod2.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod2.m0surf)
+
 ## mixed-effects DD vegxworm m10
 #lmer for m10. Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
 #PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
