@@ -206,6 +206,7 @@ summary(mod2.lsurf)
 #lmer for m10. Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
 #PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
 
+##m10 models
 #create m10 object:
 DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
 print(DDSUMS.m10)
