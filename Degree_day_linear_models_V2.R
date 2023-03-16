@@ -179,29 +179,31 @@ head(DDSUMS.df)
 DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf")
 view(DDSUMS.lsurf)
 
-mod1 <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
+mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
 
 #View object
-mod1
+mod1.lsurf
 
 #summary of object
-summary(mod1)
+summary(mod1.lsurf)
 
-##Error:
+#Error:
 #" boundary (singular) fit: see help('isSingular') "
+#2023-03-16: After filling in data gaps with NAs, no more singular fit error.
+
 
 ##What happens if we remove the random effect for site?
 
-## lm DD vegxworm lsurf 
+## lm DD vegxworm lsurf (mod2.lsurf)
 # linear model with no random effect:
 # PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: lsurf
 
-mod2 <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
-summary(mod2)
+mod2.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod2.lsurf)
 #non-significant slopes for lsurf, which makes sense
 
-## lm DD vegxworm m10
-#linear model for m10. Note: for these regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
+## mixed-effects DD vegxworm m10
+#lmer for m10. Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
 #PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
 
 #create m10 object:
@@ -209,6 +211,11 @@ DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
 print(DDSUMS.m10)
 #view(DDSUMS.m10)
 
-mod3 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
-summary(mod3)
+##m10 lmer
+mod1.m10 <- lmer(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
+summary(mod1.m10)
+
+##m10 lm
+mod2.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod2.m10)
 #significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
