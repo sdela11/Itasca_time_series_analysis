@@ -234,3 +234,17 @@ summary(mod1.m10)
 mod2.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m10)
 #significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
+
+##m30 models
+#create m30 object:
+DDSUMS.m30 <- DDSUMS.df %>% filter(position == "m30")
+print(DDSUMS.m30)
+#view(DDSUMS.m30)
+
+##m30 lmer
+mod1.m30 <- lmer(data = DDSUMS.m30, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
+summary(mod1.m30)
+
+##m30 lm
+mod2.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
+summary(mod2.m30)
