@@ -248,3 +248,15 @@ summary(mod1.m30)
 ##m30 lm
 mod2.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m30)
+
+##air sensor DD data
+#create air object:
+DDSUMS.air <- DDSUMS.df %>% filter(position == "air")
+print(DDSUMS.air)
+
+#summary statistics for air DD
+#create df for air data at each site:
+air.DD.df <- data_frame(site = DDSUMS.air$site, degree.days = DDSUMS.air$degree.days)
+print(air.DD.df)
+summary(DDSUMS.air$degree.days)
+
