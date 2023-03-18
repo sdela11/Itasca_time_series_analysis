@@ -260,3 +260,5 @@ air.DD.df <- data_frame(site = DDSUMS.air$site, degree.days = DDSUMS.air$degree.
 print(air.DD.df)
 summary(DDSUMS.air$degree.days)
 
+## Subtract replicate measurements from Air temp at sites with AT.
+
