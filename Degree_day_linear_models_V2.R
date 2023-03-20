@@ -204,6 +204,7 @@ summary(mod2.lsurf)
 
 
 ##m0surf models
+
 #creation of m0surf object
 DDSUMS.m0surf <- DDSUMS.df %>% filter(position == "m0surf" | position == "m02surf")
 view(DDSUMS.m0surf)
@@ -220,7 +221,9 @@ summary(mod2.m0surf)
 #lmer for m10. Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
 #PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
 
+
 ##m10 models
+
 #create m10 object:
 DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
 print(DDSUMS.m10)
@@ -235,7 +238,9 @@ mod2.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*w
 summary(mod2.m10)
 #significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
 
+
 ##m30 models
+
 #create m30 object:
 DDSUMS.m30 <- DDSUMS.df %>% filter(position == "m30")
 print(DDSUMS.m30)
@@ -249,7 +254,9 @@ summary(mod1.m30)
 mod2.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m30)
 
+
 ##air sensor DD data
+
 #create air object:
 DDSUMS.air <- DDSUMS.df %>% filter(position == "air")
 print(DDSUMS.air)
