@@ -1,0 +1,127 @@
+---
+title: "Degree_day_linear_models_V2"
+author: "Sara DeLaurentis"
+date: "3/23/2023"
+output:
+  word_document:
+    toc: yes
+  html_document:
+    toc: yes
+    toc_float: yes
+    theme: cerulean
+    highlight: kate
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+## LIBRARIES
+
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(dplyr)
+library(glue)
+library(lme4)
+library(lmerTest)
+library(emmeans)
+
+
+```
+
+Purpose: Analysis of Degree Day data
+
+
+####Data read-in
+
+```{r read.in, echo = TRUE}
+data <- read_csv("../ALL_A.csv")
+data$`...1` = NULL #remove strange column that was created upon read-in.
+head(data)
+```
+
+
+#### Summarize mean temps for each date
+
+Create a new df:
+ mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
+ 
+#### rename the grouping column to "date", from the automatically created 'date(date.time)'
+
+```{r summarize.daily, echo = TRUE}
+
+dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
+  group_by(name, date(date.time)) %>% 
+  summarise(meantemp = mean(value))
+colnames(dailymeans.df)[2]<- "date" #rename grouping column
+
+head(dailymeans.df)
+
+```
+
+
+#### Problem-solving
+
+```{r problem.solve, echo = TRUE}
+
+C2A_R2_m10.means <- dailymeans.df %>% filter(grepl("C2A_R2_m10",name) == TRUE)
+view(C2A_R2_m10.means)
+
+C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
+view(C2A_R3_m10.means)
+
+```
+
+#### Remove all values less than or equal to 0
+
+```{r filter.zero, echo = TRUE}
+
+dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
+
+```
+
+####code for remembering
+
+```{r remembering, echo = FALSE}
+#DD.df <- dailymeans.df %>% 
+#  group_by(SRP.name) %>% 
+#  summarise(SRP.name = SRP.name,
+#            degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+#  distinct(SRP.name, .keep_all = TRUE) %>% 
+#  ungroup()
+#view(DD.df)  
+
+
+#Helpful code for remembering.
+
+#  C2A_R1_m10_dailymean <- mutate(C2A_R1_m10,'date.time' = mdy_hm(date.time)) %>% 
+#  separate('date.time',
+#           into = c('longdate', 'time'),
+#           sep = ' ') %>% 
+#  separate('longdate',
+#           into = c('year', 'month', 'day'),
+#           sep = '-',
+#           remove = FALSE) %>% 
+#  group_by(year, month, day) %>% 
+#  summarise(meantemp = mean(value)) 
+```
+
+
+### TIME BREAKS ##
+
+```{r TIME BREAKS, echo = TRUE}
+
+time.start <- as.Date("2020-04-01")
+#time.break.one <-
+#time.break.two <- 
+time.end <- as.Date("2020-08-27")
+print(time.start)
+print(time.end)
+
+
+## subsetting the dataframe using the time breaks.
+#Selects data that is greater than time.start AND less than time.end
+DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
+
+view(DD.df.cut)
+
+```

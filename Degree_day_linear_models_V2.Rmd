@@ -33,15 +33,22 @@ Purpose: Analysis of Degree Day data
 
 ####Data read-in
 
+```{r read.in, echo = TRUE}
 data <- read_csv("../ALL_A.csv")
 data$`...1` = NULL #remove strange column that was created upon read-in.
 head(data)
+```
 
-## Summarize mean temps for each date
 
-#Create a new df:
-# mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
-# rename the grouping column to "date", from the automatically created 'date(date.time)'
+#### Summarize mean temps for each date
+
+Create a new df:
+ mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
+ 
+#### rename the grouping column to "date", from the automatically created 'date(date.time)'
+
+```{r summarize.daily, echo = TRUE}
+
 dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
   group_by(name, date(date.time)) %>% 
   summarise(meantemp = mean(value))
@@ -49,18 +56,32 @@ colnames(dailymeans.df)[2]<- "date" #rename grouping column
 
 head(dailymeans.df)
 
-## Problem-solving
+```
+
+
+#### Problem-solving
+
+```{r problem.solve, echo = TRUE}
+
 C2A_R2_m10.means <- dailymeans.df %>% filter(grepl("C2A_R2_m10",name) == TRUE)
 view(C2A_R2_m10.means)
 
 C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
 view(C2A_R3_m10.means)
 
-## Remove all values less than or equal to 0
+```
+
+#### Remove all values less than or equal to 0
+
+```{r filter.zero, echo = TRUE}
+
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
+```
 
-#code for remembering
+####code for remembering
+
+```{r remembering, echo = FALSE}
 #DD.df <- dailymeans.df %>% 
 #  group_by(SRP.name) %>% 
 #  summarise(SRP.name = SRP.name,
@@ -82,9 +103,12 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 #           remove = FALSE) %>% 
 #  group_by(year, month, day) %>% 
 #  summarise(meantemp = mean(value)) 
-  
+```
 
-## TIME BREAKS ##
+
+### TIME BREAKS ##
+
+```{r TIME BREAKS, echo = TRUE}
 
 time.start <- as.Date("2020-04-01")
 #time.break.one <-
@@ -100,7 +124,7 @@ DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$d
 
 view(DD.df.cut)
 
-
+```
 
 ## Add in metadata columns for final dataframe
 
