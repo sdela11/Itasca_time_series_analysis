@@ -32,7 +32,8 @@ library(emmeans)
 Purpose: Analysis of Degree Day data
 
 
-####Data read-in
+#### Data read-in
+
 
 ```{r read.in, echo = TRUE}
 data <- read_csv("../ALL_A.csv")
@@ -41,12 +42,15 @@ head(data)
 ```
 
 
+
 #### Summarize mean temps for each date
 
 Create a new df:
  mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
  
-#### rename the grouping column to "date", from the automatically created 'date(date.time)'
+ 
+#### Rename the grouping column to "date", from the automatically created 'date(date.time)'
+
 
 ```{r summarize.daily, echo = TRUE}
 
@@ -80,7 +84,7 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```
 
-####code for remembering
+#### code for remembering (hidden)
 
 ```{r remembering, echo = FALSE}
 #DD.df <- dailymeans.df %>% 
@@ -107,7 +111,8 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 ```
 
 
-### TIME BREAKS ##
+
+### TIME BREAKS
 
 ```{r TIME BREAKS, echo = TRUE}
 
@@ -127,7 +132,10 @@ view(DD.df.cut)
 
 ```
 
-## Add in metadata columns for final dataframe
+
+#### Add in metadata columns for final dataframe
+
+```{r attach meta}
 
 #Split the name column into 5 separate columns
 meta.df <- str_split_fixed(DD.df.cut$name, "_", n = 5)
@@ -138,16 +146,25 @@ DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], pos
                          .before = "date")
 head(DD.df.cut)
 
+```
+
+
 ## Cutting out incomplete datasets. Removes the group if the length is less than 50 days.
+
+```{r rm.incomplete}
 
 DD.df.cut <- DD.df.cut %>% group_by(name) %>% filter((length(name) > 50) == TRUE)
 view(DD.df.cut)
 
+```
      
-## Summarise, or reframe. Final step for response variable df ##
+#### Summarise, or reframe. Final step for response variable df ##
 
-# Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
-# This gives you the response variable: degree days tabulated over the desired timeframe.
+Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
+This gives you the response variable: degree days tabulated over the desired timeframe.
+
+```{r merge complete table}
+
 DDsums.df.pre <- DD.df.cut %>% 
     group_by(site, rep, position) %>% 
     reframe(site = site, position = position,
@@ -186,10 +203,15 @@ DDsums.df <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
 
 view(DDsums.df)
 
+```
 
-## Adding treatment columns:
+
+
+#### Adding treatment columns:
   
-#Worm invasion level (worm_lvl, LOW or HIGH)
+Worm invasion level (worm_lvl, LOW or HIGH)
+
+```{r trt cols}
 
 DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
 head(DDsums.df.a)
@@ -204,10 +226,11 @@ view(DDsums.df.b)
 DDSUMS.df <- DDsums.df.b # rename df
 head(DDSUMS.df)
 
-# ------------------------------------------ #
+```
 
 
 ### LINEAR MODEL TIME ##
+
 
 
 ## DD vegxworm lsurf mixed (DDSUMS.lsurf)
