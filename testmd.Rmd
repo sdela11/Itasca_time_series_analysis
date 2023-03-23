@@ -81,7 +81,7 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```
 
-#### Code for remembering
+#### Code for remembering (hidden)
 
 ```{r remembering, echo = FALSE}
 #DD.df <- dailymeans.df %>% 
@@ -108,7 +108,7 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 ```
 
 
-### TIME BREAKS ##
+### TIME BREAKS
 
 ```{r TIME BREAKS, echo = TRUE}
 

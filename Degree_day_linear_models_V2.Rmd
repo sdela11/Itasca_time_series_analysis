@@ -135,7 +135,7 @@ view(DD.df.cut)
 
 #### Add in metadata columns for final dataframe
 
-```{r attach meta}
+```{r attach meta, echo = TRUE}
 
 #Split the name column into 5 separate columns
 meta.df <- str_split_fixed(DD.df.cut$name, "_", n = 5)
@@ -151,7 +151,7 @@ head(DD.df.cut)
 
 ## Cutting out incomplete datasets. Removes the group if the length is less than 50 days.
 
-```{r rm.incomplete}
+```{r rm.incomplete, echo = TRUE}
 
 DD.df.cut <- DD.df.cut %>% group_by(name) %>% filter((length(name) > 50) == TRUE)
 view(DD.df.cut)
@@ -163,7 +163,7 @@ view(DD.df.cut)
 Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
 This gives you the response variable: degree days tabulated over the desired timeframe.
 
-```{r merge complete table}
+```{r merge complete table, echo = TRUE}
 
 DDsums.df.pre <- DD.df.cut %>% 
     group_by(site, rep, position) %>% 
@@ -211,7 +211,7 @@ view(DDsums.df)
   
 Worm invasion level (worm_lvl, LOW or HIGH)
 
-```{r trt cols}
+```{r trt cols, echo = TRUE}
 
 DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
 head(DDsums.df.a)
@@ -233,7 +233,8 @@ head(DDSUMS.df)
 
 
 
-## DD vegxworm lsurf mixed (DDSUMS.lsurf)
+#### DD vegxworm lsurf mixed (DDSUMS.lsurf)
+
 #This model has degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
 #PARAMETERS: Timeframe: 2020-04-01 - 2020-09-30, position: lsurf
 
