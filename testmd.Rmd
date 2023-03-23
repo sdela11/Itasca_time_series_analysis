@@ -31,13 +31,14 @@ library(emmeans)
 Purpose: Analysis of Degree Day data
 
 
-####Data read-in
+#### Data read-in
 
-```{r read.in, echo = TRUE}
+```{r read.in, echo = FALSE}
 data <- read_csv("../ALL_A.csv")
 data$`...1` = NULL #remove strange column that was created upon read-in.
 head(data)
 ```
+
 
 
 #### Summarize mean temps for each date
@@ -45,7 +46,8 @@ head(data)
 Create a new df:
  mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
  
-#### rename the grouping column to "date", from the automatically created 'date(date.time)'
+#### Rename the grouping column to "date", from the automatically created 'date(date.time)'
+
 
 ```{r summarize.daily, echo = TRUE}
 
@@ -79,7 +81,7 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```
 
-####code for remembering
+#### Code for remembering
 
 ```{r remembering, echo = FALSE}
 #DD.df <- dailymeans.df %>% 
