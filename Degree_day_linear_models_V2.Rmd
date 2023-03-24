@@ -26,6 +26,8 @@ library(lme4)
 library(lmerTest)
 library(emmeans)
 library(kableExtra)
+library(Hmisc)
+
 
 ```
 
@@ -250,7 +252,7 @@ mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl +
 
 #View object
 mod1.lsurf
-summary(mod1.lsurf)
+kable(summary(mod1.lsurf))
 
 #Error:
 #" boundary (singular) fit: see help('isSingular') "
