@@ -252,7 +252,10 @@ mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl +
 
 #View object
 mod1.lsurf
-kable(summary(mod1.lsurf))
+describe(mod1.lsurf)
+summ.mod1.lsurf <- describe(mod1.lsurf) %>% html()
+summ.mod1.lsurf
+print(summary(mod1.lsurf) %>% html())
 
 #Error:
 #" boundary (singular) fit: see help('isSingular') "
