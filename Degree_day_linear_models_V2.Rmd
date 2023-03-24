@@ -3,13 +3,13 @@ title: "Degree_day_linear_models_V2"
 author: "Sara DeLaurentis"
 date: "3/23/2023"
 output:
-  word_document:
-    toc: yes
   html_document:
     toc: yes
     toc_float: yes
     theme: cerulean
     highlight: kate
+  word_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -31,6 +31,8 @@ library(emmeans)
 
 Purpose: Analysis of Degree Day data
 
+
+## Data preparation ##
 
 #### Data read-in
 
@@ -149,7 +151,7 @@ head(DD.df.cut)
 ```
 
 
-## Cutting out incomplete datasets. Removes the group if the length is less than 50 days.
+#### Cutting out incomplete datasets. Removes the group if the length is less than 50 days.
 
 ```{r rm.incomplete, echo = TRUE}
 
@@ -158,7 +160,7 @@ view(DD.df.cut)
 
 ```
      
-#### Summarise, or reframe. Final step for response variable df ##
+#### Summarise, or reframe. Final step for response variable df 
 
 Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
 This gives you the response variable: degree days tabulated over the desired timeframe.
@@ -229,7 +231,7 @@ head(DDSUMS.df)
 ```
 
 
-### LINEAR MODEL ###
+## LINEAR MODEL ##
 
 
 
@@ -258,10 +260,11 @@ summary(mod1.lsurf)
 
 #### Creation of mod2: What happens if we remove the random effect for site?
 
-```{r mod2 lsurf}
 lm DD vegxworm lsurf (mod2.lsurf)
 linear model with no random effect:
 PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: lsurf
+
+```{r mod2 lsurf}
 
 mod2.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.lsurf)
