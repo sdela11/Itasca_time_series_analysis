@@ -229,7 +229,7 @@ head(DDSUMS.df)
 ```
 
 
-### LINEAR MODEL TIME ##
+### LINEAR MODEL ###
 
 
 
@@ -237,6 +237,8 @@ head(DDSUMS.df)
 
 #This model has degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
 #PARAMETERS: Timeframe: 2020-04-01 - 2020-09-30, position: lsurf
+
+```{r lsurf}
 
 #generate lsurf df for analysis
 DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf" | position == "m01surf")
@@ -246,28 +248,29 @@ mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl +
 
 #View object
 mod1.lsurf
-
-#summary of object
 summary(mod1.lsurf)
 
 #Error:
 #" boundary (singular) fit: see help('isSingular') "
 #2023-03-16: After filling in data gaps with NAs, no more singular fit error.
 
+```
 
-##What happens if we remove the random effect for site?
+#### Creation of mod2: What happens if we remove the random effect for site?
 
-## lm DD vegxworm lsurf (mod2.lsurf)
-# linear model with no random effect:
-# PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: lsurf
+```{r mod2 lsurf}
+lm DD vegxworm lsurf (mod2.lsurf)
+linear model with no random effect:
+PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: lsurf
 
 mod2.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.lsurf)
 #non-significant slopes for lsurf, which makes sense
+```
 
+#### m0surf models
 
-##m0surf models
-
+```{r m0surf}
 #creation of m0surf object
 DDSUMS.m0surf <- DDSUMS.df %>% filter(position == "m0surf" | position == "m02surf")
 view(DDSUMS.m0surf)
@@ -279,12 +282,16 @@ summary(mod1.m0surf)
 ##m0surf lm
 mod2.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m0surf)
+```
 
-## mixed-effects DD vegxworm m10
-#lmer for m10. Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
-#PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
+#### m10 models
 
+#### mixed-effects DD vegxworm m10
+#### lmer for m10. 
+Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
+PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
 
+```{r m10}
 ##m10 models
 
 #create m10 object:
@@ -299,10 +306,14 @@ summary(mod1.m10)
 ##m10 lm
 mod2.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m10)
-#significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
+```
+Significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
 
 
-##m30 models
+
+####m30 models
+
+```{r m30}
 
 #create m30 object:
 DDSUMS.m30 <- DDSUMS.df %>% filter(position == "m30")
@@ -317,9 +328,12 @@ summary(mod1.m30)
 mod2.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m30)
 
+```
 
-##air sensor DD data
 
+#### air sensor DD data
+
+```{r air}
 #create air object:
 DDSUMS.air <- DDSUMS.df %>% filter(position == "air")
 print(DDSUMS.air)
@@ -328,6 +342,8 @@ print(DDSUMS.air)
 #create df for air data at each site:
 air.DD.df <- data_frame(site = DDSUMS.air$site, degree.days = DDSUMS.air$degree.days)
 print(air.DD.df)
-summary(DDSUMS.air$degree.days)
+print(summary(DDSUMS.air$degree.days))
 
-## Subtract replicate measurements from Air temp at sites with AT.
+```
+
+#### Subtract replicate measurements from Air temp at sites with AT.
