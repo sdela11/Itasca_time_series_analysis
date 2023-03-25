@@ -52,3 +52,14 @@ view(D5A.Othk)
 
 D5B.Othk <- OA.dat %>% filter(site == "D5B") %>% select(date:totalO_thk)
 sum(!is.na(D5B.Othk$totalO_thk))
+
+
+site.stats.df <- OA.dat %>% 
+  filter(!is.na(totalO_thk)) %>% 
+  group_by(site) %>% 
+  summarise(mean = mean(totalO_thk), 
+            var = var(totalO_thk), 
+            sd = sd(totalO_thk),
+            n = length(totalO_thk))
+
+site.stats.df
