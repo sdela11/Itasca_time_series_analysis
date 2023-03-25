@@ -232,6 +232,39 @@ head(DDSUMS.df)
 
 ```
 
+## Bring in and attach OA horizon data ##
+
+ See O_horizon_prelim.R to view summary statistics
+
+
+```{r OA data}
+
+OA.dat <- read.csv("../OA_thickness_2019_21_clean_20230325.csv")
+
+# set classes for columns
+OA.dat$inv_lvl <- as.character(OA.dat$inv_lvl)
+OA.dat$Oi_thk <- as.numeric(OA.dat$Oi_thk)
+OA.dat$Oe_thk <- as.numeric(OA.dat$Oe_thk)
+OA.dat$Oa_thk <- as.numeric(OA.dat$Oa_thk)
+OA.dat$O.A_thk <- as.numeric(OA.dat$O.A_thk)
+OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
+
+# extract mean O thickness, attach to DD data
+
+OA.means.df <- OA.dat %>% 
+  filter(!is.na(totalO_thk)) %>% 
+  group_by(site) %>% 
+  summarise(Omean = round(mean(totalO_thk), digits = 2))
+OA.means.df
+# attach
+DDSUMS.ALL <- DDSUMS.df %>% 
+  left_join(OA.means.df)
+DDSUMS.ALL  
+
+
+```
+
+
 
 ## LINEAR MODEL ##
 
