@@ -275,20 +275,18 @@ DDSUMS.ALL
 #This model has degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
 #PARAMETERS: Timeframe: 2020-04-01 - 2020-09-30, position: lsurf
 
-```{r lsurf}
+
+```{r mod1 lsurf}
 
 #generate lsurf df for analysis
-DDSUMS.lsurf <- DDSUMS.df %>% filter(position == "lsurf" | position == "m01surf")
+DDSUMS.lsurf <- DDSUMS.ALL %>% filter(position == "lsurf" | position == "m01surf")
 view(DDSUMS.lsurf)
 
 mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
 
 #View object
 mod1.lsurf
-describe(mod1.lsurf)
-summ.mod1.lsurf <- describe(mod1.lsurf) %>% html()
-summ.mod1.lsurf
-print(summary(mod1.lsurf) %>% html())
+
 
 #Error:
 #" boundary (singular) fit: see help('isSingular') "
@@ -312,9 +310,9 @@ summary(mod2.lsurf)
 
 #### m0surf models
 
-```{r m0surf}
+```{r mod1.2 m0surf}
 #creation of m0surf object
-DDSUMS.m0surf <- DDSUMS.df %>% filter(position == "m0surf" | position == "m02surf")
+DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02surf")
 view(DDSUMS.m0surf)
 
 ##m0surf lmer
@@ -334,11 +332,11 @@ summary(mod2.m0surf)
 Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
 PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
 
-```{r m10}
+```{r mod 1.2 m10}
 ##m10 models
 
 #create m10 object:
-DDSUMS.m10 <- DDSUMS.df %>% filter(position == "m10")
+DDSUMS.m10 <- DDSUMS.ALL %>% filter(position == "m10")
 print(DDSUMS.m10)
 #view(DDSUMS.m10)
 
@@ -356,10 +354,10 @@ Significant effect for worm_lvl, no significant effect for vegetation type, or i
 
 ####m30 models
 
-```{r m30}
+```{r mod 1.2 m30}
 
 #create m30 object:
-DDSUMS.m30 <- DDSUMS.df %>% filter(position == "m30")
+DDSUMS.m30 <- DDSUMS.ALL %>% filter(position == "m30")
 print(DDSUMS.m30)
 #view(DDSUMS.m30)
 
@@ -378,7 +376,7 @@ summary(mod2.m30)
 
 ```{r air}
 #create air object:
-DDSUMS.air <- DDSUMS.df %>% filter(position == "air")
+DDSUMS.air <- DDSUMS.ALL %>% filter(position == "air")
 print(DDSUMS.air)
 
 #summary statistics for air DD
