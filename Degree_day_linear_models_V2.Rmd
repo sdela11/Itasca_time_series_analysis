@@ -283,13 +283,14 @@ DDSUMS.ALL
 
 #generate lsurf df for analysis
 DDSUMS.lsurf <- DDSUMS.ALL %>% filter(position == "lsurf" | position == "m01surf")
-#view(DDSUMS.lsurf)
+view(DDSUMS.lsurf)
 
 mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
 
 #View object
 mod1.lsurf
-
+summary(mod1.lsurf)
+plot(residuals(mod1.lsurf) ∼ fitted.values(mod1.lsurf))
 
 #Error:
 #" boundary (singular) fit: see help('isSingular') "
@@ -309,22 +310,28 @@ mod2.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl + V
 summary(mod2.lsurf)
 #non-significant slopes for lsurf, which makes sense
 
+plot(residuals(mod2.lsurf) ∼ fitted.values(mod2.lsurf))
+
 ```
+
 
 #### m0surf models
 
 ```{r mod1.2 m0surf}
 #creation of m0surf object
 DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02surf")
-#view(DDSUMS.m0surf)
+view(DDSUMS.m0surf)
 
 ##m0surf lmer
 mod1.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
 summary(mod1.m0surf)
+plot(residuals(mod1.m0surf) ∼ fitted.values(mod1.m0surf))
 
 ##m0surf lm
 mod2.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m0surf)
+plot(residuals(mod2.m0surf) ∼ fitted.values(mod2.m0surf))
+plot(mod2.m0surf)
 
 ```
 
@@ -410,6 +417,10 @@ summary(mod3.lsurf)
 ##lsurf lm
 mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + Omean + Veg * Omean)
 summary(mod4.lsurf)
+plot(mod4.lsurf)
+
+d<-density(mod4.lsurf[['residuals']])
+plot(d,main='Residual KDE Plot',xlab='Residual value')
 
 ```
 
@@ -428,6 +439,7 @@ summary(mod3.m0surf)
 ##m0surf lm
 mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + Omean + Veg * Omean)
 summary(mod4.m0surf)
+plot(mod4.m0surf)
 
 ```
 
