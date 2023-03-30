@@ -211,7 +211,7 @@ sensor.list.A <- sensor.list %>%
 #DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, by = "srp.name", all.x = TRUE)
 DDsums.df <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
 
-
+ 
 #view(DDsums.df)
 
 ```
@@ -272,6 +272,31 @@ DDSUMS.ALL
 ```
 
 
+## SIMPLE TESTS - one point per site ##
+
+
+```{r Simple tests}
+
+simple.df <- DDSUMS.ALL %>% 
+  group_by(site, position) %>%
+  reframe(site = site, 
+          position = position, 
+          worm_lvl = worm_lvl, 
+          Veg = Veg, 
+          Omean = Omean, 
+          degree.days = mean(degree.days))
+  
+#DDsums.df.pre <- DD.df.cut %>% 
+#    group_by(site, rep, position) %>% 
+#    reframe(site = site, rep = rep, position = position, worm_lvl = worm_lvl, Veg = Veg, Omean = Omean,
+#              degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+#    distinct(site, rep, position, .keep_all = TRUE) #%>% 
+    #ungroup()
+  #view(DDsums.df.pre) 
+
+view(simple.df)
+
+```
 
 ## LINEAR MODEL ##
 
@@ -361,6 +386,7 @@ summary(mod1.m10)
 ##m10 lm
 mod2.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
 summary(mod2.m10)
+
 ```
 Significant effect for worm_lvl, no significant effect for vegetation type, or interaction.
 
