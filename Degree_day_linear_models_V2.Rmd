@@ -266,7 +266,7 @@ OA.means.df <- OA.dat %>%
 # attach
 DDSUMS.ALL <- DDSUMS.df %>% 
   left_join(OA.means.df)
-DDSUMS.ALL  
+head(DDSUMS.ALL)  
 
 #
 #df["Column Name"][df["Column Name"] == "Old Value"] <- "New Value"
@@ -280,7 +280,7 @@ DDSUMS.ALL["position"][DDSUMS.ALL["position"] == "m02surf"] <- "m0surf"
 ## SIMPLE TESTS - one point per site ##
 
 
-```{r Simple tests}
+```{r Simple.df}
 
 simple.df <- DDSUMS.ALL %>% 
   group_by(site, position) %>%
@@ -292,6 +292,8 @@ simple.df <- DDSUMS.ALL %>%
           degree.days = mean(degree.days)) %>% 
   distinct(site, position, .keep_all = TRUE)
   
+simple.df <- simple.df %>% mutate(treatment = substr(site,1,2))
+
 #DDsums.df.pre <- DD.df.cut %>% 
 #    group_by(site, rep, position) %>% 
 #    reframe(site = site, rep = rep, position = position, worm_lvl = worm_lvl, Veg = Veg, Omean = Omean,
@@ -301,6 +303,27 @@ simple.df <- DDSUMS.ALL %>%
   #view(DDsums.df.pre) 
 
 view(simple.df)
+
+```
+
+```{r simple tests}
+
+#generate lsurf df for analysis
+DDSUMS.lsurf <- simple.df %>% filter(position == "lsurf" | position == "m01surf")
+view(DDSUMS.lsurf)
+
+fm1 <- lm(degree.days ~ treatment, data = DDSUMS.lsurf)
+anova(fm1)
+
+
+
+#generate m0surf df for analysis
+DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
+view(DDSUMS.m0surf)
+
+fm1 <- lm(degree.days ~ treatment, data = DDSUMS.m0surf)
+anova(fm1)
+summary(fm1)
 
 ```
 
