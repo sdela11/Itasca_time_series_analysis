@@ -284,7 +284,8 @@ simple.df <- DDSUMS.ALL %>%
           worm_lvl = worm_lvl, 
           Veg = Veg, 
           Omean = Omean, 
-          degree.days = mean(degree.days))
+          degree.days = mean(degree.days)) %>% 
+  distinct(site, position, .keep_all = TRUE)
   
 #DDsums.df.pre <- DD.df.cut %>% 
 #    group_by(site, rep, position) %>% 
