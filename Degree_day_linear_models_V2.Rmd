@@ -347,7 +347,7 @@ anova(fm1.m30)
 
 ```
 
-## LINEAR MODEL ##
+## LINEAR MODEL - replicates are separate points ##
 
 
 
