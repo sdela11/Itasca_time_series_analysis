@@ -308,22 +308,42 @@ view(simple.df)
 
 ```{r simple tests}
 
+# lsurf
+
 #generate lsurf df for analysis
 DDSUMS.lsurf <- simple.df %>% filter(position == "lsurf" | position == "m01surf")
 view(DDSUMS.lsurf)
 
-fm1 <- lm(degree.days ~ treatment, data = DDSUMS.lsurf)
-anova(fm1)
+fm1.lsurf <- lm(degree.days ~ treatment, data = DDSUMS.lsurf)
+anova(fm1.lsurf)
 
-
+# m0surf
 
 #generate m0surf df for analysis
 DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
 view(DDSUMS.m0surf)
 
-fm1 <- lm(degree.days ~ treatment, data = DDSUMS.m0surf)
-anova(fm1)
-summary(fm1)
+fm1.m0surf <- lm(degree.days ~ treatment, data = DDSUMS.m0surf)
+anova(fm1.m0surf)
+summary(fm1.m0surf)
+
+# m10
+
+#generate m10 df for analysis
+DDSUMS.m10 <- simple.df %>% filter(position == "m10")
+view(DDSUMS.m10)
+
+fm1.m10 <- lm(degree.days ~ treatment, data = DDSUMS.m10)
+anova(fm1.m10)
+
+# m30
+
+#generate m30 df for analysis
+DDSUMS.m30 <- simple.df %>% filter(position == "m30" | position == "m01surf")
+view(DDSUMS.m30)
+
+fm1.m30 <- lm(degree.days ~ treatment, data = DDSUMS.m30)
+anova(fm1.m30)
 
 ```
 
