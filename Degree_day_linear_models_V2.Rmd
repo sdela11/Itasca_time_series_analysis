@@ -261,7 +261,7 @@ OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
 OA.means.df <- OA.dat %>% 
   filter(!is.na(totalO_thk)) %>% 
   group_by(site) %>% 
-  summarise(Omean = round(mean(totalO_thk), digits = 2))
+  summarise(Omean = round(mean(totalO_thk, na.rm = TRUE), digits = 2))
 #OA.means.df
 # attach
 DDSUMS.ALL <- DDSUMS.df %>% 
@@ -289,7 +289,7 @@ simple.df <- DDSUMS.ALL %>%
           worm_lvl = worm_lvl, 
           Veg = Veg, 
           Omean = Omean, 
-          degree.days = mean(degree.days)) %>% 
+          degree.days = mean(degree.days, na.rm = TRUE)) %>% 
   distinct(site, position, .keep_all = TRUE)
   
 simple.df <- simple.df %>% mutate(treatment = substr(site,1,2))
@@ -344,6 +344,51 @@ view(DDSUMS.m30)
 
 fm1.m30 <- lm(degree.days ~ treatment, data = DDSUMS.m30)
 anova(fm1.m30)
+
+```
+
+```{r linear regression}
+
+# lsurf
+
+#generate lsurf df for analysis
+DDSUMS.lsurf <- simple.df %>% filter(position == "lsurf" | position == "m01surf")
+view(DDSUMS.lsurf)
+
+fm.Othk.lsurf <- lm(degree.days ~ Veg*Omean, data = DDSUMS.lsurf)
+anova(fm.Othk.lsurf)
+summary(fm.Othk.lsurf)
+
+# m0surf
+
+#generate m0surf df for analysis
+DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
+view(DDSUMS.m0surf)
+
+fm.Othk.m0surf <- lm(degree.days ~ Veg*Omean, data = DDSUMS.m0surf)
+anova(fm.Othk.m0surf)
+summary(fm.Othk.m0surf)
+
+# m10
+
+#generate m10 df for analysis
+DDSUMS.m10 <- simple.df %>% filter(position == "m10")
+view(DDSUMS.m10)
+
+fm.Othk.m10 <- lm(degree.days ~ Veg*Omean, data = DDSUMS.m10)
+anova(fm.Othk.m10)
+summary(fm.Othk.m10)
+ 
+# m30
+
+#generate m30 df for analysis
+DDSUMS.m30 <- simple.df %>% filter(position == "m30" | position == "m01surf")
+view(DDSUMS.m30)
+
+fm.Othk.m30 <- lm(degree.days ~ Veg*Omean, data = DDSUMS.m30)
+anova(fm.Othk.m30)
+summary(fm.Othk.m30)
+
 
 ```
 
