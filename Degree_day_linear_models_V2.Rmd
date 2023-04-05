@@ -262,7 +262,7 @@ OA.means.df <- OA.dat %>%
   filter(!is.na(totalO_thk)) %>% 
   group_by(site) %>% 
   summarise(Omean = round(mean(totalO_thk, na.rm = TRUE), digits = 2))
-#OA.means.df
+OA.means.df
 # attach
 DDSUMS.ALL <- DDSUMS.df %>% 
   left_join(OA.means.df)
@@ -294,6 +294,13 @@ simple.df <- DDSUMS.ALL %>%
   
 simple.df <- simple.df %>% mutate(treatment = substr(site,1,2))
 
+
+air.df <- simple.df[simple.df$position == "air", c("site", "degree.days")]
+colnames(air.df)[2] = "air.DD"
+view(air.df)
+
+simple.df <- simple.df %>% 
+  left_join(air.df)
 #DDsums.df.pre <- DD.df.cut %>% 
 #    group_by(site, rep, position) %>% 
 #    reframe(site = site, rep = rep, position = position, worm_lvl = worm_lvl, Veg = Veg, Omean = Omean,
