@@ -355,7 +355,7 @@ anova(fm1.m30)
 DDSUMS.lsurf <- simple.df %>% filter(position == "lsurf" | position == "m01surf")
 view(DDSUMS.lsurf)
 
-fm.Othk.lsurf <- lm(degree.days ~ Veg*Omean, data = DDSUMS.lsurf)
+fm.Othk.lsurf <- lm(degree.days ~ Veg + Omean, data = DDSUMS.lsurf)
 anova(fm.Othk.lsurf)
 summary(fm.Othk.lsurf)
 
@@ -365,7 +365,7 @@ summary(fm.Othk.lsurf)
 DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
 view(DDSUMS.m0surf)
 
-fm.Othk.m0surf <- lm(degree.days ~ Veg*Omean, data = DDSUMS.m0surf)
+fm.Othk.m0surf <- lm(degree.days ~ Veg + Omean, data = DDSUMS.m0surf)
 anova(fm.Othk.m0surf)
 summary(fm.Othk.m0surf)
 
@@ -375,7 +375,7 @@ summary(fm.Othk.m0surf)
 DDSUMS.m10 <- simple.df %>% filter(position == "m10")
 view(DDSUMS.m10)
 
-fm.Othk.m10 <- lm(degree.days ~ Veg*Omean, data = DDSUMS.m10)
+fm.Othk.m10 <- lm(degree.days ~ Veg + Omean, data = DDSUMS.m10)
 anova(fm.Othk.m10)
 summary(fm.Othk.m10)
  
@@ -385,7 +385,7 @@ summary(fm.Othk.m10)
 DDSUMS.m30 <- simple.df %>% filter(position == "m30" | position == "m01surf")
 view(DDSUMS.m30)
 
-fm.Othk.m30 <- lm(degree.days ~ Veg*Omean, data = DDSUMS.m30)
+fm.Othk.m30 <- lm(degree.days ~ Veg + Omean, data = DDSUMS.m30)
 anova(fm.Othk.m30)
 summary(fm.Othk.m30)
 
@@ -607,3 +607,4 @@ summary(mod4.m30)
 ```
 
 #### Subtract replicate measurements from Air temp at sites with AT.
+
