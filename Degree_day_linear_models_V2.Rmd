@@ -127,10 +127,10 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```{r TIME BREAKS, echo = TRUE}
 
-time.start <- as.Date("2020-04-01")
+time.start <- as.Date("2021-04-01")
 #time.break.one <-
 #time.break.two <- 
-time.end <- as.Date("2020-08-27")
+time.end <- as.Date("2021-08-27")
 print(time.start)
 print(time.end)
 
@@ -309,9 +309,14 @@ simple.df <- simple.df %>%
     #ungroup()
   #view(DDsums.df.pre) 
 
+
 view(simple.df)
 
+simple.df <- simple.df %>% mutate(therm.adv = air.DD - degree.days) 
+
+
 ```
+
 
 ```{r simple tests}
 
@@ -321,8 +326,9 @@ view(simple.df)
 DDSUMS.lsurf <- simple.df %>% filter(position == "lsurf" | position == "m01surf")
 view(DDSUMS.lsurf)
 
-fm1.lsurf <- lm(degree.days ~ treatment, data = DDSUMS.lsurf)
+fm1.lsurf <- lm(therm.adv ~ treatment, data = DDSUMS.lsurf)
 anova(fm1.lsurf)
+summary(fm1.lsurf)
 
 # m0surf
 
@@ -330,7 +336,7 @@ anova(fm1.lsurf)
 DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
 view(DDSUMS.m0surf)
 
-fm1.m0surf <- lm(degree.days ~ treatment, data = DDSUMS.m0surf)
+fm1.m0surf <- lm(therm.adv ~ treatment, data = DDSUMS.m0surf)
 anova(fm1.m0surf)
 summary(fm1.m0surf)
 
@@ -340,7 +346,7 @@ summary(fm1.m0surf)
 DDSUMS.m10 <- simple.df %>% filter(position == "m10")
 view(DDSUMS.m10)
 
-fm1.m10 <- lm(degree.days ~ treatment, data = DDSUMS.m10)
+fm1.m10 <- lm(therm.adv ~ treatment, data = DDSUMS.m10)
 anova(fm1.m10)
 
 # m30
@@ -349,10 +355,11 @@ anova(fm1.m10)
 DDSUMS.m30 <- simple.df %>% filter(position == "m30" | position == "m01surf")
 view(DDSUMS.m30)
 
-fm1.m30 <- lm(degree.days ~ treatment, data = DDSUMS.m30)
+fm1.m30 <- lm(therm.adv ~ treatment, data = DDSUMS.m30)
 anova(fm1.m30)
 
 ```
+
 
 ```{r linear regression}
 
@@ -362,7 +369,7 @@ anova(fm1.m30)
 DDSUMS.lsurf <- simple.df %>% filter(position == "lsurf" | position == "m01surf")
 view(DDSUMS.lsurf)
 
-fm.Othk.lsurf <- lm(degree.days ~ Veg + Omean, data = DDSUMS.lsurf)
+fm.Othk.lsurf <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.lsurf)
 anova(fm.Othk.lsurf)
 summary(fm.Othk.lsurf)
 
@@ -372,7 +379,7 @@ summary(fm.Othk.lsurf)
 DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
 view(DDSUMS.m0surf)
 
-fm.Othk.m0surf <- lm(degree.days ~ Veg + Omean, data = DDSUMS.m0surf)
+fm.Othk.m0surf <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.m0surf)
 anova(fm.Othk.m0surf)
 summary(fm.Othk.m0surf)
 
@@ -382,7 +389,7 @@ summary(fm.Othk.m0surf)
 DDSUMS.m10 <- simple.df %>% filter(position == "m10")
 view(DDSUMS.m10)
 
-fm.Othk.m10 <- lm(degree.days ~ Veg + Omean, data = DDSUMS.m10)
+fm.Othk.m10 <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.m10)
 anova(fm.Othk.m10)
 summary(fm.Othk.m10)
  
@@ -392,7 +399,7 @@ summary(fm.Othk.m10)
 DDSUMS.m30 <- simple.df %>% filter(position == "m30" | position == "m01surf")
 view(DDSUMS.m30)
 
-fm.Othk.m30 <- lm(degree.days ~ Veg + Omean, data = DDSUMS.m30)
+fm.Othk.m30 <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.m30)
 anova(fm.Othk.m30)
 summary(fm.Othk.m30)
 
