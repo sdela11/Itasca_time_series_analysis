@@ -27,8 +27,8 @@ library(glue)
 library(lme4)
 library(lmerTest)
 library(emmeans)
-library(kableExtra)
-library(Hmisc)
+#library(kableExtra)
+#library(Hmisc)
 
 
 ```
@@ -329,6 +329,9 @@ view(DDSUMS.lsurf)
 fm1.lsurf <- lm(therm.adv ~ treatment, data = DDSUMS.lsurf)
 anova(fm1.lsurf)
 summary(fm1.lsurf)
+plot(residuals(fm1.lsurf) ∼ fitted.values(fm1.lsurf))
+emm1 <- emmeans(mod1, specs = pairwise ~ worm)
+
 
 # m0surf
 
@@ -369,17 +372,20 @@ anova(fm1.m30)
 DDSUMS.lsurf <- simple.df %>% filter(position == "lsurf" | position == "m01surf")
 view(DDSUMS.lsurf)
 
-fm.Othk.lsurf <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.lsurf)
+fm.Othk.lsurf <- lm(therm.adv ~ Omean, data = DDSUMS.lsurf)
 anova(fm.Othk.lsurf)
 summary(fm.Othk.lsurf)
 
 # m0surf
 
+myplot <- qplot(Omean, therm.adv, data=DDSUMS.m0surf, color = site)
+  print(myplot)
+
 #generate m0surf df for analysis
 DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
 view(DDSUMS.m0surf)
 
-fm.Othk.m0surf <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.m0surf)
+fm.Othk.m0surf <- lm(therm.adv ~ Omean, data = DDSUMS.m0surf)
 anova(fm.Othk.m0surf)
 summary(fm.Othk.m0surf)
 
