@@ -412,6 +412,42 @@ summary(fm.Othk.m30)
 
 ```
 
+```{r plotting one}
+
+### Example of ggplot code for graphs
+
+#For y-axis superscript
+#mass_expression <- expression(Leaf ~ litter ~ dry ~ mass ~ (g/0.08~m^2))
+
+#creating bar graph
+DD_TA_plot <-ggplot(af_litter_calc) + #Inputing data
+              geom_bar(aes(x = Season, y = mean_mass, fill = Site), position = position_dodge(width=0.72), #bar graph, x axis based on sample timing, y axis on average                                                                                                             mass, fill based on site (Amynthas vs Lumbricus in my case)
+                     colour = "black", size = 0.75, #position dodge to group two bars based on season (could be something like depth in your case)
+                     stat =  'identity', width=0.5, alpha=0.85) +
+             geom_errorbar(aes(x = Season, ymin = mean_mass - stdev_mass, ymax = mean_mass + stdev_mass, group = Site), #adding error bars based on standard deviation
+                           position = position_dodge(width=0.72), width=0.3) + #position dodging the error bars to match the bar's position
+            labs(y = mass_expression, x = "") + #x and y axis labels, using above expression for y axis
+            ggtitle("Acer") + #title label
+            theme_classic() + #lots of themes to choose from
+            theme(text = element_text(size = 35), axis.title.y = element_text(size = 25), axis.title.x = element_text(size = 25), legend.title = element_blank(), 
+                  legend.position="none") + #changing text size, legend with theme
+            annotate("text", x = 4, y = 52.89556, label = c("*"), size = 15) + #adding mark of significance. Can also draw lines/points/text with annotate
+            scale_y_continuous(limits = c(0,225), expand=c(0,0)) + #setting y axis size, setting the graph at 0,0
+            scale_x_discrete(labels = c("10/20", "5/21", "7/21", "10/21")) + #changing x axis labels
+            scale_fill_manual(values = c("A" = "#FFFFFF", #bar fill colors
+                                         "L" = "#808080"), 
+                              labels = c(expression(italic("Amynthas")~"spp."), #changing legend text, adding italics                                    
+                                         expression(italic("Lumbricus")~"spp.")))
+
+png(file = "DD_TA_plot.png", width = 600, height = 600, units = 'px') #Printing graph as png, can choose size of graph here
+print(af_litter_plot)
+
+```
+
+
+
+```
+
 ## LINEAR MODEL - replicates are separate points ##
 
 
