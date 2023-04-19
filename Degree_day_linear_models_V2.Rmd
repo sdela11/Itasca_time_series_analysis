@@ -378,8 +378,8 @@ summary(fm.Othk.lsurf)
 
 # m0surf
 
-myplot <- qplot(Omean, therm.adv, data=DDSUMS.m0surf, color = site)
-  print(myplot)
+#myplot <- qplot(Omean, therm.adv, data=DDSUMS.m0surf, color = site)
+ # print(myplot)
 
 #generate m0surf df for analysis
 DDSUMS.m0surf <- simple.df %>% filter(position == "m0surf")
@@ -395,7 +395,7 @@ summary(fm.Othk.m0surf)
 DDSUMS.m10 <- simple.df %>% filter(position == "m10")
 view(DDSUMS.m10)
 
-fm.Othk.m10 <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.m10)
+fm.Othk.m10 <- lm(therm.adv ~ Omean, data = DDSUMS.m10)
 anova(fm.Othk.m10)
 summary(fm.Othk.m10)
  
@@ -405,10 +405,17 @@ summary(fm.Othk.m10)
 DDSUMS.m30 <- simple.df %>% filter(position == "m30" | position == "m01surf")
 view(DDSUMS.m30)
 
-fm.Othk.m30 <- lm(therm.adv ~ Veg + Omean, data = DDSUMS.m30)
+fm.Othk.m30 <- lm(therm.adv ~ Omean, data = DDSUMS.m30)
 anova(fm.Othk.m30)
 summary(fm.Othk.m30)
 
+
+DDSUMS.m50 <- simple.df %>% filter(position == "m50")
+view(DDSUMS.m50)
+
+fm.Othk.m50 <- lm(therm.adv ~ Omean, data = DDSUMS.m50)
+anova(fm.Othk.m50)
+summary(fm.Othk.m50)
 
 ```
 
