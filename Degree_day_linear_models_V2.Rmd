@@ -509,8 +509,6 @@ print(af_litter_plot)
 
 
 
-```
-
 ## LINEAR MODEL - replicates are separate points ##
 
 
