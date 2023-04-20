@@ -245,28 +245,37 @@ DDSUMS.df <- DDsums.df.b # rename df
 
 
 ```{r OA data}
+#OA.dat <- read.csv("../OA_thickness_2019_21_clean_20230325.csv")
+Odata <- read_csv("../2YR_replicate_PIT_depths_OA.csv")
+Odata$season <- as.character(Odata$season)
+colnames(Odata)["plot"] <- "rep" #change column name from rep to plot
 
-OA.dat <- read.csv("../OA_thickness_2019_21_clean_20230325.csv")
+Odata <- Odata %>% select(season, site, rep, totalO_thk)
+
+view(Odata)
+
 
 # set classes for columns
-OA.dat$inv_lvl <- as.character(OA.dat$inv_lvl)
-OA.dat$Oi_thk <- as.numeric(OA.dat$Oi_thk)
-OA.dat$Oe_thk <- as.numeric(OA.dat$Oe_thk)
-OA.dat$Oa_thk <- as.numeric(OA.dat$Oa_thk)
-OA.dat$O.A_thk <- as.numeric(OA.dat$O.A_thk)
-OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
+#OA.dat$inv_lvl <- as.character(OA.dat$inv_lvl)
+#OA.dat$Oi_thk <- as.numeric(OA.dat$Oi_thk)
+#OA.dat$Oe_thk <- as.numeric(OA.dat$Oe_thk)
+#OA.dat$Oa_thk <- as.numeric(OA.dat$Oa_thk)
+#OA.dat$O.A_thk <- as.numeric(OA.dat$O.A_thk)
+#OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
 
 # extract mean O thickness, attach to DD data
-
-OA.means.df <- OA.dat %>% 
-  filter(!is.na(totalO_thk)) %>% 
-  group_by(site) %>% 
-  summarise(Omean = round(mean(totalO_thk), digits = 2))
+# 2023-04-20: Do not need this step if using 2YR_replicate_pit_depths
+#OA.means.df <- OA.dat %>% 
+#  filter(!is.na(totalO_thk)) %>% 
+#  group_by(site) %>% 
+#  summarise(Omean = round(mean(totalO_thk), digits = 2))
 #OA.means.df
+
 # attach
 DDSUMS.ALL <- DDSUMS.df %>% 
-  left_join(OA.means.df)
-DDSUMS.ALL  
+  left_join(Odata)
+view(DDSUMS.ALL)  
+
 
 
 ```
