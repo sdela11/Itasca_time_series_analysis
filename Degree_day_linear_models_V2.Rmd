@@ -247,9 +247,12 @@ DDSUMS.df <- DDsums.df.b # rename df
 ```{r OA data}
 #OA.dat <- read.csv("../OA_thickness_2019_21_clean_20230325.csv")
 Odata <- read_csv("../2YR_replicate_PIT_depths_OA.csv")
+view(Odata)
 Odata$season <- as.character(Odata$season)
-colnames(Odata)["plot"] <- "rep" #change column name from rep to plot
 
+colnames(Odata)[4] <- "rep" #change column name from rep to plot
+
+head(Odata)
 Odata <- Odata %>% select(season, site, rep, totalO_thk)
 
 view(Odata)
