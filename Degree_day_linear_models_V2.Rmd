@@ -177,13 +177,12 @@ This gives you the response variable: degree days tabulated over the desired tim
 ```{r merge complete table, echo = TRUE}
 
 DDsums.df.pre <- DD.df.cut %>% 
-    group_by(site, rep, position) %>% 
-    reframe(site = site, position = position,
-              degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
-    distinct(site, rep, position, .keep_all = TRUE) #%>% 
-    #ungroup()
-  #view(DDsums.df.pre)
-
+  group_by(site, rep, position, season) %>% 
+  reframe(site = site, position = position,
+          degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+  distinct(site, rep, position, season, .keep_all = TRUE) #%>% 
+#ungroup()
+view(DDsums.df.pre)
 
 ## Creating full (expected) dataframe, to merge with the current dataframe.  
 
