@@ -197,10 +197,9 @@ view(DDsums.df.pre)
 sensor.list <- as_tibble(read_csv("../sensor_list.csv"))
 #view(sensor.list)
 
-
 #Add column to DDsums.df and sensor.list to give a unique column to merge with.
 DDsums.df.A <- DDsums.df.pre %>% 
-  mutate(srp.name = paste(site, rep, position, sep = "_"))
+  mutate(srps.name = paste(site, rep, position, season, sep = "_"))
 #head(DDsums.df.A)
 
 sensor.list.A <- sensor.list %>% 
@@ -211,7 +210,9 @@ sensor.list.A <- sensor.list %>%
 DDsums.df <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
 
 
-#view(DDsums.df)
+view(DDsums.df)
+
+
 
 ```
 
