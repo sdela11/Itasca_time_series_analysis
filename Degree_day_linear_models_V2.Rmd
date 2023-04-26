@@ -513,8 +513,8 @@ mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk)
 summary(mod4.lsurf)
 plot(mod4.lsurf)
 
-d<-density(mod4.lsurf[['residuals']])
-plot(d,main='Residual KDE Plot',xlab='Residual value')
+#d<-density(mod4.lsurf[['residuals']])
+#plot(d,main='Residual KDE Plot',xlab='Residual value')
 
 ```
 
