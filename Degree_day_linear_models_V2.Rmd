@@ -271,7 +271,7 @@ view(Odata)
 #OA.means.df <- OA.dat %>% 
 #  filter(!is.na(totalO_thk)) %>% 
 #  group_by(site) %>% 
-#  summarise(Omean = round(mean(totalO_thk), digits = 2))
+#  summarise(totalO_thk = round(mean(totalO_thk), digits = 2))
 #OA.means.df
 
 # attach
@@ -308,9 +308,6 @@ mod1.lsurf
 summary(mod1.lsurf)
 plot(residuals(mod1.lsurf) ∼ fitted.values(mod1.lsurf))
 
-#Error:
-#" boundary (singular) fit: see help('isSingular') "
-#2023-03-16: After filling in data gaps with NAs, no more singular fit error.
 
 ```
 
@@ -341,7 +338,7 @@ view(DDSUMS.m0surf)
 ##m0surf lmer
 mod1.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl + (1|site))
 summary(mod1.m0surf)
-plot(residuals(mod1.m0surf) ∼ fitted.values(mod1.m0surf))
+plot(residuals(mod1.m0surf) ∼ fitted.values(mod1.m0surf)) #2023-04-25: Looks pretty good!
 
 ##m0surf lm
 mod2.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + worm_lvl + Veg*worm_lvl)
@@ -427,11 +424,11 @@ print(DDSUMS.lsurf)
 #view(DDSUMS.lsurf)
 
 ##lsurf lmer
-mod3.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + Omean + Veg * Omean + (1|site))
+mod3.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
 summary(mod3.lsurf)
 
 ##lsurf lm
-mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + Omean + Veg * Omean)
+mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
 summary(mod4.lsurf)
 plot(mod4.lsurf)
 
@@ -449,11 +446,11 @@ DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02su
 #view(DDSUMS.m0surf)
 
 ##m0surf lmer
-mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ Veg + Omean + Veg * Omean + (1|site))
+mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
 summary(mod3.m0surf)
 
 ##m0surf lm
-mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + Omean + Veg * Omean)
+mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
 summary(mod4.m0surf)
 plot(mod4.m0surf)
 
@@ -470,11 +467,11 @@ DDSUMS.m10 <- DDSUMS.ALL %>% filter(position == "m10")
 #view(DDSUMS.m10)
 
 ##m10 lmer
-mod3.m10 <- lmer(data = DDSUMS.m10, formula = degree.days ~ Veg + Omean + Veg * Omean + (1|site))
+mod3.m10 <- lmer(data = DDSUMS.m10, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
 summary(mod3.m10)
 
 ##m10 lm
-mod4.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + Omean + Veg * Omean)
+mod4.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
 summary(mod4.m10)
 
 ```
@@ -489,11 +486,11 @@ print(DDSUMS.m30)
 #view(DDSUMS.m30)
 
 ##m30 lmer
-mod3.m30 <- lmer(data = DDSUMS.m30, formula = degree.days ~ Veg + Omean + Veg * Omean + (1|site))
+mod3.m30 <- lmer(data = DDSUMS.m30, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
 summary(mod3.m30)
 
 ##m30 lm
-mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ Veg + Omean + Veg * Omean)
+mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
 summary(mod4.m30)
 
 ```
