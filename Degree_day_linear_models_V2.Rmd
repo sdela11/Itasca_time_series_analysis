@@ -246,7 +246,7 @@ DDSUMS.df <- DDsums.df.b # rename df
 
 ```{r OA data}
 #OA.dat <- read.csv("../OA_thickness_2019_21_clean_20230325.csv")
-Odata <- read_csv("../2YR_replicate_PIT_depths_OA.csv")
+Odata <- read.csv("../2YR_replicate_PIT_depths_OA.csv")
 view(Odata)
 Odata$season <- as.character(Odata$season)
 
