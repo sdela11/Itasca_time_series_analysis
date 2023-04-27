@@ -575,4 +575,19 @@ mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ totalO_thk)
 summary(mod4.m30)
 
 ```
+
+
+```{r mod3.4 m50}
+
+#create m50 object:
+DDSUMS.m50 <- DDSUMS.ALL %>% filter(position == "m50")
+print(DDSUMS.m50)
+#view(DDSUMS.m50)
+
+##m50 lm
+mod4.m50 <- lm(data = DDSUMS.m50, formula = degree.days ~ totalO_thk)
+summary(mod4.m50)
+
+```
+
 #### Subtract replicate measurements from Air temp at sites with AT.
