@@ -127,10 +127,10 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```{r TIME BREAKS, echo = TRUE}
 
-time.start <- as.Date("2020-04-01")
+time.start <- as.Date("2021-04-01")
 #time.break.one <-
 #time.break.two <- 
-time.end <- as.Date("2020-08-27")
+time.end <- as.Date("2021-08-27")
 print(time.start)
 print(time.end)
 
@@ -534,6 +534,7 @@ summary(mod3.m0surf)
 mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk)
 summary(mod4.m0surf)
 plot(mod4.m0surf)
+
 
 ```
 
