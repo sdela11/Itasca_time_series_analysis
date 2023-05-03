@@ -284,6 +284,21 @@ view(DDSUMS.ALL)
 ```
 
 
+```{r O plots}
+
+DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02surf")
+
+myplot <- ggplot(DDSUMS.ALL, aes(x = totalO_thk, y = degree.days, color = site, shape = season)) +
+  geom_point() +
+  facet_wrap(~position, ncol = 1, scales = "free_y")
+
+ggsave("Oplot.png", height = 7, width = 4)
+
+print(myplot)
+args(ggsave)
+
+```
+
 ## LINEAR MODEL ##
 
 
