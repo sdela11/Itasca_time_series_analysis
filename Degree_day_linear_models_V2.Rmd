@@ -284,7 +284,6 @@ view(DDSUMS.ALL)
 ```
 
 
-
 ## LINEAR MODEL ##
 
 
@@ -433,7 +432,7 @@ summary(mod4.lsurf)
 plot(mod4.lsurf)
 
 d<-density(mod4.lsurf[['residuals']])
-plot(d,main='Residual KDE Plot',xlab='Residual value')
+plot(d,main='Residual KDE Plot',v xlab='Residual value')
 
 ```
 
