@@ -95,6 +95,14 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```
 
+```{r remove m01surf and m02surf}
+dailymeans.df %>% 
+  
+
+
+```
+
+
 #### code for remembering (hidden)
 
 ```{r remembering, echo = FALSE}
