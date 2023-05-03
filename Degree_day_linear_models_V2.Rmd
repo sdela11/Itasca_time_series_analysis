@@ -127,10 +127,10 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```{r TIME BREAKS, echo = TRUE}
 
-time.start <- as.Date("2020-04-01")
+time.start <- as.Date("2021-04-01")
 #time.break.one <-
 #time.break.two <- 
-time.end <- as.Date("2020-08-27")
+time.end <- as.Date("2021-08-27")
 print(time.start)
 print(time.end)
 
@@ -534,6 +534,7 @@ mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk)
 summary(mod4.m0surf)
 plot(mod4.m0surf)
 
+
 ```
 
 
@@ -574,4 +575,19 @@ mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ totalO_thk)
 summary(mod4.m30)
 
 ```
+
+
+```{r mod3.4 m50}
+
+#create m50 object:
+DDSUMS.m50 <- DDSUMS.ALL %>% filter(position == "m50")
+print(DDSUMS.m50)
+#view(DDSUMS.m50)
+
+##m50 lm
+mod4.m50 <- lm(data = DDSUMS.m50, formula = degree.days ~ totalO_thk)
+summary(mod4.m50)
+
+```
+
 #### Subtract replicate measurements from Air temp at sites with AT.
