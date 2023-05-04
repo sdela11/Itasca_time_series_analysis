@@ -70,7 +70,7 @@ dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-
   summarise(meantemp = mean(value))
 colnames(dailymeans.df)[2]<- "date" #rename grouping column
 
-#head(dailymeans.df)
+head(dailymeans.df)
 
 ```
 
@@ -92,13 +92,6 @@ C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
 ```{r filter.zero, echo = TRUE}
 
 dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
-
-```
-
-```{r remove m01surf and m02surf}
-dailymeans.df %>% 
-  
-
 
 ```
 
@@ -224,7 +217,19 @@ view(DDsums.df)
 
 ```
 
+#### Replace m01surf and m02surf labels
 
+```{r remove m01surf and m02surf}
+
+#format:
+#df[df == "Old Value"] <- "New Value"
+
+DDsums.df[DDsums.df == "m01surf"] <- "lsurf"
+DDsums.df[DDsums.df == "m02surf"] <- "m0surf"
+
+print(DDsums.df$position == "m01surf" | DDsums.df$position == "m02surf")
+
+```
 
 #### Adding treatment columns:
   
