@@ -128,10 +128,10 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```{r TIME BREAKS, echo = TRUE}
 
-time.start <- as.Date("2021-04-01")
+time.start <- as.Date("2020-04-01")
 #time.break.one <-
 #time.break.two <- 
-time.end <- as.Date("2021-08-27")
+time.end <- as.Date("2020-08-27")
 print(time.start)
 print(time.end)
 
@@ -227,7 +227,7 @@ view(DDsums.df)
 DDsums.df[DDsums.df == "m01surf"] <- "lsurf"
 DDsums.df[DDsums.df == "m02surf"] <- "m0surf"
 
-print(DDsums.df$position == "m01surf" | DDsums.df$position == "m02surf")
+#print(DDsums.df$position == "m01surf" | DDsums.df$position == "m02surf")
 
 ```
 
@@ -299,7 +299,7 @@ view(DDSUMS.ALL)
 
 ```{r O plots}
 
-DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02surf")
+DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf")
 
 myplot <- ggplot(DDSUMS.ALL, aes(x = totalO_thk, y = degree.days, color = site, shape = season)) +
   geom_point() +
@@ -550,8 +550,8 @@ plot(mod4.lsurf)
 ```{r mod3.4 m0surf}
 
 #creation of m0surf object
-DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02surf")
-#view(DDSUMS.m0surf)
+DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf")
+view(DDSUMS.m0surf)
 
 ##m0surf lmer
 mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk + (1|site))
