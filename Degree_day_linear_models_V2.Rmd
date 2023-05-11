@@ -335,6 +335,7 @@ mod1.lsurf
 summary(mod1.lsurf)
 plot(residuals(mod1.lsurf) ∼ fitted.values(mod1.lsurf))
 
+args(plot)
 
 ```
 
@@ -539,7 +540,8 @@ summary(mod3.lsurf)
 mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk)
 summary(mod4.lsurf)
 plot(mod4.lsurf)
-plot(residuals(mod4.lsurf) ∼ fitted.values(mod4.lsurf))
+plot(residuals(mod4.lsurf) ∼ fitted.values(mod4.lsurf), main = "Residuals: O thickness linear regression model 
+     Litter Surface")
 
 #d<-density(mod4.lsurf[['residuals']])
 #plot(d,main='Residual KDE Plot',xlab='Residual value')
@@ -552,7 +554,7 @@ plot(residuals(mod4.lsurf) ∼ fitted.values(mod4.lsurf))
 
 #creation of m0surf object
 DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf")
-view(DDSUMS.m0surf)
+#view(DDSUMS.m0surf)
 
 ##m0surf lmer
 mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk + (1|site))
@@ -562,7 +564,8 @@ summary(mod3.m0surf)
 mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk)
 summary(mod4.m0surf)
 plot(mod4.m0surf)
-plot(residuals(mod4.m0surf) ∼ fitted.values(mod4.m0surf))
+plot(residuals(mod4.m0surf) ∼ fitted.values(mod4.m0surf), main = "Residuals: O thickness linear regression model 
+     Mineral Soil Surface")
 
 ```
 
@@ -583,7 +586,8 @@ summary(mod3.m10)
 ##m10 lm
 mod4.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ totalO_thk)
 summary(mod4.m10)
-plot(residuals(mod4.m10) ∼ fitted.values(mod4.m10))
+plot(residuals(mod4.m10) ∼ fitted.values(mod4.m10), main = "Residuals: O thickness linear regression model 
+     M10")
 
 ```
 
@@ -604,7 +608,8 @@ summary(mod3.m30)
 ##m30 lm
 mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ totalO_thk)
 summary(mod4.m30)
-plot(residuals(mod4.m30) ∼ fitted.values(mod4.m30))
+plot(residuals(mod4.m30) ∼ fitted.values(mod4.m30), main = "Residuals: O thickness linear regression model 
+     M30")
 
 ```
 
@@ -619,6 +624,8 @@ print(DDSUMS.m50)
 ##m50 lm
 mod4.m50 <- lm(data = DDSUMS.m50, formula = degree.days ~ totalO_thk)
 summary(mod4.m50)
+plot(residuals(mod4.m50) ∼ fitted.values(mod4.m50), main = "Residuals: O thickness linear regression model 
+     M50")
 
 ```
 
