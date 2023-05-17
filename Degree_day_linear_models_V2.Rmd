@@ -452,11 +452,11 @@ print(DDSUMS.lsurf)
 #view(DDSUMS.lsurf)
 
 ##lsurf lmer
-mod3.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
+mod3.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
 summary(mod3.lsurf)
 
 ##lsurf lm
-mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
+mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
 summary(mod4.lsurf)
 plot(mod4.lsurf)
 
@@ -474,11 +474,11 @@ DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02su
 #view(DDSUMS.m0surf)
 
 ##m0surf lmer
-mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
+mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
 summary(mod3.m0surf)
 
 ##m0surf lm
-mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
+mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
 summary(mod4.m0surf)
 plot(mod4.m0surf)
 
@@ -495,11 +495,11 @@ DDSUMS.m10 <- DDSUMS.ALL %>% filter(position == "m10")
 #view(DDSUMS.m10)
 
 ##m10 lmer
-mod3.m10 <- lmer(data = DDSUMS.m10, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
+mod3.m10 <- lmer(data = DDSUMS.m10, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
 summary(mod3.m10)
 
 ##m10 lm
-mod4.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
+mod4.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
 summary(mod4.m10)
 
 ```
@@ -514,11 +514,11 @@ print(DDSUMS.m30)
 #view(DDSUMS.m30)
 
 ##m30 lmer
-mod3.m30 <- lmer(data = DDSUMS.m30, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk + (1|site))
+mod3.m30 <- lmer(data = DDSUMS.m30, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
 summary(mod3.m30)
 
 ##m30 lm
-mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ Veg + totalO_thk + Veg * totalO_thk)
+mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
 summary(mod4.m30)
 
 ```
