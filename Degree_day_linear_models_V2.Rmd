@@ -132,14 +132,15 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 #time.break.one <-
 #time.break.two <- 
 #time.end <- as.Date("2021-08-27")
-print(time.start)
-print(time.end)
+
 
 time.start <- as.Date("2020-10-01")
 #time.break.one <-
 #time.break.two <- 
 time.end <- as.Date("2021-09-30")
 
+print(time.start)
+print(time.end)
 ## subsetting the dataframe using the time breaks.
 #Selects data that is greater than time.start AND less than time.end
 DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
@@ -514,7 +515,7 @@ summary(mod4.m10)
 
 #create m30 object:
 DDSUMS.m30 <- DDSUMS.ALL %>% filter(position == "m30")
-print(DDSUMS.m30)
+#print(DDSUMS.m30)
 #view(DDSUMS.m30)
 
 ##m30 lmer
@@ -544,7 +545,7 @@ summary(mod3.lsurf)
 mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk)
 summary(mod4.lsurf)
 plot(mod4.lsurf)
-plot(residuals(mod4.lsurf) ∼ fitted.values(mod4.lsurf), main = "Residuals: O thickness linear regression model 
+plot(residuals(mod4.lsurf) ∼ fitted.values(mod4.lsurf), main = "Residuals: O thickness linear regression model
      Litter Surface")
 
 #d<-density(mod4.lsurf[['residuals']])
@@ -568,8 +569,7 @@ summary(mod3.m0surf)
 mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk)
 summary(mod4.m0surf)
 plot(mod4.m0surf)
-plot(residuals(mod4.m0surf) ∼ fitted.values(mod4.m0surf), main = "Residuals: O thickness linear regression model 
-     Mineral Soil Surface")
+plot(residuals(mod4.m0surf) ∼ fitted.values(mod4.m0surf), main = "Residuals: O thickness linear regression model Mineral Soil Surface")
 
 ```
 
