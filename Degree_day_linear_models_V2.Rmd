@@ -91,7 +91,7 @@ C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
 
 ```{r filter.zero, echo = TRUE}
 
-dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
+dailymeans.df <- dailymeans.df %>% filter(meantemp > 5)
 
 ```
 
