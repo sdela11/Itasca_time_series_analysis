@@ -29,6 +29,7 @@ library(lmerTest)
 library(emmeans)
 library(kableExtra)
 library(Hmisc)
+library(zoo)
 
 
 ```
@@ -68,17 +69,21 @@ Create a new df:
  mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
  
  
-#### Rename the grouping column to "date", from the automatically created 'date(date.time)'
+#### Rename 
+dailymeans.df <- mutate(DD.wanted, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
+  group_by(name, date(date.time)) %>% 
+  summarise(meantemp = mean(value), GDD5 = (mean(value) -5))
+colnames(dailymeans.df)[2]<- "date" #rename grouping column
+
+#### Set all values less than 0 to 0.
+
+dailymeans.df$GDD5 <- pmax(dailymeans.df$GDD5, 0)
+
+head(dailymeans.df)
+the grouping column to "date", from the automatically created 'date(date.time)'
 
 
 ```{r summarize.daily, echo = TRUE}
-
-dailymeans.df <- mutate(DD.wanted, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
-  group_by(name, date(date.time)) %>% 
-  summarise(meantemp = mean(value))
-colnames(dailymeans.df)[2]<- "date" #rename grouping column
-
-head(dailymeans.df)
 
 ```
 
@@ -159,28 +164,19 @@ view(DD.df.cut)
 
 ```
 
-#### Remove all values less than or equal to 0, create new column with base temperature subtracted.
 
-```{r filter.zero, echo = TRUE}
-GDD5.df <- DD.df.cut
-GDD5.df$GDD5 <- GDD5.df$meantemp - 5  #create new column by subtracting 5 from meantemp.
-GDD5.df <- GDD5.df %>% filter(GDD5 > 0)
-
-head(GDD5.df)
-
-```
 #### Add in metadata columns for final dataframe
 
 ```{r attach meta, echo = TRUE}
 
 #Split the name column into 5 separate columns
-meta.df <- str_split_fixed(GDD5.df$name, "_", n = 5)
+meta.df <- str_split_fixed(DD.df.cut$name, "_", n = 5)
 #head(meta.df)
 
 # Name and attach the columns from meta.df
-GDD5.df <- GDD5.df %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
+DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
                          .before = "date")
-head(GDD5.df)
+head(DD.df.cut)
 
 ```
 
@@ -188,6 +184,21 @@ head(GDD5.df)
 
 Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
 This gives you the response variable: degree days tabulated over the desired timeframe.
+
+## Rolling sums
+
+```{r rollsum}
+
+GDD5.sums.df <- DD.df.cut %>% 
+  group_by(name) %>% 
+  mutate(GDD5.sum = cumsum(GDD5))
+
+head(GDD5.sums.df)
+
+```
+
+
+
 
 ```{r merge complete table, echo = TRUE}
 
