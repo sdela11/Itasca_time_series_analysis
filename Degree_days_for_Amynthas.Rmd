@@ -194,10 +194,24 @@ GDD5.sums.df <- DD.df.cut %>%
   mutate(GDD5.sum = cumsum(GDD5))
 
 head(GDD5.sums.df)
+view(GDD5.sums.df)
+
+
+test.df <- GDD5.sums.df %>% 
+  group_by(name) %>% 
+  filter(GDD5.sum >= 1000) %>% 
+  slice(1) %>% # takes the first occurrence if there is a tie
+  ungroup()
+
+view(test.df)
+
+print(test.df[test.df$position == "lsurf" | test.df$position == "m0surf" | test.df$position == "m01surf" | test.df$position == "m02surf",])
+
+print(test.df[test.df$position == "m10",])
+
+print(max(test.df$date))
 
 ```
-
-
 
 
 ```{r merge complete table, echo = TRUE}
