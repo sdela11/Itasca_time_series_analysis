@@ -134,15 +134,26 @@ C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
 ```{r TIME BREAKS, echo = TRUE}
 
 #time.start <- as.Date("2021-04-01")
-#time.break.one <-
+#time.break.one <- 
 #time.break.two <- 
 #time.end <- as.Date("2021-08-27")
 
+time.start <- as.Date("2020-02-01")
+time.end <- as.Date("2020-11-01")
 
-time.start <- as.Date("2020-10-01")
+time.start <- as.Date("2021-02-01")
+time.end <- as.Date("2021-11-01")
+
+time.start <- as.Date("2020-05-13")
+time.end <- as.Date("2020-11-01")
+
+time.start <- as.Date("2021-05-13")
+time.end <- as.Date("2021-11-01")
 #time.break.one <-
 #time.break.two <- 
-time.end <- as.Date("2021-09-30")
+
+#time.start <- as.Date("2020-10-01")
+#time.end <- as.Date("2021-09-30")
 
 print(time.start)
 print(time.end)
@@ -150,7 +161,7 @@ print(time.end)
 #Selects data that is greater than time.start AND less than time.end
 DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
 
-#view(DD.df.cut)
+view(DD.df.cut)
 
 ```
 
@@ -159,7 +170,7 @@ DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$d
 ```{r rm.incomplete, echo = TRUE}
 
 DD.df.cut <- DD.df.cut %>% group_by(name) %>% filter((length(name) > 50) == TRUE)
-view(DD.df.cut)
+#view(DD.df.cut)
 
 
 ```
@@ -205,10 +216,11 @@ test.df <- GDD5.sums.df %>%
 
 view(test.df)
 
-print(test.df[test.df$position == "lsurf" | test.df$position == "m0surf" | test.df$position == "m01surf" | test.df$position == "m02surf",])
+view(test.df[test.df$position == "lsurf" | test.df$position == "m0surf" | test.df$position == "m01surf" | test.df$position == "m02surf",])
 
-print(test.df[test.df$position == "m10",])
+view(test.df[test.df$position == "m10",])
 
+print(min(test.df$date))
 print(max(test.df$date))
 
 ```
