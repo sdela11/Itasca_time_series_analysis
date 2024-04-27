@@ -134,6 +134,8 @@ time.end <- as.Date("2020-08-27")
 print(time.start)
 print(time.end)
 
+time.start <- as.Date("2020-10-01")
+time.end <- as.Date("2021-09-30")
 
 ## subsetting the dataframe using the time breaks.
 #Selects data that is greater than time.start AND less than time.end
