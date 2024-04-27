@@ -3,15 +3,15 @@ title: "Degree_day_linear_models_V2"
 author: "Sara DeLaurentis"
 date: "3/23/2023"
 output:
-  word_document:
-    toc: yes
-  pdf_document:
-    toc: yes
   html_document:
     toc: yes
     toc_float: yes
     theme: cerulean
     highlight: kate
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -91,7 +91,7 @@ C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
 
 ```{r filter.zero, echo = TRUE}
 
-dailymeans.df <- dailymeans.df %>% filter(meantemp > 5)
+dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```
 
@@ -136,10 +136,10 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 5)
 time.start <- as.Date("2020-10-01")
 time.end <- as.Date("2021-09-30")
 
-time.start <- as.Date("2020-10-01")
+#time.start <- as.Date("2020-10-01")
 #time.break.one <-
 #time.break.two <- 
-time.end <- as.Date("2021-09-30")
+#time.end <- as.Date("2021-09-30")
 
 print(time.start)
 print(time.end)
@@ -326,7 +326,7 @@ args(ggsave)
 #### DD vegxworm lsurf mixed (DDSUMS.lsurf)
 
 #This model has degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
-#PARAMETERS: Timeframe: 2020-04-01 - 2020-09-30, position: lsurf
+#PARAMETERS: Timeframe: 2020-10-01 - 2021-09-30, position: lsurf
 
 
 ```{r mod1 lsurf}
@@ -467,8 +467,8 @@ mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk + Veg +
 summary(mod4.lsurf)
 plot(mod4.lsurf)
 
-d<-density(mod4.lsurf[['residuals']])
-plot(d,main='Residual KDE Plot',v xlab='Residual value')
+#d<-density(mod4.lsurf[['residuals']])
+#plot(d,main='Residual KDE Plot',v xlab='Residual value')
 
 ```
 
