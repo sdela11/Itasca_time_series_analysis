@@ -85,6 +85,7 @@ the grouping column to "date", from the automatically created 'date(date.time)'
 
 ```{r summarize.daily, echo = TRUE}
 
+
 ```
 
 
@@ -155,13 +156,15 @@ time.end <- as.Date("2021-11-01")
 #time.start <- as.Date("2020-10-01")
 #time.end <- as.Date("2021-09-30")
 
+
 print(time.start)
 print(time.end)
 ## subsetting the dataframe using the time breaks.
 #Selects data that is greater than time.start AND less than time.end
 DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
 
-view(DD.df.cut)
+
+#view(DD.df.cut)
 
 ```
 
@@ -187,6 +190,30 @@ meta.df <- str_split_fixed(DD.df.cut$name, "_", n = 5)
 # Name and attach the columns from meta.df
 DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
                          .before = "date")
+
+```
+
+
+#### Cutting out incomplete datasets. Removes the group if the length is less than 50 days.
+
+```{r rm.incomplete, echo = TRUE}
+
+DD.df.cut <- DD.df.cut %>% group_by(name) %>% filter((length(name) > 50) == TRUE)
+#view(DD.df.cut)
+
+```
+     
+#### Summarise, or reframe. Final step for response variable df 
+
+Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
+This gives you the response variable: degree days tabulated over the desired timeframe.
+
+```{r merge complete table, echo = TRUE}
+
+DDsums.df.pre <- DD.df.cut %>% 
+  group_by(site, rep, position, season) %>% 
+  reframe(site = site, position = position,
+          degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
 head(DD.df.cut)
 
 ```
