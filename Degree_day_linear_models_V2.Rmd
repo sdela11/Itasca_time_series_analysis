@@ -133,6 +133,8 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 5)
 #time.break.two <- 
 #time.end <- as.Date("2021-08-27")
 
+time.start <- as.Date("2020-10-01")
+time.end <- as.Date("2021-09-30")
 
 time.start <- as.Date("2020-10-01")
 #time.break.one <-
@@ -348,7 +350,7 @@ args(plot)
 
 lm DD vegxworm lsurf (mod2.lsurf)
 linear model with no random effect:
-PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: lsurf
+PARAMETERS: timeframe = 2020-10-01 - 2021-09-30, position: lsurf
 
 ```{r mod2 lsurf}
 
@@ -386,7 +388,7 @@ plot(mod2.m0surf)
 #### mixed-effects DD vegxworm m10
 #### lmer for m10. 
 Note: for the regular linear models, this is not taking into account the natural variation by site, that may be due to soil type and solar radiation, slope, etc.
-PARAMETERS: timeframe = 2020-04-01 - 2020-09-30, position: m10
+PARAMETERS: timeframe = 2020-10-01 - 2021-09-30, position: m10
 
 ```{r mod 1.2 m10}
 ##m10 models
