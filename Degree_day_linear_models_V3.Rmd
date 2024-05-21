@@ -27,8 +27,7 @@ library(glue)
 library(lme4)
 library(lmerTest)
 library(emmeans)
-library(kableExtra)
-library(Hmisc)
+
 
 
 ```
@@ -270,10 +269,10 @@ view(Odata)
 #OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
 
 # extract mean O thickness, attach to Degree Day data:
-OA.means.df <- OA.dat %>% 
-  filter(!is.na(totalO_thk)) %>% #remove NA values
-  group_by(site) %>% #group by site
-  summarise(Omean = round(mean(totalO_thk), digits = 2)) #take the mean for each site and round to 2 decimal places.
+#OA.means.df <- OA.dat %>% 
+ # filter(!is.na(totalO_thk)) %>% #remove NA values
+ # group_by(site) %>% #group by site
+ # summarise(Omean = round(mean(totalO_thk), digits = 2)) #take the mean for each site and round to 2 decimal places.
 
 # extract mean O thickness, attach to DD data
 
