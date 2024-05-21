@@ -196,7 +196,7 @@ This gives you the response variable: degree days tabulated over the desired tim
 
 GDD5.sums.df <- DD.df.cut %>% 
   group_by(name) %>% 
-  mutate(GDD5.sum = cumsum(GDD5))
+  mutate(GDD5.sum = cumsum(GDD5)) #GDD5.sum column is the cumulative sum of GDD5.
 
 head(GDD5.sums.df)
 view(GDD5.sums.df)
@@ -220,47 +220,6 @@ print(max(test.df$date))
 ```
 
 
-#```{r merge complete table, echo = TRUE}
-
-DDsums.df.pre <- test.df %>% 
-  group_by(site, rep, position, season) %>% 
-  reframe(site = site, position = position,
-          degree.days = sum(GDD5)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
-  distinct(site, rep, position, season, .keep_all = TRUE) #%>% 
-#ungroup()
-view(DDsums.df.pre)
-
-## Creating full (expected) dataframe, to merge with the current dataframe.  
-
-#  site <- c(rep("C2A", 14), rep("C2B", 14), rep("C5A", 14), rep("C5B", 14),
-#          rep("D2A", 14), rep("D2B", 14), rep("D5A", 14), rep("D5B", 14))
-#print(site)
-
-#rep <- c("R0", rep("R1",5), rep("R2", 4), rep("R3",4))  %>% 
-#  rep(8)
-#print(rep)
-
-sensor.list <- as_tibble(read_csv("../sensor_list.csv"))
-#view(sensor.list)
-
-#Add column to DDsums.df and sensor.list to give a unique column to merge with.
-DDsums.df.A <- DDsums.df.pre %>% 
-  mutate(srps.name = paste(site, rep, position, season, sep = "_"))
-#head(DDsums.df.A)
-
-sensor.list.A <- sensor.list %>% 
-  mutate(srp.name = paste(site, rep, position, sep = "_"))
-#head(sensor.list.A)
-
-#DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, by = "srp.name", all.x = TRUE)
-DDsums.df <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
-
-
-view(DDsums.df)
-
-
-
-#```
 
 #### Replace m01surf and m02surf labels
 
