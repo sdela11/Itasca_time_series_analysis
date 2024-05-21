@@ -499,7 +499,3 @@ mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ totalO_thk + Veg + tot
 summary(mod4.m30)
 
 ```
-
-
-
-#### Subtract replicate measurements from Air temp at sites with AT.
