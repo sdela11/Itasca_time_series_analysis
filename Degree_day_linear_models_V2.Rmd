@@ -172,21 +172,11 @@ sensor_list.csv is a pre-made version of this dataframe.
 ```{r merge complete table, echo = TRUE}
 
 DDsums.df.pre <- DD.df.cut %>% 
-<<<<<<< HEAD
     group_by(site, rep, position) %>% #group by site, then replicate, then position.
     reframe(site = site, position = position,
               degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
     distinct(site, rep, position, .keep_all = TRUE) #%>%   #only keep the one row for each distinct value of site, rep, position. 
     #ungroup()
-  #view(DDsums.df.pre)
-
-#Pre-made dataframe of all expected values:
-=======
-  group_by(site, rep, position, season) %>% 
-  reframe(site = site, position = position,
-          degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
-  distinct(site, rep, position, season, .keep_all = TRUE) #%>% 
-#ungroup()
 view(DDsums.df.pre)
 
 ## Reading in full (expected) dataframe, to merge with the current dataframe.  
@@ -196,7 +186,7 @@ sensor.list <- as_tibble(read_csv("../sensor_list.csv"))
 
 #Add column to DDsums.df and sensor.list to give a unique column to merge with.
 DDsums.df.A <- DDsums.df.pre %>% 
-  mutate(srps.name = paste(site, rep, position, season, sep = "_"))
+  mutate(srps.name = paste(site, rep, position, sep = "_"))
 #head(DDsums.df.A)
 
 sensor.list.A <- sensor.list %>% 
@@ -262,14 +252,15 @@ Odata <- read.csv("../2YR_replicate_PIT_depths_OA.csv")
 view(Odata)
 Odata$season <- as.character(Odata$season)
 
-colnames(Odata)[4] <- "rep" #change column name from rep to plot
+colnames(Odata)[4] <- "rep" #change column name from plot to rep.
 
 head(Odata)
-Odata <- Odata %>% select(season, site, rep, totalO_thk)
+Odata <- Odata %>% select(season, site, rep, totalO_thk) %>% #take only certain columns
+  filter(season == 2021) #select only 2021 season
 
 view(Odata)
 
-
+##For OA.dat only: 
 # set classes for columns
 #OA.dat$inv_lvl <- as.character(OA.dat$inv_lvl)
 #OA.dat$Oi_thk <- as.numeric(OA.dat$Oi_thk)
@@ -278,7 +269,6 @@ view(Odata)
 #OA.dat$O.A_thk <- as.numeric(OA.dat$O.A_thk)
 #OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
 
-<<<<<<< HEAD
 # extract mean O thickness, attach to Degree Day data:
 OA.means.df <- OA.dat %>% 
   filter(!is.na(totalO_thk)) %>% #remove NA values
@@ -327,6 +317,9 @@ args(ggsave)
 #### DD vegxworm lsurf mixed (DDSUMS.lsurf)
 
 #This model has degree.days as a function of vegetation (Veg) and worm invasion intensity (worm_lvl), as well as the interaction as slopes, with site as a random effect.
+
+
+
 #PARAMETERS: Timeframe: 2020-10-01 - 2021-09-30, position: lsurf
 
 
