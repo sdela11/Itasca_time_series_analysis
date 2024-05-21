@@ -1,7 +1,7 @@
 ---
 title: "Degree_day_linear_models_V2"
 author: "Sara DeLaurentis"
-date: "3/23/2023"
+date: "5/21/2024"
 output:
   word_document:
     toc: yes
@@ -33,8 +33,7 @@ library(Hmisc)
 
 ```
 
-Purpose: Analysis of Degree Day data
-
+Purpose: Analysis of Degree Day data via linear models and linear mixed-effects models (lme4 package).
 
 ## Data preparation ##
 
@@ -47,11 +46,10 @@ data$`...1` = NULL #remove strange column that was created upon read-in.
 head(data)
 
 data <- data[!(data$site == "D5B"),] #remove all D5B sensors.
-D5B.chk <- data[data$site == "D5B",]
-D5B.chk
+D5B.chk <- data[data$site == "D5B",] #will only create something if "D5B" sensors are still present.
+D5B.chk 
 
 ```
-
 
 
 #### Summarize mean temps for each date
@@ -66,26 +64,15 @@ Create a new df:
 ```{r summarize.daily, echo = TRUE}
 
 dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
-  group_by(name, date(date.time)) %>% 
-  summarise(meantemp = mean(value))
+  group_by(name, date(date.time)) %>% # group by date 
+  summarise(meantemp = mean(value)) #take the mean temperature for each date
 colnames(dailymeans.df)[2]<- "date" #rename grouping column
 
-#head(dailymeans.df)
+head(dailymeans.df)
 
 ```
 
 
-#### Problem-solving
-
-```{r problem.solve, echo = TRUE}
-
-C2A_R2_m10.means <- dailymeans.df %>% filter(grepl("C2A_R2_m10",name) == TRUE)
-#view(C2A_R2_m10.means)
-
-C2A_R3_m10.means <- dailymeans.df %>% filter(grepl("C2A_R3_m10", name) == TRUE)
-#view(C2A_R3_m10.means)
-
-```
 
 #### Remove all values less than or equal to 0
 
@@ -127,13 +114,6 @@ dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
 
 ```{r TIME BREAKS, echo = TRUE}
 
-time.start <- as.Date("2020-04-01")
-#time.break.one <-
-#time.break.two <- 
-time.end <- as.Date("2020-08-27")
-print(time.start)
-print(time.end)
-
 time.start <- as.Date("2020-10-01")
 time.end <- as.Date("2021-09-30")
 
@@ -141,6 +121,7 @@ time.end <- as.Date("2021-09-30")
 #Selects data that is greater than time.start AND less than time.end
 DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
 
+#Un-comment the line below to view the new dataframe.
 #view(DD.df.cut)
 
 ```
@@ -176,27 +157,21 @@ DD.df.cut <- DD.df.cut %>% group_by(name) %>% filter((length(name) > 50) == TRUE
 Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
 This gives you the response variable: degree days tabulated over the desired timeframe.
 
+A dataframe will need to be used to merge all expected values with the values that we have.
+sensor_list.csv is a pre-made version of this dataframe. 
+
+
 ```{r merge complete table, echo = TRUE}
 
 DDsums.df.pre <- DD.df.cut %>% 
-    group_by(site, rep, position) %>% 
+    group_by(site, rep, position) %>% #group by site, then replicate, then position.
     reframe(site = site, position = position,
               degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
-    distinct(site, rep, position, .keep_all = TRUE) #%>% 
+    distinct(site, rep, position, .keep_all = TRUE) #%>%   #only keep the one row for each distinct value of site, rep, position. 
     #ungroup()
   #view(DDsums.df.pre)
 
-
-## Creating full (expected) dataframe, to merge with the current dataframe.  
-
-#  site <- c(rep("C2A", 14), rep("C2B", 14), rep("C5A", 14), rep("C5B", 14),
-#          rep("D2A", 14), rep("D2B", 14), rep("D5A", 14), rep("D5B", 14))
-#print(site)
-
-#rep <- c("R0", rep("R1",5), rep("R2", 4), rep("R3",4))  %>% 
-#  rep(8)
-#print(rep)
-
+#Pre-made dataframe of all expected values:
 sensor.list <- as_tibble(read_csv("../sensor_list.csv"))
 #view(sensor.list)
 
@@ -226,13 +201,15 @@ Worm invasion level (worm_lvl, LOW or HIGH)
 
 ```{r trt cols, echo = TRUE}
 
-DDsums.df.a <- DDsums.df %>% mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH"))
+DDsums.df.a <- DDsums.df %>% 
+  mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH")) #if a "2" is present in site column, insert "LOW" in worm_lvl column. If not, insert "HIGH".
 #head(DDsums.df.a)
 #view(DDsums.df.a) 
 
 #Vegetation (Veg, Coniferous or Deciduous)
 
-DDsums.df.b <- DDsums.df.a %>% mutate(Veg = if_else(grepl("C", DDsums.df$site), "Coniferous", "Deciduous"))
+DDsums.df.b <- DDsums.df.a %>% 
+  mutate(Veg = if_else(grepl("C", DDsums.df$site), "Coniferous", "Deciduous")) #similar to above: if a "C" is present in site column, insert "Coniferous". If not, insert "Deciduous".
 #head(DDsums.df.b)
 #view(DDsums.df.b)  
 
@@ -243,7 +220,8 @@ DDSUMS.df <- DDsums.df.b # rename df
 
 ## Bring in and attach OA horizon data ##
 
- See O_horizon_prelim.R to view summary statistics
+ See O_horizon_prelim.R to view summary statistics.
+ May need to download new version of O data from Google Drive.
 
 
 ```{r OA data}
@@ -258,12 +236,11 @@ OA.dat$Oa_thk <- as.numeric(OA.dat$Oa_thk)
 OA.dat$O.A_thk <- as.numeric(OA.dat$O.A_thk)
 OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
 
-# extract mean O thickness, attach to DD data
-
+# extract mean O thickness, attach to Degree Day data:
 OA.means.df <- OA.dat %>% 
-  filter(!is.na(totalO_thk)) %>% 
-  group_by(site) %>% 
-  summarise(Omean = round(mean(totalO_thk), digits = 2))
+  filter(!is.na(totalO_thk)) %>% #remove NA values
+  group_by(site) %>% #group by site
+  summarise(Omean = round(mean(totalO_thk), digits = 2)) #take the mean for each site and round to 2 decimal places.
 #OA.means.df
 # attach
 DDSUMS.ALL <- DDSUMS.df %>% 
@@ -296,7 +273,7 @@ mod1.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ Veg + worm_lvl +
 #View object
 mod1.lsurf
 summary(mod1.lsurf)
-plot(residuals(mod1.lsurf) ∼ fitted.values(mod1.lsurf))
+plot(residuals(mod1.lsurf) ∼ fitted.values(mod1.lsurf)) #plot residuals
 
 #Error:
 #" boundary (singular) fit: see help('isSingular') "
