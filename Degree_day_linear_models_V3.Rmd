@@ -1,0 +1,505 @@
+---
+title: "Degree_day_linear_models_V2"
+author: "Sara DeLaurentis"
+date: "5/21/2024"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    theme: cerulean
+    highlight: kate
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+## LIBRARIES
+
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(broom)
+library(dplyr)
+library(glue)
+library(lme4)
+library(lmerTest)
+library(emmeans)
+library(kableExtra)
+library(Hmisc)
+
+
+```
+
+Purpose: Analysis of Degree Day data via linear models and linear mixed-effects models (lme4 package).
+
+## Data preparation ##
+
+#### Data read-in
+
+
+```{r read.in, echo = TRUE}
+data <- read_csv("../ALL_A.csv")
+data$`...1` = NULL #remove strange column that was created upon read-in.
+head(data)
+
+data <- data[!(data$site == "D5B"),] #remove all D5B sensors.
+D5B.chk <- data[data$site == "D5B",] #will only create something if "D5B" sensors are still present.
+D5B.chk 
+
+```
+
+
+#### Summarize mean temps for each date
+
+Create a new df:
+ mutate date.time to POSIXct object, then summarize temperature measurements into one meantemp measurement for each date.
+ 
+ 
+#### Rename the grouping column to "date", from the automatically created 'date(date.time)'
+
+
+```{r summarize.daily, echo = TRUE}
+
+dailymeans.df <- mutate(data, date.time = as.POSIXct(date.time, format = "%Y-%m-%d %H:%M")) %>% 
+  group_by(name, date(date.time)) %>% # group by date 
+  summarise(meantemp = mean(value)) #take the mean temperature for each date
+colnames(dailymeans.df)[2]<- "date" #rename grouping column
+
+head(dailymeans.df)
+
+```
+
+
+
+#### Remove all values less than or equal to 0
+
+```{r filter.zero, echo = TRUE}
+
+dailymeans.df <- dailymeans.df %>% filter(meantemp > 0)
+
+```
+
+
+#### code for remembering (hidden)
+
+```{r remembering, echo = FALSE}
+#DD.df <- dailymeans.df %>% 
+#  group_by(SRP.name) %>% 
+#  summarise(SRP.name = SRP.name,
+#            degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+#  distinct(SRP.name, .keep_all = TRUE) %>% 
+#  ungroup()
+#view(DD.df)  
+
+
+#Helpful code for remembering.
+
+#  C2A_R1_m10_dailymean <- mutate(C2A_R1_m10,'date.time' = mdy_hm(date.time)) %>% 
+#  separate('date.time',
+#           into = c('longdate', 'time'),
+#           sep = ' ') %>% 
+#  separate('longdate',
+#           into = c('year', 'month', 'day'),
+#           sep = '-',
+#           remove = FALSE) %>% 
+#  group_by(year, month, day) %>% 
+#  summarise(meantemp = mean(value)) 
+```
+
+
+
+### TIME BREAKS
+
+```{r TIME BREAKS, echo = TRUE}
+
+time.start <- as.Date("2020-10-01")
+time.end <- as.Date("2021-09-30")
+
+#time.start <- as.Date("2020-10-01")
+#time.break.one <-
+#time.break.two <- 
+#time.end <- as.Date("2021-09-30")
+
+print(time.start)
+print(time.end)
+## subsetting the dataframe using the time breaks.
+#Selects data that is greater than time.start AND less than time.end
+DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
+
+#Un-comment the line below to view the new dataframe.
+#view(DD.df.cut)
+
+```
+
+
+#### Add in metadata columns for final dataframe
+
+```{r attach meta, echo = TRUE}
+
+#Split the name column into 5 separate columns
+meta.df <- str_split_fixed(DD.df.cut$name, "_", n = 5)
+#head(meta.df)
+
+# Name and attach the columns from meta.df
+DD.df.cut <- DD.df.cut %>% add_column(site = meta.df[,1], rep = meta.df[,2], position = meta.df[,3], buttonID = meta.df[,4], season = meta.df[,5],
+                         .before = "date")
+#head(DD.df.cut)
+
+```
+
+
+#### Cutting out incomplete datasets. Removes the group if the length is less than 50 days.
+
+```{r rm.incomplete, echo = TRUE}
+
+DD.df.cut <- DD.df.cut %>% group_by(name) %>% filter((length(name) > 50) == TRUE)
+#view(DD.df.cut)
+
+```
+     
+#### Summarise, or reframe. Final step for response variable df 
+
+Group by site, rep, and position, and sum the mean temperatures in the cut dataframe.
+This gives you the response variable: degree days tabulated over the desired timeframe.
+
+A dataframe will need to be used to merge all expected values with the values that we have.
+sensor_list.csv is a pre-made version of this dataframe. 
+
+
+```{r merge complete table, echo = TRUE}
+
+DDsums.df.pre <- DD.df.cut %>% 
+    group_by(site, rep, position) %>% #group by site, then replicate, then position.
+    reframe(site = site, position = position,
+              degree.days = sum(meantemp)) %>%  #create degree.days column by outputting the sum of meantemp for each position. (Not sensor, but position)
+    distinct(site, rep, position, .keep_all = TRUE) #%>%   #only keep the one row for each distinct value of site, rep, position. 
+    #ungroup()
+view(DDsums.df.pre)
+
+## Reading in full (expected) dataframe, to merge with the current dataframe.  
+
+sensor.list <- as_tibble(read_csv("../sensor_list.csv"))
+#view(sensor.list)
+
+#Add column to DDsums.df and sensor.list to give a unique column to merge with.
+DDsums.df.A <- DDsums.df.pre %>% 
+  mutate(srps.name = paste(site, rep, position, sep = "_"))
+#head(DDsums.df.A)
+
+sensor.list.A <- sensor.list %>% 
+  mutate(srp.name = paste(site, rep, position, sep = "_"))
+#head(sensor.list.A)
+
+#DDsums.df.new <- merge(x = sensor.list.A, y = DDsums.df.A, by = "srp.name", all.x = TRUE)
+DDsums.df <- merge(x = sensor.list.A, y = DDsums.df.A, all.x = TRUE)
+
+
+view(DDsums.df)
+
+
+
+```
+
+#### Replace m01surf and m02surf labels
+
+```{r remove m01surf and m02surf}
+
+#format:
+#df[df == "Old Value"] <- "New Value"
+
+DDsums.df[DDsums.df == "m01surf"] <- "lsurf"
+DDsums.df[DDsums.df == "m02surf"] <- "m0surf"
+
+#print(DDsums.df$position == "m01surf" | DDsums.df$position == "m02surf")
+
+```
+
+#### Adding treatment columns:
+  
+Worm invasion level (worm_lvl, LOW or HIGH)
+
+```{r trt cols, echo = TRUE}
+
+DDsums.df.a <- DDsums.df %>% 
+  mutate(worm_lvl = if_else(grepl("2", DDsums.df$site), "LOW", "HIGH")) #if a "2" is present in site column, insert "LOW" in worm_lvl column. If not, insert "HIGH".
+#head(DDsums.df.a)
+#view(DDsums.df.a) 
+
+#Vegetation (Veg, Coniferous or Deciduous)
+
+DDsums.df.b <- DDsums.df.a %>% 
+  mutate(Veg = if_else(grepl("C", DDsums.df$site), "Coniferous", "Deciduous")) #similar to above: if a "C" is present in site column, insert "Coniferous". If not, insert "Deciduous".
+#head(DDsums.df.b)
+#view(DDsums.df.b)  
+
+DDSUMS.df <- DDsums.df.b # rename df
+#head(DDSUMS.df)
+
+```
+
+## Bring in and attach OA horizon data ##
+
+ See O_horizon_prelim.R to view summary statistics.
+ May need to download new version of O data from Google Drive.
+
+
+```{r OA data}
+#OA.dat <- read.csv("../OA_thickness_2019_21_clean_20230325.csv")
+Odata <- read.csv("../2YR_replicate_PIT_depths_OA.csv")
+view(Odata)
+Odata$season <- as.character(Odata$season)
+
+colnames(Odata)[4] <- "rep" #change column name from plot to rep.
+
+head(Odata)
+Odata <- Odata %>% select(season, site, rep, totalO_thk) %>% #take only certain columns
+  filter(season == 2021) #select only 2021 season
+
+view(Odata)
+
+##For OA.dat only: 
+# set classes for columns
+#OA.dat$inv_lvl <- as.character(OA.dat$inv_lvl)
+#OA.dat$Oi_thk <- as.numeric(OA.dat$Oi_thk)
+#OA.dat$Oe_thk <- as.numeric(OA.dat$Oe_thk)
+#OA.dat$Oa_thk <- as.numeric(OA.dat$Oa_thk)
+#OA.dat$O.A_thk <- as.numeric(OA.dat$O.A_thk)
+#OA.dat$bulk_density <- as.numeric(OA.dat$bulk_density)
+
+# extract mean O thickness, attach to Degree Day data:
+OA.means.df <- OA.dat %>% 
+  filter(!is.na(totalO_thk)) %>% #remove NA values
+  group_by(site) %>% #group by site
+  summarise(Omean = round(mean(totalO_thk), digits = 2)) #take the mean for each site and round to 2 decimal places.
+
+# extract mean O thickness, attach to DD data
+
+# 2023-04-20: Do not need this step if using 2YR_replicate_pit_depths
+#OA.means.df <- OA.dat %>% 
+#  filter(!is.na(totalO_thk)) %>% 
+#  group_by(site) %>% 
+#  summarise(totalO_thk = round(mean(totalO_thk), digits = 2))
+
+#OA.means.df
+
+# attach
+DDSUMS.ALL <- DDSUMS.df %>% 
+  left_join(Odata)
+view(DDSUMS.ALL)  
+
+
+
+```
+
+
+```{r O plots}
+
+DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf")
+
+myplot <- ggplot(DDSUMS.ALL, aes(x = totalO_thk, y = degree.days, color = site, shape = season)) +
+  geom_point() +
+  facet_wrap(~position, ncol = 1, scales = "free_y")
+
+ggsave("Oplot.png", height = 7, width = 4)
+
+print(myplot)
+args(ggsave)
+
+```
+
+
+
+## Model including O horizon data ##
+
+#### Creation of mod3: Including mean O horizon thickness
+
+
+
+```{r mod3.4 lsurf}
+
+#create lsurf object:
+DDSUMS.lsurf <- DDSUMS.ALL %>% filter(position == "lsurf")
+print(DDSUMS.lsurf)
+#view(DDSUMS.lsurf)
+
+##lsurf lmer
+mod3.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
+summary(mod3.lsurf)
+
+##lsurf lm
+mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
+summary(mod4.lsurf)
+plot(mod4.lsurf)
+
+#d<-density(mod4.lsurf[['residuals']])
+#plot(d,main='Residual KDE Plot',v xlab='Residual value')
+
+```
+
+
+
+```{r mod3.4 m0surf}
+
+#creation of m0surf object
+DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf" | position == "m02surf")
+#view(DDSUMS.m0surf)
+
+##m0surf lmer
+mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
+summary(mod3.m0surf)
+
+##m0surf lm
+mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
+summary(mod4.m0surf)
+plot(mod4.m0surf)
+
+```
+
+
+```{r mod3.4 m10}
+
+##m10 models
+
+#create m10 object:
+DDSUMS.m10 <- DDSUMS.ALL %>% filter(position == "m10")
+#print(DDSUMS.m10)
+#view(DDSUMS.m10)
+
+##m10 lmer
+mod3.m10 <- lmer(data = DDSUMS.m10, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
+summary(mod3.m10)
+
+##m10 lm
+mod4.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
+summary(mod4.m10)
+
+```
+
+
+
+```{r mod3.4 m30}
+
+#create m30 object:
+DDSUMS.m30 <- DDSUMS.ALL %>% filter(position == "m30")
+#print(DDSUMS.m30)
+#view(DDSUMS.m30)
+
+##m30 lmer
+mod3.m30 <- lmer(data = DDSUMS.m30, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg + (1|site))
+summary(mod3.m30)
+
+##m30 lm
+mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ totalO_thk + Veg + totalO_thk * Veg)
+summary(mod4.m30)
+
+```
+
+## Models lmer and lm with O thickness only
+
+```{r mod3.4 lsurf}
+
+#create lsurf object:
+DDSUMS.lsurf <- DDSUMS.ALL %>% filter(position == "lsurf")
+print(DDSUMS.lsurf)
+#view(DDSUMS.lsurf)
+
+##lsurf lmer
+mod3.lsurf <- lmer(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk + (1|site))
+summary(mod3.lsurf)
+
+##lsurf lm
+mod4.lsurf <- lm(data = DDSUMS.lsurf, formula = degree.days ~ totalO_thk)
+summary(mod4.lsurf)
+plot(mod4.lsurf)
+plot(residuals(mod4.lsurf) ∼ fitted.values(mod4.lsurf), main = "Residuals: O thickness linear regression model
+     Litter Surface")
+
+#d<-density(mod4.lsurf[['residuals']])
+#plot(d,main='Residual KDE Plot',xlab='Residual value')
+
+```
+
+
+
+```{r mod3.4 m0surf}
+
+#creation of m0surf object
+DDSUMS.m0surf <- DDSUMS.ALL %>% filter(position == "m0surf")
+#view(DDSUMS.m0surf)
+
+##m0surf lmer
+mod3.m0surf <- lmer(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk + (1|site))
+summary(mod3.m0surf)
+
+##m0surf lm
+mod4.m0surf <- lm(data = DDSUMS.m0surf, formula = degree.days ~ totalO_thk)
+summary(mod4.m0surf)
+plot(mod4.m0surf)
+plot(residuals(mod4.m0surf) ∼ fitted.values(mod4.m0surf), main = "Residuals: O thickness linear regression model Mineral Soil Surface")
+
+```
+
+
+```{r mod3.4 m10}
+
+##m10 models
+
+#create m10 object:
+DDSUMS.m10 <- DDSUMS.ALL %>% filter(position == "m10")
+#print(DDSUMS.m10)
+#view(DDSUMS.m10)
+
+##m10 lmer
+mod3.m10 <- lmer(data = DDSUMS.m10, formula = degree.days ~ totalO_thk + (1|site))
+summary(mod3.m10)
+
+##m10 lm
+mod4.m10 <- lm(data = DDSUMS.m10, formula = degree.days ~ totalO_thk)
+summary(mod4.m10)
+plot(residuals(mod4.m10) ∼ fitted.values(mod4.m10), main = "Residuals: O thickness linear regression model 
+     M10")
+
+```
+
+
+
+```{r mod3.4 m30}
+
+#create m30 object:
+DDSUMS.m30 <- DDSUMS.ALL %>% filter(position == "m30")
+print(DDSUMS.m30)
+#view(DDSUMS.m30)
+
+##m30 lmer
+mod3.m30 <- lmer(data = DDSUMS.m30, formula = degree.days ~ totalO_thk + (1|site))
+summary(mod3.m30)
+
+
+##m30 lm
+mod4.m30 <- lm(data = DDSUMS.m30, formula = degree.days ~ totalO_thk)
+summary(mod4.m30)
+plot(residuals(mod4.m30) ∼ fitted.values(mod4.m30), main = "Residuals: O thickness linear regression model 
+     M30")
+
+```
+
+
+```{r mod3.4 m50}
+
+#create m50 object:
+DDSUMS.m50 <- DDSUMS.ALL %>% filter(position == "m50")
+print(DDSUMS.m50)
+#view(DDSUMS.m50)
+
+##m50 lm
+mod4.m50 <- lm(data = DDSUMS.m50, formula = degree.days ~ totalO_thk)
+summary(mod4.m50)
+plot(residuals(mod4.m50) ∼ fitted.values(mod4.m50), main = "Residuals: O thickness linear regression model 
+     M50")
+
+```
+
+#### Subtract replicate measurements from Air temp at sites with AT.
