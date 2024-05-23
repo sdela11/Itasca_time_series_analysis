@@ -34,6 +34,13 @@ library(emmeans)
 
 Purpose: Analysis of Degree Day data via linear models and linear mixed-effects models (lme4 package).
 
+Files needed: 
+ALL_A.csv - all iButton data in one file, long form 
+
+sensor_list.csv - list of iButton sensor names (site, rep, position)
+
+2YR_replicate_PIT_depths_OA.csv - depths of O and A horizons at all soil pits and for each year.
+
 ## Data preparation ##
 
 #### Data read-in
@@ -73,7 +80,7 @@ head(dailymeans.df)
 
 
 
-#### Remove all values less than or equal to 0
+#### Remove all values less than or equal to 0 (base temp)
 
 ```{r filter.zero, echo = TRUE}
 
@@ -125,7 +132,7 @@ time.end <- as.Date("2021-09-30")
 print(time.start)
 print(time.end)
 ## subsetting the dataframe using the time breaks.
-#Selects data that is greater than time.start AND less than time.end
+#Selects data that is greater than time.start AND less than time.end, creates new dataframe
 DD.df.cut <- dailymeans.df[(dailymeans.df$date >= time.start) & (dailymeans.df$date <= time.end),]
 
 #Un-comment the line below to view the new dataframe.
