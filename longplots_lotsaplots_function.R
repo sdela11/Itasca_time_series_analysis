@@ -1,7 +1,7 @@
 ---
-#title: "lotsaplots.2.rebuild"
+#title: "longplots_lotsaplots_function.R"
 #author: "Sara DeLaurentis"
-#date: "02/10/2021"
+#date: "04/20/2022"
 #output: html_document
 
 #NOTE: Much code lost during theft on 2/4/2021. This is the rebuild that includes .png plotting parameters.
