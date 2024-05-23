@@ -38,7 +38,7 @@ getAnywhere(wes_palettes)
 
 #Series selection component:
 
-data <- read.csv("ALL.csv")
+data <- read.csv("ALL_A.csv")
 data$date.time <- data$date.time %>% as.POSIXlt(tz = "") #set date/time class to POSIXlt for greater ease in parsing date elements.
 head(data$date.time)
 head(data)
