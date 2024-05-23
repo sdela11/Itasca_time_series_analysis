@@ -6,6 +6,10 @@ output: html_document
 purpose: tabulate (and plot?) thermal time for Itasca Project
 ---
 
+
+Archived 2024-05-24
+Kept for potential usefulness with week calculations.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
