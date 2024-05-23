@@ -3,6 +3,8 @@
 # Date created: 2023-03-25
 # Purpose: Check O and A horizon data sheet: 
 
+# Files needed: OA_thickness data 
+
 library(tidyverse)
 library(dplyr)
 library(stringr)
@@ -12,8 +14,8 @@ library(ggplot2)
 # read in data
 
 OA.dat <- read.csv("../OA_thickness_2019_21_clean_20230325.csv")
-head(OA.dat)
-str(OA.dat)
+head(OA.dat) #check first 5 rows
+str(OA.dat) #check structure (mainly to see what class everything is)
 
 # set classes for columns
 OA.dat$inv_lvl <- as.character(OA.dat$inv_lvl)
