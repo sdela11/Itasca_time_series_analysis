@@ -4,6 +4,8 @@
 #Date created: 05/02/2022
 #By: Sara DeLaurentis 
 #Original code copied from ggplot_function_dDIFF.R
+#05/22/2024: I'm not sure if this code works to plot weekly means. It might...
+
 
 #Notes:
 #Code examples are from Lukemiller.org, 
